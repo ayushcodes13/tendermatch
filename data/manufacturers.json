@@ -1,0 +1,882 @@
+[
+    {
+        "id": "mfr_001",
+        "name": "Korvus Technology",
+        "aliases": [
+            "Korvus",
+            "Korvus Tech"
+        ],
+        "country": "United Kingdom",
+        "active": true,
+        "product_categories": [
+            "thin film deposition systems",
+            "PVD systems",
+            "vacuum deposition equipment",
+            "deposition sources",
+            "laboratory research tools"
+        ],
+        "products": [
+            "HEX Series PVD systems",
+            "HEX Mini",
+            "HEX-L",
+            "HEX-XL",
+            "FISSION Magnetron Sputtering Source",
+            "ORCA Low Temperature Evaporation",
+            "TAU Electron Beam Evaporation",
+            "TES Thermal Boat Evaporation"
+        ],
+        "industries_served": [
+            "material science",
+            "semiconductors",
+            "photovoltaics",
+            "optics",
+            "electronics",
+            "nanomaterials",
+            "sensor applications",
+            "academic R&D"
+        ],
+        "embedding_text": "Supply, procurement, and installation of modular PVD coating systems including magnetron sputtering, thermal evaporation, and electron beam evaporation systems used in research and laboratory environments.\nUsed in universities and R&D labs for thin film deposition, materials research, nanotechnology, and experimental coating development.\nAlso referred to as PVD coating system, thin film deposition unit, sputtering system, or vacuum deposition system for research applications.\nSpecialized in compact, modular, and reconfigurable PVD systems for academic and research use.",
+        "keywords": [
+            "PVD",
+            "thin film deposition",
+            "magnetron sputtering",
+            "electron beam evaporation",
+            "thermal evaporation",
+            "vacuum system",
+            "HEX series",
+            "material research"
+        ],
+        "website": "https://korvustech.com/"
+    },
+    {
+        "id": "mfr_008",
+        "name": "G.N.R. S.r.l. - Analytical Instruments Group",
+        "aliases": [
+            "GNR",
+            "GNR Srl",
+            "GNR Analytical Instruments",
+            "ItalStructures"
+        ],
+        "country": "Italy",
+        "active": true,
+        "product_categories": [
+            "optical emission spectrometers",
+            "x-ray diffractometers",
+            "x-ray fluorescence spectrometers",
+            "oil analysis systems",
+            "sample preparation equipment"
+        ],
+        "products": [
+            "S1 MiniLab 150",
+            "S3 MiniLab 300",
+            "S7 Metal Lab Plus",
+            "S9 Atlantis",
+            "AreX D Benchtop Diffractometer",
+            "StressX Residual Stress Analyzer",
+            "SpiderX Portable XRD",
+            "RotrOil RDE-OES",
+            "LP 3000 Lapping Machine",
+            "Explorer XRD"
+        ],
+        "industries_served": [
+            "metallurgy and foundries",
+            "automotive and aerospace",
+            "oil and gas",
+            "material science research",
+            "chemical and pharmaceutical",
+            "environmental and forensic"
+        ],
+        "embedding_text": "Manufacturer of advanced analytical instrumentation specializing in Optical Emission Spectrometry (OES) for metal analysis and X-Ray Diffraction (XRD/XRF) for structural characterization. GNR supplies high-precision laboratory and portable systems used in foundries, research centers, and industrial quality control for elemental analysis and residual stress measurement. Unlike general lab suppliers, GNR is a direct developer of specialized RDE-OES technology for predictive maintenance through used oil analysis. In tenders, equipment is typically specified as 'optical emission spectrometer for metal alloys', 'benchtop X-ray diffractometer', 'retained austenite analyzer', or 'rotating disc electrode spectrometer'. Its specialization lies in the proprietary integration of CCD and PMT detectors for ultra-trace element detection in complex metallic matrices.",
+        "keywords": [
+            "spectrometry",
+            "X-ray diffraction",
+            "XRD",
+            "OES",
+            "metal analysis",
+            "residual stress",
+            "oil analysis",
+            "retained austenite",
+            "XRF",
+            "metallurgy"
+        ],
+        "website": "https://gnr.it"
+    },
+    {
+        "id": "mfr_003",
+        "name": "Madur",
+        "country": "Poland",
+        "active": true,
+        "product_categories": [
+            "gas analyzers",
+            "flue gas analysis systems",
+            "environmental monitoring instruments"
+        ],
+        "products": [
+            "portable flue gas analyzers",
+            "stationary gas analysis systems",
+            "emission monitoring solutions",
+            "combustion efficiency analyzers"
+        ],
+        "industries_served": [
+            "environmental monitoring",
+            "power plants",
+            "industrial combustion systems",
+            "oil and gas",
+            "HVAC and energy auditing"
+        ],
+        "embedding_text": "Madur develops gas analyzers and flue gas analysis systems for monitoring emissions and combustion efficiency in industrial environments. Their instruments are used in power plants, environmental monitoring agencies, and industrial facilities to measure gases such as CO, CO2, NOx, and SO2. These systems are relevant for tenders involving emission control, environmental compliance, and energy efficiency auditing in industrial and regulatory settings.",
+        "keywords": [
+            "gas analyzer",
+            "flue gas",
+            "emissions",
+            "NOx",
+            "SO2",
+            "CO2",
+            "combustion analysis",
+            "environment monitoring"
+        ],
+        "website": "https://www.madur.com"
+    },
+    {
+        "id": "mfr_004",
+        "name": "ParteQ GmbH",
+        "country": "Germany",
+        "active": true,
+        "product_categories": [
+            "nanoparticle synthesis systems",
+            "aerosol measurement instruments",
+            "particle engineering systems",
+            "CVD-based powder functionalization systems"
+        ],
+        "products": [
+            "flame spray pyrolysis nanoparticle synthesis systems",
+            "bench-top nanoparticle synthesis units",
+            "aerosol and particle measurement instruments",
+            "nanopowder collection and filtration systems",
+            "pilot-scale particle engineering systems"
+        ],
+        "industries_served": [
+            "nanotechnology research",
+            "materials science",
+            "energy storage and batteries",
+            "catalysis",
+            "environmental monitoring",
+            "advanced academic R&D"
+        ],
+        "embedding_text": "ParteQ GmbH develops advanced particle engineering systems including nanoparticle synthesis units, aerosol measurement instruments, and powder functionalization technologies using processes like flame spray pyrolysis and chemical vapor deposition. Their systems enable precise control over nano- and micro-scale particle structures and are used in advanced materials research, energy storage, catalysis, and nanotechnology labs. These solutions are highly relevant for tenders involving nanomaterial synthesis, aerosol science, and pilot-scale material development infrastructure where specialized expertise and low competition environments are typical.",
+        "keywords": [
+            "nanoparticle synthesis",
+            "flame spray pyrolysis",
+            "aerosol measurement",
+            "particle engineering",
+            "nanopowder",
+            "CVD functionalization",
+            "materials research",
+            "nano fabrication"
+        ],
+        "website": "https://parteq.net"
+    },
+    {
+        "id": "mfr_005",
+        "name": "Sint Technology S.r.l.",
+        "country": "Italy",
+        "active": true,
+        "product_categories": [
+            "spark plasma sintering systems",
+            "field assisted sintering technology",
+            "high temperature material processing systems"
+        ],
+        "products": [
+            "LABOX series spark plasma sintering systems",
+            "pilot-scale SPS systems",
+            "custom FAST/SPS solutions",
+            "high temperature vacuum sintering equipment"
+        ],
+        "industries_served": [
+            "advanced materials research",
+            "ceramics engineering",
+            "powder metallurgy",
+            "nanomaterials",
+            "energy materials",
+            "aerospace materials R&D"
+        ],
+        "embedding_text": "Sint Technology S.r.l. develops spark plasma sintering (SPS) and field assisted sintering systems for rapid densification of advanced materials, including ceramics, metals, and nanostructured materials. Their LABOX systems are widely used in research institutes and advanced laboratories for applications such as energy materials, aerospace components, and nanomaterials processing. These systems are highly relevant for tenders involving advanced material synthesis infrastructure, high-temperature processing, and specialized research equipment where technical specifications can limit competition to a small number of global suppliers.",
+        "keywords": [
+            "spark plasma sintering",
+            "SPS",
+            "FAST",
+            "field assisted sintering",
+            "powder metallurgy",
+            "ceramics processing",
+            "nanomaterials",
+            "high temperature sintering"
+        ],
+        "website": "https://www.sintechnology.com"
+    },
+    {
+        "id": "mfr_006",
+        "name": "P.G. Instruments Ltd.",
+        "country": "UK",
+        "active": true,
+        "product_categories": [
+            "analytical instruments",
+            "atomic absorption spectrometers",
+            "UV-Vis spectrophotometers",
+            "flame photometers"
+        ],
+        "products": [
+            "atomic absorption spectrometers (AAS)",
+            "UV-Vis spectrophotometers",
+            "flame photometers",
+            "atomic fluorescence spectrometers"
+        ],
+        "industries_served": [
+            "environmental testing",
+            "food and agriculture",
+            "pharmaceutical analysis",
+            "academic laboratories",
+            "industrial quality control"
+        ],
+        "embedding_text": "P.G. Instruments Ltd. manufactures analytical instruments including atomic absorption spectrometers, UV-Vis spectrophotometers, and flame photometers for elemental and chemical analysis. Their systems are used in environmental testing labs, food safety analysis, pharmaceutical quality control, and academic research for detecting trace metals and chemical compounds. These instruments are relevant for routine laboratory analysis, regulatory testing, and quality assurance applications.",
+        "keywords": [
+            "AAS",
+            "atomic absorption",
+            "UV-Vis",
+            "spectrophotometer",
+            "flame photometer",
+            "elemental analysis",
+            "chemical analysis",
+            "lab instruments"
+        ],
+        "website": "https://www.pginstruments.com"
+    },
+    {
+        "id": "mfr_007",
+        "name": "Thesix Solutions Technology",
+        "aliases": [
+            "Thesix",
+            "Thesix Solutions",
+            "Thesix Tech"
+        ],
+        "country": "Canada",
+        "active": true,
+        "product_categories": [
+            "fuel cell testing systems",
+            "electrochemical testing equipment",
+            "battery and energy systems testing",
+            "hydrogen research equipment"
+        ],
+        "products": [
+            "fuel cell test stations",
+            "electrolyzer testing systems",
+            "flow battery test cells",
+            "gas handling and humidification systems",
+            "conductivity measurement systems"
+        ],
+        "industries_served": [
+            "hydrogen energy research",
+            "fuel cell development",
+            "battery and energy storage research",
+            "electrochemistry",
+            "academic R&D"
+        ],
+        "embedding_text": "Supply and installation of fuel cell testing systems, electrolyzer test stations, battery testing equipment, and electrochemical analysis systems used in energy research and hydrogen technology./n Includes equipment for testing performance, durability, and efficiency of fuel cells, batteries, and energy storage systems in research laboratories and R&D facilities./n Also referred to in tenders as fuel cell test system, electrolyzer testing setup, battery testing system, electrochemical testing equipment, or hydrogen energy research system.",
+        "keywords": [
+            "fuel cell",
+            "electrolyzer",
+            "battery testing",
+            "electrochemical",
+            "hydrogen",
+            "energy systems",
+            "fuel cell test station",
+            "energy storage"
+        ],
+        "website": "https://www.thesixsolutions.com"
+    },
+    {
+        "id": "mfr_008",
+        "name": "GeniCore",
+        "aliases": [
+            "GeniCore Sp. z o.o.",
+            "Genicore Poland"
+        ],
+        "country": "Poland",
+        "active": true,
+        "product_categories": [
+            "field assisted sintering technology",
+            "spark plasma sintering systems",
+            "advanced material manufacturing",
+            "powder metallurgy equipment",
+            "ultra-hard composite materials"
+        ],
+        "products": [
+            "U-FAST (SPS) COMPACT",
+            "U-FAST (SPS) GC",
+            "U-FAST Glovebox (GC)",
+            "U-FAST (SPS) MASS",
+            "U-FAST (SPS) Hybrid",
+            "Pulse Plasma Compaction (PPC)",
+            "Diamond Enhanced Cemented Carbide (DEC)",
+            "Super Enhanced Ceramic - Whiskers (SEC-W)",
+            "CUBNEC (cBN Composite)",
+            "Precision Graphite Dies",
+            "Toll Sintering Services"
+        ],
+        "industries_served": [
+            "academic R&D",
+            "advanced materials manufacturing",
+            "aerospace and defense",
+            "tooling and machining",
+            "mining and road milling",
+            "electronics and thermoelectrics"
+        ],
+        "embedding_text": "Supply and installation of spark plasma sintering (SPS) systems and field assisted sintering technology (FAST) equipment used for powder metallurgy and advanced material consolidation. \n Used in research and industrial environments for producing high-density ceramics, composites, and advanced materials through rapid thermal processing. \n Also referred to as SPS system, spark plasma sintering machine, field assisted sintering equipment, or powder consolidation furnace. \n Not related to thin film deposition, PVD coating, or sputtering systems. \n Specialized in sintering and powder processing technologies, not coating or deposition systems.",
+        "keywords": [
+            "U-FAST",
+            "Spark Plasma Sintering",
+            "SPS",
+            "Field Assisted Sintering Technology",
+            "FAST",
+            "powder metallurgy",
+            "graphite dies",
+            "super-hard materials",
+            "composite sintering",
+            "vacuum furnace"
+        ],
+        "website": "https://genicore.eu"
+    },
+    {
+        "id": "mfr_009",
+        "name": "Nordiko Technical Services Ltd.",
+        "aliases": [
+            "Nordiko",
+            "NTSL",
+            "Nordiko Technical Services",
+            "Nordiko Ltd."
+        ],
+        "country": "United Kingdom",
+        "active": true,
+        "product_categories": [
+            "ion beam deposition systems",
+            "ion beam milling systems",
+            "physical vapour deposition systems",
+            "magnetron sputtering equipment",
+            "thin film process modules",
+            "plasma etching and deposition"
+        ],
+        "products": [
+            "Mnem-iX Broad Ion Beam System",
+            "Nordiko 3000 Multi-target Dual Source IBD",
+            "Nordiko 3400/3600/3800 Broad Ion Beam Systems",
+            "Nordiko 7000/7500 Broad Ion Beam Milling Systems",
+            "i-Octave Ion Beam Deposition System",
+            "Nordiko 2000/2550 Batch Load PVD Systems",
+            "Nordiko 8000/8550 Batch Load PVD Systems",
+            "Nordiko 9000/9550 Series PVD Systems",
+            "Nordiko 8800 Multi-electrode PVD Module",
+            "Nordiko 5000 Configurable Process Module",
+            "N2000 Compact Sputtering System",
+            "N300 Laboratory Scale Sputtering System",
+            "N1500 Sputtering System"
+        ],
+        "industries_served": [
+            "MRAM and magnetic storage",
+            "semiconductor manufacturing",
+            "MEMS and nanotechnology",
+            "sensor and microbolometer fabrication",
+            "photonics and LED production",
+            "aerospace and telecommunications",
+            "academic and industrial R&D"
+        ],
+        "embedding_text": "Supply, procurement, and installation of industrial-scale PVD coating systems including ion beam deposition, ion beam milling, and magnetron sputtering systems used for semiconductor manufacturing, magnetic sensors, and advanced materials production.\n Used in production environments for high-volume thin film coating, MRAM devices, and precision surface engineering requiring high uniformity and large-area processing.\n Also referred to as ion beam deposition system, ion beam sputtering system, industrial PVD coating system, or thin film production equipment.\n Specialized in large-scale industrial PVD systems and ion beam technologies for semiconductor and manufacturing applications.",
+        "keywords": [
+            "ion beam deposition",
+            "ion beam milling",
+            "magnetron sputtering",
+            "PVD",
+            "MRAM",
+            "thin film",
+            "RIE",
+            "PECVD",
+            "wafer processing",
+            "vacuum coating",
+            "MTJ",
+            "broad ion beam"
+        ],
+        "website": "https://nordiko-tech.co.uk"
+    },
+    {
+        "id": "mfr_010",
+        "name": "Nippon Instruments Corporation",
+        "country": "Japan",
+        "active": true,
+        "product_categories": [
+            "mercury analyzers",
+            "trace metal analyzers",
+            "atomic absorption systems"
+        ],
+        "products": [
+            "mercury analyzers based on cold vapor atomic absorption",
+            "mercury analysis systems for liquids and solids",
+            "trace mercury detection instruments",
+            "automatic mercury analyzers"
+        ],
+        "industries_served": [
+            "environmental monitoring",
+            "water quality testing",
+            "food safety",
+            "pharmaceutical analysis",
+            "academic research",
+            "regulatory laboratories"
+        ],
+        "embedding_text": "Equipment used for detecting and quantifying trace levels of mercury in samples such as water, soil, food, and industrial materials using techniques like cold vapor atomic absorption. These systems are commonly used in environmental monitoring, pollution control, food safety testing, and regulatory laboratories where accurate detection of mercury at very low concentrations is critical.\n\nIn government tenders, this may be described as mercury analyzer, trace metal analyzer for mercury, atomic absorption system for mercury detection, or instrument for mercury testing in water and environmental samples. It may also appear in less technical terms such as equipment for measuring mercury contamination, system for detecting heavy metals in samples, or lab instrument for pollution and water quality analysis.",
+        "keywords": [
+            "mercury analyzer",
+            "trace mercury",
+            "cold vapor AAS",
+            "heavy metal analysis",
+            "water testing",
+            "environmental monitoring",
+            "trace detection"
+        ],
+        "website": "https://www.nic-usa.com"
+    },
+    {
+        "id": "mfr_011",
+        "name": "Spinflex Instruments Ltd",
+        "country": "Israel",
+        "active": true,
+        "product_categories": [
+            "NMR analyzers",
+            "time-domain NMR systems",
+            "material characterization instruments"
+        ],
+        "products": [
+            "time-domain NMR analyzers",
+            "benchtop NMR systems",
+            "relaxation and diffusion measurement systems",
+            "solid and liquid sample analyzers"
+        ],
+        "industries_served": [
+            "materials science",
+            "petrochemicals",
+            "food science",
+            "pharmaceutical research",
+            "academic R&D"
+        ],
+        "embedding_text": "Equipment used for analyzing material properties using time-domain nuclear magnetic resonance techniques, enabling measurement of parameters such as molecular mobility, porosity, relaxation times, and composition in solid and liquid samples. Commonly used in materials science, petrochemical analysis, food quality testing, and pharmaceutical research for non-destructive characterization of samples.\n\nIn government tenders, this may be described as NMR analyzer, time-domain NMR system, benchtop NMR instrument, or system for material characterization using magnetic resonance. It may also appear in less technical terms such as equipment for analyzing molecular structure or composition, system for studying material properties without destroying samples, or lab instrument for advanced material and fluid analysis.",
+        "keywords": [
+            "NMR",
+            "time-domain NMR",
+            "material characterization",
+            "relaxation time",
+            "porosity analysis",
+            "non-destructive testing",
+            "benchtop NMR"
+        ],
+        "website": "https://www.spinflex.com"
+    },
+    {
+        "id": "mfr_011",
+        "name": "STATON, s.r.o.",
+        "aliases": [
+            "Staton",
+            "Staton Coating",
+            "Staton Slovakia"
+        ],
+        "country": "Slovakia",
+        "active": true,
+        "product_categories": [
+            "PVD coating systems",
+            "PECVD systems",
+            "magnetron sputtering equipment",
+            "arc evaporation systems",
+            "tool sharpening and regrinding equipment",
+            "plasma source technology"
+        ],
+        "products": [
+            "OCTOARC Series (PD300-G2, PD500-G2, PD700-G2, PD1000-G2)",
+            "OCTOMAG Series (M250-G2, M500-G2, M700-G2, M1000-G2)",
+            "OCTOMARC Hybrid Systems",
+            "MARC1 Arc Cathodes",
+            "fsARC Cathodes",
+            "PLASMAgTECHNOLOGY Plasma Sources",
+            "HIPIMS and HITUS Deposition Modules",
+            "Precision Cutting and Forming Tools"
+        ],
+        "industries_served": [
+            "tool manufacturing and metalworking",
+            "automotive and transportation",
+            "medical and biocompatible devices",
+            "aerospace and defense",
+            "food processing",
+            "woodworking",
+            "minting and decorative arts",
+            "academic R&D"
+        ],
+        "embedding_text": "Supply and installation of turn-key PVD and PECVD coating systems including cathodic arc evaporation and magnetron sputtering equipment for industrial coating applications.\n Used in manufacturing environments for coating cutting tools, forming dies, and automotive components with hard, wear-resistant, and low-friction coatings.\n Also referred to as PVD coating machine, cathodic arc evaporation system, magnetron sputtering unit, or turn-key coating system.\n Specialized in complete industrial coating solutions with integrated process optimization, not modular research or laboratory-scale systems.",
+        "keywords": [
+            "PVD",
+            "PECVD",
+            "cathodic arc",
+            "magnetron sputtering",
+            "HIPIMS",
+            "hard coatings",
+            "tool coating",
+            "thin film deposition",
+            "regrinding",
+            "tribological coatings",
+            "OCTOARC",
+            "OCTOMAG"
+        ],
+        "website": "https://www.staton.sk/en/home/"
+    },
+    {
+        "id": "mfr_013",
+        "name": "Eralytics",
+        "aliases": [
+            "Eralytics GmbH",
+            "Eralytics Austria"
+        ],
+        "country": "Austria",
+        "active": true,
+        "product_categories": [
+            "petroleum analyzers",
+            "fuel testing instruments",
+            "density and viscosity measurement systems"
+        ],
+        "products": [
+            "fuel density analyzers",
+            "viscosity analyzers",
+            "distillation analyzers",
+            "vapor pressure analyzers",
+            "multi-parameter fuel testing systems"
+        ],
+        "industries_served": [
+            "oil and gas",
+            "petroleum refining",
+            "fuel quality testing",
+            "chemical industry",
+            "regulatory laboratories"
+        ],
+        "embedding_text": "Equipment used for analyzing physical and chemical properties of fuels and petroleum products such as density, viscosity, vapor pressure, and distillation characteristics. These systems are commonly used in oil refineries, fuel testing laboratories, chemical industries, and regulatory environments to ensure fuel quality and compliance with standards.\n\nIn government tenders, this may be described as fuel analyzer, petroleum testing instrument, density or viscosity analyzer, distillation analyzer, or system for fuel quality testing. It may also appear in less technical terms such as equipment for testing petrol and diesel quality, system for analyzing fuel properties, or lab instrument for oil and petroleum product testing.",
+        "keywords": [
+            "fuel analysis",
+            "petroleum testing",
+            "density",
+            "viscosity",
+            "vapor pressure",
+            "distillation",
+            "fuel quality"
+        ],
+        "website": "https://www.eralytics.com"
+    },
+    {
+        "id": "mfr_014",
+        "name": "Cox Analytical Systems",
+        "aliases": [
+            "Cox Analytical",
+            "Cox Systems"
+        ],
+        "country": "UK",
+        "active": true,
+        "product_categories": [
+            "online process analyzers",
+            "water and environmental monitoring systems",
+            "industrial analytical systems",
+            "custom monitoring solutions"
+        ],
+        "products": [
+            "online water quality analyzers",
+            "process monitoring systems",
+            "environmental monitoring solutions",
+            "custom analytical systems for industrial processes"
+        ],
+        "industries_served": [
+            "water treatment",
+            "environmental monitoring",
+            "power plants",
+            "chemical processing",
+            "industrial utilities"
+        ],
+        "embedding_text": "Supply and installation of online water analyzers, process monitoring systems, and continuous water quality monitoring equipment used in industrial and environmental applications./n Includes systems for real-time measurement of chemical parameters such as pH, conductivity, dissolved oxygen, and contaminants in water treatment plants, power plants, and industrial processes./n Also referred to in tenders as online water analyzer, water quality monitoring system, environmental monitoring equipment, or process analyzer for industrial water systems.",
+        "keywords": [
+            "online analyzer",
+            "water monitoring",
+            "process monitoring",
+            "continuous analysis",
+            "environmental monitoring",
+            "water quality",
+            "industrial analysis"
+        ],
+        "website": "https://www.coxsystems.co.uk"
+    },
+    {
+        "id": "mfr_015",
+        "name": "Lumex Instruments",
+        "aliases": [
+            "Lumex",
+            "Lumex Analytics",
+            "Lumex Instruments Group"
+        ],
+        "country": "Canada/Russia",
+        "active": true,
+        "product_categories": [
+            "mercury analyzers",
+            "atomic absorption spectrometers",
+            "environmental analyzers",
+            "trace metal analysis systems"
+        ],
+        "products": [
+            "mercury analyzers",
+            "portable mercury analyzers",
+            "atomic absorption spectrometers",
+            "water and soil analysis systems",
+            "environmental monitoring instruments"
+        ],
+        "industries_served": [
+            "environmental monitoring",
+            "water quality testing",
+            "industrial emissions",
+            "food safety",
+            "academic research",
+            "regulatory laboratories"
+        ],
+        "embedding_text": "Equipment used for detecting and analyzing trace levels of mercury and other elements in air, water, soil, and industrial samples using techniques such as atomic absorption spectroscopy. These systems are commonly used in environmental monitoring, pollution control, industrial emissions testing, and regulatory laboratories for accurate detection of contaminants.\n\nIn government tenders, this may be described as mercury analyzer, environmental analyzer, atomic absorption spectrometer, or system for detecting heavy metals in samples. It may also appear in less technical terms such as equipment for measuring mercury pollution, system for testing water and air quality, or instrument for monitoring environmental contamination and emissions.",
+        "keywords": [
+            "mercury analyzer",
+            "atomic absorption",
+            "environmental monitoring",
+            "heavy metals",
+            "water testing",
+            "air monitoring",
+            "trace detection"
+        ],
+        "website": "https://www.lumexinstruments.com"
+    },
+    {
+        "id": "mfr_016",
+        "name": "Thermal-Lube",
+        "aliases": [
+            "Thermal Lube",
+            "Thermal-Lube Inc"
+        ],
+        "country": "USA",
+        "active": true,
+        "product_categories": [
+            "high temperature lubricants",
+            "vacuum greases",
+            "thermal interface materials",
+            "specialty coatings and compounds"
+        ],
+        "products": [
+            "high temperature lubricants",
+            "vacuum greases",
+            "anti-seize compounds",
+            "thermal pastes and interface materials",
+            "specialty industrial coatings"
+        ],
+        "industries_served": [
+            "vacuum systems",
+            "semiconductor processing",
+            "aerospace",
+            "industrial maintenance",
+            "research laboratories"
+        ],
+        "embedding_text": "Materials such as high temperature lubricants, vacuum greases, and thermal interface compounds used to support the operation and maintenance of scientific and industrial equipment, especially in vacuum and high-temperature environments. These are commonly used in semiconductor processing, vacuum systems, and research laboratories to ensure proper sealing, heat transfer, and smooth mechanical operation.\n\nIn government tenders, this may be described as high temperature lubricant, vacuum grease, thermal paste, anti-seize compound, or consumables for vacuum and high-temperature equipment. It may also appear in less technical terms such as materials for maintaining lab equipment, compounds for heat transfer and lubrication, or supplies for vacuum system operation and maintenance.",
+        "keywords": [
+            "vacuum grease",
+            "high temperature lubricant",
+            "thermal paste",
+            "anti-seize",
+            "thermal interface",
+            "vacuum systems",
+            "maintenance materials"
+        ],
+        "website": "https://www.thermal-lube.com"
+    },
+    {
+        "id": "mfr_017",
+        "name": "VersaMelt",
+        "aliases": [
+            "VersaMelt Systems",
+            "Versa Melt"
+        ],
+        "country": "USA",
+        "active": true,
+        "product_categories": [
+            "induction heating systems",
+            "metal melting systems",
+            "materials processing equipment",
+            "laboratory melting furnaces"
+        ],
+        "products": [
+            "induction melting systems",
+            "metal alloy development systems",
+            "laboratory-scale melting furnaces",
+            "custom induction heating solutions"
+        ],
+        "industries_served": [
+            "materials science",
+            "metallurgy",
+            "alloy development",
+            "academic R&D",
+            "industrial research labs"
+        ],
+        "embedding_text": "Equipment used for melting metals and developing alloys using induction heating techniques in laboratory or pilot-scale environments. These systems are commonly used in materials science, metallurgy, and research laboratories for alloy development, metal processing, and experimental studies involving high-temperature melting and solidification.\n\nIn government tenders, this may be described as induction melting system, metal melting furnace, laboratory melting furnace, or system for alloy development and metal processing. It may also appear in less technical terms such as equipment for melting metals in lab conditions, system for preparing metal samples and alloys, or research setup for high-temperature material processing and metallurgical experiments.",
+        "keywords": [
+            "induction melting",
+            "metal melting",
+            "alloy development",
+            "furnace",
+            "metallurgy",
+            "high temperature",
+            "materials processing"
+        ],
+        "website": "https://www.versamelt.com"
+    },
+    {
+        "id": "mfr_018",
+        "name": "ABECTA",
+        "aliases": [
+            "ABECTA Ltd",
+            "ABECTA UK"
+        ],
+        "country": "UK",
+        "active": true,
+        "product_categories": [
+            "liquid handling systems",
+            "laboratory sample preparation equipment",
+            "automation systems for labs"
+        ],
+        "products": [
+            "liquid handling workstations",
+            "automated pipetting systems",
+            "sample preparation systems",
+            "custom lab automation platforms"
+        ],
+        "industries_served": [
+            "biotechnology",
+            "life sciences",
+            "pharmaceutical research",
+            "academic laboratories",
+            "clinical research"
+        ],
+        "embedding_text": "Supply, procurement, and installation of automated liquid handling systems, pipetting robots, and sample preparation workstations used for high-throughput laboratory workflows./n Includes equipment for precise liquid dispensing, sample processing, reagent handling, and automated lab workflows in biotechnology, molecular biology, and pharmaceutical laboratories./n Also referred to in tenders as liquid handling system, automated pipetting system, sample preparation workstation, lab automation system, or robotic liquid handling equipment.",
+        "keywords": [
+            "liquid handling",
+            "pipetting",
+            "sample preparation",
+            "lab automation",
+            "biotech",
+            "automation system",
+            "dispensing"
+        ],
+        "website": "https://www.abecta.com"
+    },
+    {
+        "id": "mfr_010",
+        "name": "Teer Coatings Limited",
+        "aliases": [
+            "TCL",
+            "Teer Coatings",
+            "Teer"
+        ],
+        "country": "United Kingdom",
+        "active": true,
+        "product_categories": [
+            "PVD coating systems",
+            "magnetron sputtering systems",
+            "cluster beam deposition systems",
+            "ion beam sources",
+            "thin film deposition equipment",
+            "plasma assisted CVD systems"
+        ],
+        "products": [
+            "UDP 4 Magnetron Sputtering Systems",
+            "CF 4 Magnetron Clean Room Systems",
+            "ClusterGen Max-200 Cluster-beam System",
+            "Plasmag II Magnetrons",
+            "Teer Linear Ion Source",
+            "Mnem-iX MRAM Production Tool",
+            "N300 Laboratory Sputtering System",
+            "UDP 850/1000/1200 Large Scale Systems"
+        ],
+        "industries_served": [
+            "aerospace and aviation",
+            "automotive and motorsport",
+            "medical and healthcare",
+            "minting and coin production",
+            "fuel cells and electrolysers",
+            "semiconductor and data storage",
+            "optical and photonics",
+            "academic R&D"
+        ],
+        "embedding_text": "Supply, procurement, and installation of industrial PVD coating systems using magnetron sputtering and ion plating technologies for high-performance surface coatings. \n Used for applying hard, wear-resistant, and low-friction coatings on cutting tools, automotive components, and industrial parts requiring tribological performance and durability. \n Also referred to as PVD coating system, magnetron sputtering system, ion plating system, or industrial coating equipment. \n Specialized in advanced industrial coatings for tools and components, including tribological and solid lubricant coatings, not research-focused deposition systems.",
+        "keywords": [
+            "PVD",
+            "magnetron sputtering",
+            "closed field",
+            "thin film",
+            "ion plating",
+            "UDP system",
+            "cluster beam",
+            "solid lubricant",
+            "bipolar plates",
+            "tribology",
+            "sputtering target",
+            "ion source"
+        ],
+        "website": "https://www.teercoatings.co.uk"
+    },
+    {
+        "id": "mfr_012",
+        "name": "SALD B.V.",
+        "aliases": [
+            "SALD",
+            "Spatial ALD",
+            "SALD BV"
+        ],
+        "country": "Netherlands",
+        "active": true,
+        "product_categories": [
+            "spatial atomic layer deposition systems",
+            "roll-to-roll (R2R) deposition equipment",
+            "sheet-to-sheet (S2S) deposition systems",
+            "atmospheric pressure thin film equipment",
+            "nano-coating systems"
+        ],
+        "products": [
+            "SALD R&D Tool (Compact Lab System)",
+            "SALD R&D Glovebox Tool",
+            "High-Volume Production (HVM) Systems",
+            "Roll-to-roll (R2R) Spatial ALD System",
+            "Sheet-to-sheet (S2S) Spatial ALD System",
+            "Patented Spatial ALD Deposition Head",
+            "Atmospheric Pressure ALD Reactor"
+        ],
+        "industries_served": [
+            "lithium-ion and solid-state batteries",
+            "perovskite and silicon solar cells",
+            "green hydrogen (electrolyzers and fuel cells)",
+            "sustainable packaging and barrier films",
+            "flexible electronics and OLED displays",
+            "membranes and porous materials",
+            "textiles and medical packaging"
+        ],
+        "embedding_text": "Supply and installation of spatial atomic layer deposition (ALD) systems for high-throughput, atmospheric pressure thin film coating applications. \n Used for conformal coating of materials, catalysts, and flexible substrates in energy systems, batteries, and industrial coating processes, especially where uniform coating on complex or porous surfaces is required.\n Also referred to as spatial ALD system, atmospheric pressure deposition system, roll-to-roll ALD coater, or conformal coating system.\n Not related to PVD sputtering, magnetron sputtering, or vacuum-based thin film deposition systems used in research or conventional coating equipment. \n Specialized in atomic layer deposition (ALD) for large-area and industrial applications, not PVD-based coating systems.",
+        "keywords": [
+            "Spatial ALD",
+            "sALD",
+            "atomic layer deposition",
+            "thin film",
+            "roll-to-roll",
+            "atmospheric pressure",
+            "battery coating",
+            "solar passivation",
+            "hydrogen electrolyzer",
+            "barrier layers"
+        ],
+        "website": "https://www.sald.nl"
+    }
+]
