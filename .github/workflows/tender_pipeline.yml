@@ -13,18 +13,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Restore tender DB cache
+        uses: actions/cache@v4
+        with:
+          path: data/tenders.db
+          key: tender-db-cache-${{ github.run_id }}
+          restore-keys: |
+            tender-db-cache-
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run Tender Pipeline
         env:
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-        run: |
-          python -m pipeline.run
+        run: python -m pipeline.run
