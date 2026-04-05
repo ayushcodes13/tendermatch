@@ -32,6 +32,10 @@ BASE_URLS = {
     "state": "https://eprocure.gov.in/cppp/latestactivetendersnew/mmpdata",
     "gem": "https://eprocure.gov.in/cppp/latestactivetendersnew/gemdata"
 }
+PORTAL_LINKS = BASE_URLS.copy()
+
+MAX_PAGES = 50
+CUTOFF_HOURS = 24
 
 
 def parse_date(date_str):
@@ -193,9 +197,15 @@ def scrape_source(source_key, max_pages=50, cutoff_hours=24):
     return all_tenders
 
 
-def scrape_all(max_pages=50, cutoff_hours=24):
+def scrape_all():
     all_tenders = []
+
     for source in BASE_URLS.keys():
-        tenders = scrape_source(source, max_pages=max_pages, cutoff_hours=cutoff_hours)
+        tenders = scrape_source(
+            source,
+            max_pages=MAX_PAGES,
+            cutoff_hours=CUTOFF_HOURS
+        )
         all_tenders.extend(tenders)
+
     return all_tenders
