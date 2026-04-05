@@ -1,14 +1,17 @@
-from data.db import get_connection, init_db, process_tender, update_flags, generate_hash
+from data.db import (
+    get_connection,
+    init_db,
+    process_tender,
+    update_flags
+)
+
 from matching.filter import classify_tender
-from matching.embedder import ManufacturerEmbedder
-from matching.matcher import TenderMatcher
+from matching.embedder import build_matcher
 
-import json
-from .testsynthetic import generate_tenders
-
-# ✅ NEW IMPORTS
 from digest.formatter import format_email
 from digest.sender import send_email
+
+from .testsynthetic import generate_tenders
 
 
 def test_pipeline():
@@ -18,25 +21,18 @@ def test_pipeline():
 
     tenders = generate_tenders(100)
 
-    # Load manufacturers
-    with open("data/manufacturers.json") as f:
-        manufacturers = json.load(f)
-
-    embedder = ManufacturerEmbedder()
-    embedder.load_manufacturers(manufacturers)
-    embedder.build_embeddings()
-
-    matcher = TenderMatcher(embedder)
+    matcher = build_matcher()
 
     stats = {
         "blocked": 0,
         "low": 0,
-        "high": 0
+        "high": 0,
+        "explore": 0
     }
 
-    # ✅ NEW: email collections
     high_tenders = []
     low_tenders = []
+    explore_tenders = []
 
     for t in tenders:
         new_t = process_tender(conn, t)
@@ -46,7 +42,7 @@ def test_pipeline():
 
         result = classify_tender(new_t)
 
-        content_hash = generate_hash(new_t)
+        content_hash = new_t["content_hash"]
 
         update_flags(
             conn,
@@ -66,9 +62,12 @@ def test_pipeline():
             for m in matches:
                 print(f"→ {m['manufacturer_name']} ({m['score']})")
 
-            # ✅ ADD FOR EMAIL
             new_t["matches"] = matches
             high_tenders.append(new_t)
+
+        elif result["category"] == "explore":
+            stats["explore"] += 1
+            explore_tenders.append(new_t)
 
         elif result["category"] == "low_signal":
             stats["low"] += 1
@@ -80,23 +79,28 @@ def test_pipeline():
     print("\n📊 FINAL STATS:")
     print(stats)
 
-    # ✅ EMAIL SECTION
-    if high_tenders or low_tenders:
+    if high_tenders or low_tenders or explore_tenders:
 
         email_stats = {
             "total": len(tenders),
             "high": stats["high"],
+            "explore": stats["explore"],
             "low": stats["low"]
         }
 
-        subject, body = format_email(high_tenders, low_tenders, email_stats)
+        subject, body = format_email(
+            high_tenders,
+            explore_tenders,
+            low_tenders,
+            email_stats
+        )
 
         send_email(subject, body, "devayushrout@gmail.com")
 
         print("\n📩 Test email sent.")
 
     else:
-        print("\n📭 No email sent (no signals).")
+        print("\n📭 No email sent.")
 
 
 if __name__ == "__main__":
