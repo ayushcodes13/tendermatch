@@ -1,5 +1,6 @@
 import sqlite3
 import hashlib
+import re
 
 DB_PATH = "data/tenders.db"
 
@@ -189,3 +190,6 @@ def is_already_emailed(conn, content_hash):
     
     row = cursor.fetchone()
     return row and row[0] == 1
+
+def normalize_title(title):
+    return re.sub(r'[^a-z0-9 ]', '', (title or "").lower()).strip()

@@ -830,7 +830,7 @@
         "website": "https://www.teercoatings.co.uk"
     },
     {
-        "id": "mfr_012",
+        "id": "mfr_019",
         "name": "SALD B.V.",
         "aliases": [
             "SALD",
@@ -878,5 +878,88 @@
             "barrier layers"
         ],
         "website": "https://www.sald.nl"
+    },
+    {
+        "id": "mfr_020",
+        "name": "Agnitron Technology",
+        "country": "USA",
+        "active": true,
+        "product_categories": [
+            "MOCVD systems",
+            "semiconductor deposition equipment",
+            "process control software",
+            "in-situ monitoring instruments"
+        ],
+        "products": [
+            "Agilis Series MOCVD reactors",
+            "GOX Series Gallium Oxide systems",
+            "Imperium-MOCVD control software",
+            "AgniTemp multiwavelength pyrometer",
+            "Legacy MOCVD system upgrades"
+        ],
+        "industries_served": [
+            "semiconductor R&D",
+            "power electronics",
+            "optoelectronics",
+            "academic and industrial research labs",
+            "material science"
+        ],
+        "embedding_text": "Agnitron Technology specializes in custom Metal Organic Chemical Vapor Deposition (MOCVD) systems and advanced process control solutions for the semiconductor industry. Their product line includes the Agilis and GOX series reactors, optimized for the growth of ultra-wide bandgap materials such as Gallium Oxide (Ga2O3), III-Nitrides, and 2D materials. They offer the Imperium-MOCVD SCADA software for upgrading legacy systems from manufacturers like Veeco and Aixtron, along with AgniTemp pyrometry for high-speed in-situ thermal monitoring. These solutions are highly relevant for tenders involving epitaxial growth, wide bandgap semiconductor research, and laboratory-scale semiconductor fabrication.",
+        "keywords": [
+            "MOCVD",
+            "Gallium Oxide",
+            "epitaxial growth",
+            "semiconductor",
+            "SCADA",
+            "pyrometer",
+            "thin film deposition",
+            "wide bandgap"
+        ],
+        "website": "https://agnitron.com/"
+    },
+    {
+        "id": "mfr_021",
+        "name": "AdNaNoTek Corporation",
+        "country": "Taiwan",
+        "active": true,
+        "product_categories": [
+            "UHV deposition systems",
+            "plasma etching systems",
+            "thin film characterization",
+            "quantum computing fabrication tools"
+        ],
+        "products": [
+            "E-beam evaporator (EBS and JEB series)",
+            "Molecular Beam Epitaxy (MBE) systems",
+            "Magnetron sputtering system",
+            "Pulsed Laser Deposition (PLD) system",
+            "Ion Beam Sputtering Deposition (IBSD)",
+            "Reactive Ion Etching (RIE/ICP-RIE/ECR-RIE)",
+            "Ion Beam Etching (IBE)",
+            "Josephson Junction Cluster systems",
+            "UHV transfer robots and manipulators"
+        ],
+        "industries_served": [
+            "quantum computing",
+            "semiconductor research",
+            "materials science",
+            "nanotechnology",
+            "academic and industrial R&D"
+        ],
+        "embedding_text": "AdNaNoTek Corporation specializes in the design and manufacture of ultrahigh vacuum (UHV) deposition and plasma etching systems. Their core expertise includes Physical Vapor Deposition (PVD) technologies such as E-beam evaporation, Molecular Beam Epitaxy (MBE), and Magnetron Sputtering, alongside advanced dry etching solutions like ICP-RIE and Ion Beam Etching. They provide specialized cluster tools for Josephson Junction fabrication, essential for quantum computing devices. These systems are highly relevant for high-end research tenders involving thin-film growth, semiconductor fabrication, and UHV material processing.",
+        "keywords": [
+            "UHV",
+            "MBE",
+            "PVD",
+            "E-beam evaporation",
+            "Magnetron sputtering",
+            "PLD",
+            "RIE",
+            "Ion Beam Etching",
+            "Josephson Junction",
+            "thin film deposition",
+            "vacuum chamber"
+        ],
+        "website": "https://adnano-tek.com/"
     }
 ]
