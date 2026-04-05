@@ -4,7 +4,10 @@
 compare → rank
 """
 
+import json
 from sentence_transformers import SentenceTransformer
+from matching.matcher import TenderMatcher
+
 
 class ManufacturerEmbedder:
     def __init__(self, model_name="BAAI/bge-small-en-v1.5"):
@@ -39,4 +42,22 @@ class ManufacturerEmbedder:
         """
         Used later for embedding tender text
         """
-        return self.model.encode(text, normalize_embeddings=True)
+        return self.model.encode(
+            text,
+            normalize_embeddings=True
+        )
+
+
+def build_matcher():
+    """
+    Loads manufacturers, builds embeddings,
+    and returns ready-to-use matcher
+    """
+    with open("data/manufacturers.json") as f:
+        manufacturers = json.load(f)
+
+    embedder = ManufacturerEmbedder()
+    embedder.load_manufacturers(manufacturers)
+    embedder.build_embeddings()
+
+    return TenderMatcher(embedder)

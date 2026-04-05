@@ -1,4 +1,5 @@
 import numpy as np
+from matching.domain_keywords import company_keywords
 
 
 class TenderMatcher:
@@ -11,10 +12,26 @@ class TenderMatcher:
 
     def match(self, tender):
         text = (tender.get("title") or "") + " " + (tender.get("raw_text") or "")
+        text_lower = text.lower()
 
         query_embedding = self.embedder.embed_text(text)
 
         scores = np.dot(self.mfr_embeddings, query_embedding)
+
+        # -----------------------
+        # KEYWORD BOOST LAYER
+        # -----------------------
+        for idx, manufacturer in enumerate(self.manufacturers):
+            manufacturer_name = manufacturer.get("name", "")
+            keywords = company_keywords.get(manufacturer_name, [])
+
+            keyword_hits = sum(
+                1 for kw in keywords
+                if kw.lower() in text_lower
+            )
+
+            if keyword_hits > 0:
+                scores[idx] += min(0.03 * keyword_hits, 0.15)
 
         MIN_SCORE = 0.65
 

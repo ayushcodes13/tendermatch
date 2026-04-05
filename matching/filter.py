@@ -20,26 +20,167 @@
 import re
 import numpy as np
 from matching.embedder import ManufacturerEmbedder
+from matching.domain_keywords import company_keywords
 
 # -----------------------
-# BLOCKLIST (unchanged)
+# BLOCKLIST
 # -----------------------
 BLOCKLIST = [
-    "road", "construction", "civil", "repair", "maintenance",
-    "drain", "pipeline", "renovation", "fencing", "water",    "cable",
-    "pump",
-    "motor",
-    "starter",
-    "underground mine",
-    "mine",
+    "11 kv", "leakages", "Photostat", "IndianOil", "Bharat Heavy Electricals Limited", "shauchalaya", "BOGIE",
+    "33 kv", "Oil and Natural Gas Corporation Limited", "Biopsy", "fans", "Onion", "Truck", " Audio-Video system",
+    "aluminum door", "chauraha", "Bank of Baroda", "NTPC", "WHEAT", "straw", "Ventilator", "PANTRIES", "Jal",
+    "auction", "GRAM PANCHAYAT", "Adobe Creative Cloud Software", "GHAR", "GRAM", "CATERING", "PANTRY", "Washer",
+    "balaclava", "Shock bars", "Trolley", 
+    "bridge",
+    "building repair",
+    "building upgradation",
+    "bus stand",
+    "cable",
+    "charging",
+    "civil",
+    "civil work",
+    "civil works",
+    "cleaning",
     "coal",
+    "colour wash",
+    "compound wall",
+    "connected electrical works",
+    "construction",
+    "cpwd",
+    "culvert",
+    "dam",
+    "desilting",
+    "display board",
+    "disposal",
+    "door",
+    "double circuit line",
+    "drain",
+    "drainage",
+    "earth filling",
+    "electrical connection",
+    "electrical line shifting",
+    "false ceiling",
+    "felling",
+    "fencing",
+    "fertilizer",
+    "flooring",
+    "gaiter",
+    "garland drain",
+    "gloves",
+    "gymnasium",
+    "helmet",
+    "housekeeping",
+    "ht line",
+    "information board",
+    "kv line",
+    "landscaping",
+    "load enhancement",
+    "lt extension",
+    "maintenance",
+    "marg",
+    "methanol",
+    "military engineer services",
+    "mine",
+    "motor",
+    "municipal",
+    "nallah",
+    "neck gaiter",
+    "open gym",
+    "paint",
+    "paint work",
+    "painting",
+    "park",
+    "park development",
+    "pest",
+    "pesticide",
+    "pipeline",
+    "pipeline laying",
+    "plantation",
+    "plastering",
+    "plumbing",
+    "power line shifting",
+    "public works department",
+    "pump",
+    "rasta",
+    "rectification",
+    "renovation",
+    "repair",
+    "road",
+    "road marking",
+    "roof covering",
+    "roof leak",
+    "sadak",
+    "sale of scrap",
+    "sapling",
+    "sapling plantation",
+    "scrap",
+    "sewer",
+    "sewerage",
+    "shoe",
+    "sign board",
+    "sock",
+    "socks",
+    "solid waste",
+    "sports hub",
+    "stadium",
+    "starter",
+    "sub station",
+    "surveillance unit",
+    "sweeping",
+    "thermoplastic paint",
+    "timber",
+    "toilet",
+    "transformer repair",
     "transportation",
-    "charging"
+    "underground mine",
+    "uniform",
+    "upgradation",
+    "ups installation",
+    "warning board",
+    "waste disposal",
+    "water",
+    "water supply",
+    "well cleaning",
+    "wells",
+    "white wash",
+    "window",
+    "murum",
+    "crush sand",
+    "crush metal",
+    "sand",
+    "metal spreading",
+    "spreading",
+    "allotment of space",
+    "hanger",
+    "hangar",
+    "dome",
+    "festival",
+    "fair",
+    "spring festival",
+    "temporary structure",
+    "mementoe",
+    "mementoes",
+    "beautification",
+    "pond",
+    "pathway",
+    "flood protection",
+    "flood work",
+    "ward-",
+    "ward ",
+    "lane",
+    "village",
+    "protection work"
 ]
+
 
 NEGATIVE_CONTEXT = [
     "labour", "manpower", "vehicle",
-    "insurance", "furniture", "cleaning"
+    "insurance", "furniture", "cleaning",
+    "catering", "food service","pantry",
+    "cleaning", "painting",
+    "civil", "road",
+    "drain", "railway hospitality",
+    "amc of building","whitewash"
 ]
 
 # -----------------------
@@ -64,16 +205,18 @@ STRONG_KEYWORDS = [
 
     # Sintering (very niche → high value)
     "spark plasma sintering", "sps", "spad",
-    "field assisted sintering", "fast", "pecvd", "peld", "icp-rie", 
-    "mocvd", "sald", "lithography", "femtosecond-laser",
-    "pulsed epr", "cw-pulsed esr", "snspd", "spr", 
+    "field assisted sintering", "fast", "pecvd", "peld",
+    "icp-rie", "mocvd", "sald", "lithography",
+    "femtosecond-laser", "pulsed epr",
+    "cw-pulsed esr", "snspd", "spr",
     "quantum deposition system", "quantum deposition",
-    "cryogenic system", "sps", "spark plasma sintering", "probstation", "rcm",
+    "cryogenic system", "sps",
+    "spark plasma sintering", "probstation", "rcm",
 
     # Electrochem / energy systems
     "fuel cell test", "electrolyzer testing",
     "battery testing system",
-
+    
     # Niche high-signal instruments
     "nmr", "time-domain nmr",
     "mercury analyzer"
@@ -92,34 +235,37 @@ WEAK_KEYWORDS = [
 # SEMANTIC DOMAIN QUERIES
 # -----------------------
 DOMAIN_QUERIES = [
-    # Thin film & coatings
     "thin film deposition systems for research and industry",
     "physical vapor deposition and sputtering equipment",
     "vacuum coating and surface engineering systems",
     "atomic layer deposition and conformal coating systems",
 
-    # Advanced materials processing
     "advanced material synthesis and sintering systems",
     "spark plasma sintering and powder metallurgy equipment",
     "nanoparticle synthesis and aerosol processing systems",
 
-    # Material characterization
     "material characterization instruments using x-ray and spectroscopy",
     "analytical instruments for chemical and elemental analysis",
     "laboratory spectrometry and diffraction systems",
 
-    # Energy & electrochemistry
     "fuel cell and battery testing systems for energy research",
     "electrochemical testing and hydrogen research equipment",
 
-    # Environmental & gas analysis
     "gas analyzers and emission monitoring systems",
     "environmental monitoring and water analysis instruments",
 
-    # Industrial + research lab systems
     "scientific laboratory equipment for research and testing",
     "advanced instrumentation for physics and material science labs"
 ]
+
+# -----------------------
+# COMPANY KEYWORD POOL
+# -----------------------
+ALL_COMPANY_KEYWORDS = set()
+
+for keywords in company_keywords.values():
+    for kw in keywords:
+        ALL_COMPANY_KEYWORDS.add(kw.lower())
 
 # -----------------------
 # CLEAN TEXT
@@ -142,9 +288,9 @@ def init_semantic():
     global domain_embeddings
 
     if domain_embeddings is None:
-            domain_embeddings = np.array([
-                embedder.embed_text(q) for q in DOMAIN_QUERIES
-            ])
+        domain_embeddings = np.array([
+            embedder.embed_text(q) for q in DOMAIN_QUERIES
+        ])
 
 
 # -----------------------
@@ -201,7 +347,25 @@ def classify_tender(tender):
         }
 
     # -----------------------
-    # 3. SEMANTIC LAYER
+    # 3. COMPANY KEYWORD RECALL
+    # -----------------------
+    company_hits = []
+
+    for kw in ALL_COMPANY_KEYWORDS:
+        pattern = r'\b' + re.escape(kw) + r'\b'
+        if re.search(pattern, text):
+            company_hits.append(kw)
+
+    if company_hits:
+        return {
+            "is_blocked": False,
+            "has_signal": True,
+            "category": "high_signal",
+            "reason": f"company_keyword_match: {company_hits[:3]}"
+        }
+
+    # -----------------------
+    # 4. SEMANTIC LAYER
     # -----------------------
     semantic_score = get_semantic_score(text)
 
@@ -222,7 +386,7 @@ def classify_tender(tender):
         }
 
     # -----------------------
-    # 4. WEAK KEYWORDS
+    # 5. WEAK KEYWORDS
     # -----------------------
     weak_hits = [w for w in WEAK_KEYWORDS if w in text]
 
@@ -235,7 +399,7 @@ def classify_tender(tender):
         }
 
     # -----------------------
-    # 5. NEGATIVE CONTEXT
+    # 6. NEGATIVE CONTEXT
     # -----------------------
     for bad in NEGATIVE_CONTEXT:
         if bad in text:
@@ -247,7 +411,7 @@ def classify_tender(tender):
             }
 
     # -----------------------
-    # 6. DEFAULT
+    # 7. DEFAULT
     # -----------------------
     return {
         "is_blocked": True,
