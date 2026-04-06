@@ -31,7 +31,16 @@ BLOCKLIST = [
     "aluminum door", "chauraha", "Bank of Baroda", "NTPC", "WHEAT", "straw", "Ventilator", "PANTRIES", "Jal",
     "auction", "GRAM PANCHAYAT", "Adobe Creative Cloud Software", "GHAR", "GRAM", "CATERING", "PANTRY", "Washer",
     "balaclava", "Shock bars", "Trolley", "vehicles", "powergrid", "powergrid corporation of india limited",
-    "bridge", "Coil Spring Machine",
+    "bridge", "Coil Spring Machine", "spring washer",
+    "axle box",
+    "coach",
+    "wagon",
+    "railway",
+    "locomotive",
+    "bogie",
+    "brake unit",
+    "pressure regulating valve",
+    "coil spring"
     "building repair",
     "building upgradation",
     "bus stand",
@@ -172,6 +181,75 @@ BLOCKLIST = [
     "protection work"
 ]
 
+ORG_BLOCKLIST = {
+    # transport / infra / public works
+    "chennai metro rail limited",
+    "delhi metro rail corporation limited",
+    "ministry of railways - world bank tenders",
+    "ministry of road transport and highways",
+    "national highways and infrastructure development corporation",
+    "andaman lakshadweep harbour works",
+    "chennai port trust",
+    "jawaharlal nehru port trust",
+    "kolkata port trust",
+    "mumbai port trust",
+    "new mangalore port trust",
+    "mormugao port authority",
+    "land ports authority of india",
+    "inland waterways authority of india",
+    "ministry of shipping",
+
+    # utilities / infra / power / heavy civil
+    "delhi development authority",
+    "chenab valley power projects",
+    "bundelkhand saur urja limited",
+    "nhdc ltd.",
+    "nhpc limited",
+    "thdc india limited",
+    "bridge and roof company (india) limited",
+
+    # oil / industrial infra / chemicals
+    "engineers india limited,mopng",
+    "hindustan organic chemicals limited",
+    "hindustan urvarak and rasayan limited",
+    "madras fertilizers limited",
+    "numaligarh refinery limited",
+    "rashtriya chemicals and fertilizers ltd.",
+    "the fertilisers and chemicals travancore ltd.",
+    "projects and development india limited, fert",
+
+    # telecom / utilities noise
+    "bharat sanchar nigam limited",
+    "mahanagar telephone nigam limited",
+
+    # govt administrative / public sector noise
+    "food corporation of india",
+    "department of posts",
+    "sports authority of india",
+    "navodaya vidyalaya samiti",
+    "staff selection commission",
+    "supreme court of india",
+    "office of the cag of india",
+    "india trade promotion organisation",
+    "national archives of india",
+
+    # police / border / forces / infra ops
+    "assam rifles - mha",
+    "dg,bsf,mha",
+    "dg,crpf,mha",
+    "dg, indo-tibetan border police force",
+    "dg,national security guard,mha",
+    "dg sashastra seema bal,mha",
+    "directorate general ndrf",
+
+    # roads / survey / public administration
+    "archaeological survey of india",
+    "central ground water board",
+    "geological survey of india",
+    "directorate general of shipping",
+    "directorate general of lighthouses and lightships",
+    "directorate of construction services and estate management"
+}
 
 NEGATIVE_CONTEXT = [
     "labour", "manpower", "vehicle",
@@ -311,10 +389,22 @@ def classify_tender(tender):
 
     title = tender.get("title") or ""
     raw_text = tender.get("raw_text") or ""
+    organization = (tender.get("organization") or "").lower().strip()
 
     text = clean_text(title + " " + raw_text)
     words = set(text.split())
 
+    # -----------------------
+    # 0. ORGANIZATION BLOCK
+    # -----------------------
+    for blocked_org in ORG_BLOCKLIST:
+        if blocked_org in organization:
+            return {
+                "is_blocked": True,
+                "has_signal": False,
+                "category": "blocked",
+                "reason": f"organization_blocked: {blocked_org}"
+            }
     # -----------------------
     # 1. HARD BLOCK
     # -----------------------
