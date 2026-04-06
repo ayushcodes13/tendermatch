@@ -31,7 +31,7 @@ BLOCKLIST = [
     "aluminum door", "chauraha", "Bank of Baroda", "NTPC", "WHEAT", "straw", "Ventilator", "PANTRIES", "Jal",
     "auction", "GRAM PANCHAYAT", "Adobe Creative Cloud Software", "GHAR", "GRAM", "CATERING", "PANTRY", "Washer",
     "balaclava", "Shock bars", "Trolley", "vehicles", "powergrid", "powergrid corporation of india limited",
-    "bridge", "Coil Spring Machine", "spring washer",
+    "bridge", "Coil Spring Machine", "spring washer", "gym",
     "axle box",
     "coach",
     "wagon",
