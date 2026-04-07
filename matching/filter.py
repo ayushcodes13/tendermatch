@@ -33,7 +33,7 @@ BLOCKLIST = [
     "balaclava", "Shock bars", "Trolley", "vehicles", "powergrid", "powergrid corporation of india limited",
     "bridge", "Coil Spring Machine", "spring washer", "gym", "chainsaw", "WEIGHING SCALES", "SPRING", "HINGES",
     "axle box", "restaurant", "fast food", "BOMB", "cafe", "SPRING RING", "FASTENERS", "LPG storage vessel", "LPG",
-    "coach",
+    "coach", "Football Ground", "Sports Activity", "CEMENT", "CEMENT BAGS", "Dental Lab Services", "Dental Lab",
     "wagon",
     "railway",
     "locomotive",
