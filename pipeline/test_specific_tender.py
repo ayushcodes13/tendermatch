@@ -1,4 +1,4 @@
-from matching.classifier import classify_tender
+from matching.matcher import classify_tender
 
 def test_specific_tender():
     tender = {
