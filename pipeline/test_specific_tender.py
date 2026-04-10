@@ -1,6 +1,5 @@
 from matching.filter import classify_tender
-from matching.matcher import TenderMatcher
-from matching.embedder import ManufacturerEmbedder
+from matching.embedder import build_matcher
 
 
 def test_specific_tender():
@@ -18,24 +17,21 @@ def test_specific_tender():
     print("Organization:", tender["organization"])
 
     # -----------------------
-    # STEP 1: CLASSIFIER
+    # CLASSIFICATION
     # -----------------------
     classification = classify_tender(tender)
 
     print("\n[CLASSIFICATION RESULT]")
     print(classification)
 
-    # Stop early if blocked
     if classification["category"] == "blocked":
-        print("\n❌ Tender blocked before matching")
+        print("\n❌ Tender blocked")
         return
 
     # -----------------------
-    # STEP 2: MATCHER
+    # MATCHING
     # -----------------------
-    embedder = ManufacturerEmbedder()
-    matcher = TenderMatcher(embedder)
-
+    matcher = build_matcher()
     matches = matcher.match(tender)
 
     print("\n[MATCHING RESULT]")
