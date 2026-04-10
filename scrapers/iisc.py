@@ -31,11 +31,14 @@ def extract_date(text):
         return None
 
 
-def is_fresh_24h(dt):
+def is_fresh_recent(dt, days=3):
     if not dt:
         return False
 
-    return datetime.now() - dt <= timedelta(hours=24)
+    today = datetime.now().date()
+    tender_day = dt.date()
+
+    return (today - tender_day).days <= days
 
 
 def looks_like_tender(line):
@@ -75,7 +78,7 @@ def scrape_iisc():
         published_date = extract_date(line)
 
         # STRICT 24H FILTER
-        if not is_fresh_24h(published_date):
+        if not is_fresh_recent(published_date, days=3):
             continue
 
         tender = {
