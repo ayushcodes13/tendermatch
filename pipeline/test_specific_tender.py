@@ -1,4 +1,7 @@
-from matching.matcher import classify_tender
+from matching.filter import classify_tender
+from matching.matcher import TenderMatcher
+from matching.embedder import ManufacturerEmbedder
+
 
 def test_specific_tender():
     tender = {
@@ -8,11 +11,40 @@ def test_specific_tender():
         "raw_text": "Global Tender for Maskless laser lithography system"
     }
 
-    result = classify_tender(tender)
-
-    print("\n--- TEST RESULT ---")
+    print("\n" + "=" * 60)
+    print("TESTING SPECIFIC TENDER")
+    print("=" * 60)
     print("Title:", tender["title"])
-    print("Result:", result)
+    print("Organization:", tender["organization"])
+
+    # -----------------------
+    # STEP 1: CLASSIFIER
+    # -----------------------
+    classification = classify_tender(tender)
+
+    print("\n[CLASSIFICATION RESULT]")
+    print(classification)
+
+    # Stop early if blocked
+    if classification["category"] == "blocked":
+        print("\n❌ Tender blocked before matching")
+        return
+
+    # -----------------------
+    # STEP 2: MATCHER
+    # -----------------------
+    embedder = ManufacturerEmbedder()
+    matcher = TenderMatcher(embedder)
+
+    matches = matcher.match(tender)
+
+    print("\n[MATCHING RESULT]")
+    if not matches:
+        print("❌ No manufacturer matches found")
+    else:
+        for i, match in enumerate(matches, 1):
+            print(f"{i}. {match}")
+
 
 if __name__ == "__main__":
     test_specific_tender()
