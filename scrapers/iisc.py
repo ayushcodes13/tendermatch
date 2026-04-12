@@ -1,11 +1,11 @@
 """
 IISc Bangalore tender scraper
-Static webpage + strict 24 hour freshness
+HTML structure based scraper
 """
 
 import requests
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 from bs4 import BeautifulSoup
 
 URL = "https://iisc.ac.in/all-tenders/"
@@ -16,10 +16,6 @@ HEADERS = {
 
 
 def extract_date(text):
-    """
-    Extract first tender publish date from line
-    Example: (04/04/2026)
-    """
     match = re.search(r"\((\d{2}/\d{2}/\d{4})\)", text)
 
     if not match:
@@ -27,18 +23,11 @@ def extract_date(text):
 
     try:
         return datetime.strptime(match.group(1), "%d/%m/%Y")
-    except ValueError:
+    except:
         return None
 
 
-def is_fresh(dt, days=7):
-    if not dt:
-        return False
-
-    return datetime.now() - dt <= timedelta(days=days)
-
-
-def looks_like_tender(line):
+def looks_like_tender(text):
     keywords = [
         "tender",
         "rfq",
@@ -48,9 +37,9 @@ def looks_like_tender(line):
         "bid"
     ]
 
-    line_lower = line.lower()
+    text_lower = text.lower()
 
-    return any(k in line_lower for k in keywords)
+    return any(k in text_lower for k in keywords)
 
 
 def scrape_iisc():
@@ -59,40 +48,37 @@ def scrape_iisc():
 
     soup = BeautifulSoup(response.text, "html.parser")
 
-    lines = soup.get_text("\n", strip=True).split("\n")
-
     tenders = []
 
-    for line in lines:
-        line = line.strip()
+    # CRITICAL FIX: scrape list items directly
+    list_items = soup.find_all("li")
 
-        if not line:
+    for item in list_items:
+        text = item.get_text(" ", strip=True)
+
+        if not text:
             continue
 
-        if not looks_like_tender(line):
+        if not looks_like_tender(text):
             continue
 
-        published_date = extract_date(line)
-
-        # STRICT 24H FILTER
-        if not is_fresh(published_date, days=7):
-            continue
+        published_date = extract_date(text)
 
         tender = {
-            "tender_id": f"iisc_{abs(hash(line))}",
-            "title": line,
+            "tender_id": f"iisc_{abs(hash(text))}",
+            "title": text,
             "organization": "Indian Institute of Science Bangalore",
-            "published_date": published_date.isoformat(),
+            "published_date": published_date.isoformat() if published_date else None,
             "closing_date": None,
             "source_url": URL,
             "source_portal": "iisc",
-            "raw_text": line,
+            "raw_text": text,
             "scraped_at": datetime.now().isoformat()
         }
 
         tenders.append(tender)
 
-    print(f"IISc fresh tenders (24h): {len(tenders)}")
+    print(f"IISc total tenders scraped: {len(tenders)}")
 
     return tenders
 
@@ -100,6 +86,7 @@ def scrape_iisc():
 if __name__ == "__main__":
     tenders = scrape_iisc()
 
-    print(len(tenders))
-    for t in tenders[:5]:
+    print(f"\nTotal: {len(tenders)}")
+
+    for t in tenders[:20]:
         print(t["title"])
