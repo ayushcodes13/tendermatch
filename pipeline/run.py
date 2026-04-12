@@ -111,6 +111,9 @@ def run_pipeline():
         if result["category"] == "high_signal":
             matches = matcher.match(new_t)
 
+            if not matches:
+                continue
+
             print("\n=== MATCHES ===")
             print(f"TENDER: {new_t['title']}")
             print(f"ORG: {new_t['organization']}")
