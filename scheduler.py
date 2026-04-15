@@ -1,3 +1,19 @@
+"""
+Background execution manager for the tender intelligence pipeline.
+
+Pipeline role:
+Ensures the pipeline runs at regular intervals to capture new tenders in near 
+real-time. Acts as the entry point for production deployments.
+
+Key responsibilities:
+- Managing the infinite execution loop.
+- Handling top-level exceptions to prevent the process from crashing.
+- Coordinating sleep intervals between consecutive pipeline runs.
+
+Notes:
+- Default interval is 30 minutes, configurable via global constants.
+- Error logs include full tracebacks for debugging pipeline failures.
+"""
 import time
 import traceback
 
@@ -8,6 +24,13 @@ INTERVAL = 30 * 60  # 30 minutes
 
 
 def start_scheduler():
+    """
+    Starts the infinite loop for periodic pipeline execution.
+
+    Side Effects:
+        - Logs pipeline status to stdout.
+        - Triggers the full run_pipeline() logic every INTERVAL seconds.
+    """
     print("🚀 Scheduler started...")
 
     while True:
