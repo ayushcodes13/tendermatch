@@ -1,3 +1,11 @@
+"""
+Batch test runner for all portal scrapers.
+
+Purpose:
+Executes each configured scraper (CPPP, IITM, etc.) and prints a summary 
+of the results to verify that portal structures haven't changed and 
+scraping is still functional.
+"""
 from scrapers.cppp import scrape_all as scrape_cppp
 from scrapers.iitm import scrape_iitm
 from scrapers.iit_palakkad import scrape_iit_palakkad
