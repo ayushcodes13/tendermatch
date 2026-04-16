@@ -1,3 +1,11 @@
+"""
+Database inspection utility.
+
+Purpose:
+CLI tool to inspect the contents of the SQLite database. Prints total counts, 
+sample rows, and classification distributions for monitoring and debugging 
+purposes.
+"""
 import sqlite3
 
 conn = sqlite3.connect("data/tenders.db")
