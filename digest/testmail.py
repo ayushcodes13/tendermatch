@@ -1,3 +1,10 @@
+"""
+SMTP connectivity test script.
+
+Purpose:
+Verifies that the system can authenticate with the configured mail server 
+and successfully transmit a test message.
+"""
 from digest.sender import send_email
 
 subject = "Test Email - Tendermatch"
