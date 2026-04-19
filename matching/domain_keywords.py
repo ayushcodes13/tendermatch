@@ -1,3 +1,20 @@
+"""
+Registry of niche keywords associated with specific manufacturers.
+
+Pipeline role:
+Provides the 'keyword boost' layer for the matching engine. While semantic 
+matching captures general themes, this file captures precise technical terms 
+(e.g., specific model numbers, proprietary technologies) that guarantee 
+a match with nearly 100% precision.
+
+Key responsibilities:
+- Mapping manufacturer names to lists of high-intent technical keywords.
+- Defining global keyword pools used for classifying tender relevance.
+
+Notes:
+- This is a manually curated list and is the primary source of 'truth' for 
+  the hybrid matching strategy.
+"""
 company_keywords = {
     "Korvus Technology": [
         "Physical Vapour Deposition",
