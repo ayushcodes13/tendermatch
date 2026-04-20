@@ -1,20 +1,28 @@
-"""1. If BLOCKLIST → blocked
+"""
+Multi-stage heuristic and semantic classifier for tender relevance.
 
-2. Else if STRONG_KEYWORD or DOMAIN_MAP → high_signal
+Pipeline role:
+Acts as a high-pass filter to eliminate noise (construction, civil works, 
+services) and identify high-value opportunities for research equipment 
+manufacturers.
 
-3. Else compute SEMANTIC_SCORE:
+Classification Strategy:
+1. Organization Blocklist: Immediate rejection of known irrelevant entities.
+2. Keyword Blocklist: Removal of tenders containing 'hard block' terms (e.g., 'civil', 'road').
+3. Strong Keywords: Direct promotion to 'high_signal' based on niche technology terms.
+4. Company Keyword Recall: Identification of tenders mentioning specific manufacturer brands.
+5. Semantic Layer: Cosine similarity comparison against domain-specific research queries.
+6. Weak Signals: Categorization as 'low_signal' for general lab equipment.
+7. Negative Context: Final safety check for service/labor themes.
 
-    if score > 0.70:
-        high_signal
+Inputs:
+- Normalized tender dictionary.
 
-    elif 0.45 < score < 0.70:
-        explore
+Outputs:
+- Classification dictionary containing category, reasoning, and signal flags.
 
-    elif weak keywords exist:
-        low_signal
-
-    else:
-        blocked
+Notes:
+- Designed to prioritize precision over recall for 'high_signal' to maintain digest quality.
 """
 
 import re
@@ -350,6 +358,15 @@ for keywords in company_keywords.values():
 # CLEAN TEXT
 # -----------------------
 def clean_text(text):
+    """
+    Normalizes text for keyword matching.
+
+    Args:
+        text (str): Raw input string.
+
+    Returns:
+        str: Lowercase alphanumeric string with single spacing.
+    """
     text = text.lower()
     text = re.sub(r'[^a-z0-9\s]', ' ', text)
     text = re.sub(r'\s+', ' ', text)
@@ -364,6 +381,13 @@ domain_embeddings = None
 
 
 def init_semantic():
+    """
+    Lazy-loads and caches domain embeddings for semantic scoring.
+
+    Notes:
+        - Uses the ManufacturerEmbedder to convert DOMAIN_QUERIES into vectors.
+        - Only executed once per process to conserve memory and compute.
+    """
     global domain_embeddings
 
     if domain_embeddings is None:
@@ -376,6 +400,15 @@ def init_semantic():
 # SEMANTIC SCORE
 # -----------------------
 def get_semantic_score(text):
+    """
+    Calculates the maximum semantic similarity to known domain queries.
+
+    Args:
+        text (str): Cleaned tender text.
+
+    Returns:
+        float: Highest cosine similarity score found across all domain queries.
+    """
     query_vec = embedder.embed_text(text)
     scores = np.dot(domain_embeddings, query_vec)
     return float(np.max(scores))
@@ -385,6 +418,19 @@ def get_semantic_score(text):
 # MAIN CLASSIFIER
 # -----------------------
 def classify_tender(tender):
+    """
+    Executes the full multi-stage classification pipeline for a single tender.
+
+    Args:
+        tender (dict): Normalized tender data.
+
+    Returns:
+        dict: Classification results including:
+            - is_blocked (bool): True if categorized as 'blocked'.
+            - has_signal (bool): True if categorized as 'high_signal'.
+            - category (str): One of [blocked, low_signal, explore, high_signal].
+            - reason (str): Specific logic branch that triggered the result.
+    """
 
     init_semantic()
 

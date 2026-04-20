@@ -1,3 +1,10 @@
+"""
+Debug script for the manufacturer embedding space.
+
+Purpose:
+Verifies that the ManufacturerEmbedder correctly loads and vectorizes manufacturer 
+profiles. Inspects the dimensions and content of generated embeddings.
+"""
 import sys
 import os
 import json
