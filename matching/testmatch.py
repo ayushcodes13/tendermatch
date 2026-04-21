@@ -1,3 +1,10 @@
+"""
+Integration test for the hybrid manufacturer matcher.
+
+Purpose:
+Verifies that the TenderMatcher correctly identifies relevant manufacturers 
+using both semantic embeddings and keyword boosts for a mock tender.
+"""
 import json
 from matching.embedder import ManufacturerEmbedder
 from matching.matcher import TenderMatcher
