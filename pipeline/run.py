@@ -1,8 +1,28 @@
 """
-run.py
-(orchestrator)
- /      |       |       \    \ 
-cppp   iitm   iitpkd   iitgoa  iisc
+Central orchestrator for the tender intelligence pipeline.
+
+Pipeline role:
+Coordinates the end-to-end flow: scraping from multiple portals, deduplication 
+via database hashing, classification of tender relevance, semantic matching 
+against manufacturer profiles, and generation of digest emails.
+
+Key responsibilities:
+- Aggregating data from across CPPP and specific institution scrapers.
+- Managing tender lifecycle (New -> Classified -> Matched -> Emailed).
+- Maintaining pipeline stats and triggering failure alerts.
+
+Inputs:
+- Portal URLs and API endpoints (via scrapers).
+- Persistence state (via data/tenders.db).
+- Manufacturer profiles (via data/manufacturers.json).
+
+Outputs:
+- Classified and matched tenders in the database.
+- Multi-section HTML/Text digest emails for stakeholders.
+
+Notes:
+- Uses a title+organization normalization strategy to handle cross-portal duplicates.
+- Semantic matching is only triggered for 'high_signal' tenders to optimize resource usage.
 """
 
 from scrapers.cppp import scrape_all as scrape_cppp, PORTAL_LINKS
@@ -30,6 +50,16 @@ from digest.sender import send_email
 
 
 def collect_all_tenders():
+    """
+    Aggregates tender data from all configured scraping sources.
+
+    Returns:
+        list: A consolidated list of raw tender dictionaries from various portals.
+
+    Notes:
+        - Sources include CPPP (Central, State, GeM) and specific Tier-1 institutions.
+        - No deduplication is performed at this stage.
+    """
     tenders = []
 
     # CPPP ecosystem
@@ -45,6 +75,21 @@ def collect_all_tenders():
 
 
 def run_pipeline():
+    """
+    Executes the main pipeline logic for tender processing and matching.
+
+    Side Effects:
+        - Initializes/updates SQLite database.
+        - Triggers web scraping requests.
+        - Sends digest emails if relevant tenders are found.
+        - Updates persistence flags for emailed/processed status.
+
+    Notes:
+        - Implements a multi-stage duplicate check: (1) DB check via content hash, 
+          (2) Runtime check via normalized title set.
+        - Classification results determine whether a tender enters the 
+          computational intensive matching phase.
+    """
     conn = get_connection()
     init_db(conn)
 
