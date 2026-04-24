@@ -5,6 +5,13 @@ from data.db import (
     update_flags
 )
 
+"""
+Functional integration test for the full tender pipeline.
+
+Purpose:
+Simulates a complete execution of the pipeline (Synthetic Data -> Classify -> Match -> Email) 
+to verify component interoperability and end-to-end data flow.
+"""
 from matching.filter import classify_tender
 from matching.embedder import build_matcher
 

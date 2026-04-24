@@ -1,3 +1,10 @@
+"""
+Synthetic data generator for pipeline stress testing.
+
+Purpose:
+Creates a large volume of mock tender dictionaries (title, org, categories) 
+to test pipeline classification performance and scalability.
+"""
 import random
 from datetime import datetime
 
