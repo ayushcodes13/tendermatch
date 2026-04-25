@@ -1,14 +1,26 @@
 """
-scrape_all
-    → scrape central portal  (scrape_source)
-        → open page 1         (scrape_page)
-            → read 10 rows    (parse_tenders)
-                → read 1 row  (parse_cppp_row)
-        → open page 2
-        → old tender found, stop
-    → scrape state portal
-    → scrape gem portal
-    → combine everything → 1 big list
+Scraper for the Central Public Procurement Portal (CPPP) ecosystem.
+
+Pipeline role:
+The primary data source for the pipeline. Scrapes the latest active tenders 
+from Central, State, and GeM portals using a multipage sliding window approach.
+
+Key responsibilities:
+- Scraping chronologically sorted tender tables across multiple pages.
+- Applying 'freshness' filters to stop scraping once old tenders are reached.
+- Parsing complex row structures (ID vs Title extraction) for different source types.
+- Implementing retry logic and rate limiting (jitter) to ensure reliability.
+
+Inputs:
+- Portal index URLs for Central, State, and GeM.
+
+Outputs:
+- Normalized tender dictionaries with portal-specific metadata.
+
+Notes:
+- The GeM portal has a significantly different row structure compared 
+  to Central/State, requiring a dedicated parser.
+- Uses a 24-hour cutoff by default to maintain pipeline efficiency.
 """
 
 import sys
@@ -39,6 +51,15 @@ CUTOFF_HOURS = 24
 
 
 def parse_date(date_str):
+    """
+    Normalizes CPPP date strings into datetime objects.
+
+    Args:
+        date_str (str): Date string in format "%d-%b-%Y %I:%M %p".
+
+    Returns:
+        datetime: Parsed object, or None if the format is invalid.
+    """
     try:
         return datetime.strptime(date_str, "%d-%b-%Y %I:%M %p")
     except:
@@ -46,6 +67,16 @@ def parse_date(date_str):
 
 
 def is_new_tender(tender, cutoff_hours=24):
+    """
+    Filter to determine if a tender was published within the target window.
+
+    Args:
+        tender (dict): Tender metadata.
+        cutoff_hours (int): Sliding window duration in hours.
+
+    Returns:
+        bool: True if the tender is within the cutoff period.
+    """
     published = parse_date(tender.get("published_date", ""))
     if not published:
         return True
@@ -59,6 +90,17 @@ HEADERS = {
 
 
 def scrape_page(url, page, retries=3):
+    """
+    Fetches and parses a specific page of results from the CPPP portal.
+
+    Args:
+        url (str): Base portal URL.
+        page (int): Page number to retrieve.
+        retries (int): Number of connection attempt retries.
+
+    Returns:
+        BeautifulSoup: Parsed HTML content of the page.
+    """
     full_url = f"{url}?page={page}"
 
     for attempt in range(retries):
@@ -80,6 +122,19 @@ def scrape_page(url, page, retries=3):
 
 
 def parse_cppp_row(cells, link):
+    """
+    Parses a single row from the Central/State CPPP tender table.
+
+    Args:
+        cells (list): List of BeautifulSoup <td> elements.
+        link (str): Resolved absolute URL for the tender.
+
+    Returns:
+        dict: Normalized tender data.
+
+    Notes:
+        - Extracts Tender ID using regex to separate it from the raw title string.
+    """
     raw = cells[4].strip() if len(cells) > 4 else ""
     match = re.search(r'(GEM/\d{4}|[\w]+/\d{4}[_/])', raw)
 
@@ -108,6 +163,19 @@ def parse_cppp_row(cells, link):
 
 
 def parse_gem_row(cells, link):
+    """
+    Parses a single row from the GeM-specific tender table.
+
+    Args:
+        cells (list): List of BeautifulSoup <td> elements.
+        link (str): Resolved absolute URL for the tender.
+
+    Returns:
+        dict: Normalized tender data.
+
+    Notes:
+        - GeM rows use a different index structure (e.g., ID is in index 3).
+    """
     tender_id = cells[3].strip() if len(cells) > 3 else None
     product_category = cells[4].strip() if len(cells) > 4 else None
     organization = cells[5].strip() if len(cells) > 5 else None
@@ -132,6 +200,16 @@ def parse_gem_row(cells, link):
 
 
 def parse_tenders(soup, source):
+    """
+    Extracts all tenders from a page's HTML structure.
+
+    Args:
+        soup (BeautifulSoup): Page content.
+        source (str): Source identifier (central, state, gem).
+
+    Returns:
+        list: Collection of parsed tender dictionaries.
+    """
     tenders = []
     table = soup.find("table")
     if not table:
@@ -161,6 +239,17 @@ def parse_tenders(soup, source):
 
 
 def scrape_source(source_key, max_pages=50, cutoff_hours=24):
+    """
+    Executes a paginated scrape for a single CPPP portal.
+
+    Args:
+        source_key (str): Key matching BASE_URLS (central, state, gem).
+        max_pages (int): Safety limit for pagination.
+        cutoff_hours (int): Freshness window for stopping the scrape.
+
+    Returns:
+        list: All new tenders found in the portal.
+    """
     url = BASE_URLS[source_key]
     all_tenders = []
 
@@ -198,6 +287,12 @@ def scrape_source(source_key, max_pages=50, cutoff_hours=24):
 
 
 def scrape_all():
+    """
+    Coordinating function to scrape the entire CPPP ecosystem.
+
+    Returns:
+        list: Consolidated list of all new tenders from all portal types.
+    """
     all_tenders = []
 
     for source in BASE_URLS.keys():
