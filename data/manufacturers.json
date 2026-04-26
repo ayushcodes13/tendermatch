@@ -961,5 +961,62 @@
             "vacuum chamber"
         ],
         "website": "https://adnano-tek.com/"
+    },
+    {
+        "id": "mfr_onnano_001",
+        "name": "ON NANO",
+        "aliases": [
+            "ON Nano GmbH",
+            "ON-NANO"
+        ],
+        "country": "Germany",
+        "active": true,
+        "product_categories": [
+            "spin coating systems",
+            "spray coating equipment",
+            "automated coater and developer tracks",
+            "thermal processing and hotplates",
+            "HMDS systems",
+            "cleaning and etching systems",
+            "semiconductor processing modules"
+        ],
+        "products": [
+            "World's Largest Spin Coater (C3+ Technology)",
+            "ON Nano Matrix Coater",
+            "ON Nano Matrix Developer",
+            "ON Nano Matrix Hot Module",
+            "nanoCOAT 1800",
+            "nanoLAB 750",
+            "300mm Coater Developer for High Throughput",
+            "Single Substrate Cleaning and Etching System",
+            "Multi-chamber Cleaning and Etching System",
+            "Large Size Hotplate",
+            "Hydraulic Dispense Pump"
+        ],
+        "industries_served": [
+            "semiconductor manufacturing",
+            "AI and microchip production",
+            "advanced packaging",
+            "GPS (Glass Panel Substrates) and glass core substrates",
+            "organic panels",
+            "OLED and micro OLED manufacturing",
+            "sensor production",
+            "defense and security manufacturing",
+            "scientific R&D"
+        ],
+        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm. \n Featured technology includes the patented C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput. \n Offers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production 'Matrix' systems. \n Key applications include GPTG projects, high-density packaging, and glass core substrate processing. \n Systems are designed with a compact footprint, SECS/GEM compatibility, and gas phase cleaning processes that reduce chemical usage by over 90%.",
+        "keywords": [
+            "C3+ technology",
+            "spin coater",
+            "glass panel substrates",
+            "GPS",
+            "wafer processing",
+            "matrix coater",
+            "large area coating",
+            "semiconductor equipment",
+            "gas phase etching",
+            "thin film processing"
+        ],
+        "website": "https://on-nano.com/"
     }
 ]
