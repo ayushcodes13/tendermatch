@@ -1,6 +1,19 @@
 """
-IISc Bangalore tender scraper
-HTML structure based scraper
+Tender scraper for Indian Institute of Science (IISc) Bangalore.
+
+Pipeline role:
+Parses the centralized tender page of IISc. Used to capture high-value 
+research instrumentation requirements from one of India's premier 
+research institutions.
+
+Key responsibilities:
+- Fetching and parsing the specific HTML structure of the IISc tender list.
+- Extracting publication dates from raw text strings via regex.
+- Filtering for 'tender-like' items from general list elements.
+
+Notes:
+- The portal does not use a structured table, requiring list-item parsing 
+  and keyword-based filtering.
 """
 
 import requests
@@ -16,6 +29,15 @@ HEADERS = {
 
 
 def extract_date(text):
+    """
+    Parses a date string from raw IISc tender text.
+
+    Args:
+        text (str): String containing a date in "(DD/MM/YYYY)" format.
+
+    Returns:
+        datetime: Parsed object, or None if no match found.
+    """
     match = re.search(r"\((\d{2}/\d{2}/\d{4})\)", text)
 
     if not match:
@@ -28,6 +50,15 @@ def extract_date(text):
 
 
 def looks_like_tender(text):
+    """
+    Heuristically determines if a text fragment represents a tender.
+
+    Args:
+        text (str): Input text fragment.
+
+    Returns:
+        bool: True if keywords like 'tender', 'rfq', or 'bid' are present.
+    """
     keywords = [
         "tender",
         "rfq",
@@ -43,6 +74,12 @@ def looks_like_tender(text):
 
 
 def scrape_iisc():
+    """
+    Main entry point for scraping IISc Bangalore tenders.
+
+    Returns:
+        list: Normalized tender dictionaries.
+    """
     response = requests.get(URL, headers=HEADERS, timeout=20)
     response.raise_for_status()
 
