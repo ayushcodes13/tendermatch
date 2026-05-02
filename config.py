@@ -1,3 +1,19 @@
+"""
+Global configuration for the tender intelligence system.
+
+Pipeline role:
+Centralizes environment-dependent variables and static thresholds. 
+Used across scrapers (portals), matching logic (thresholds), and the 
+scheduler (timing).
+
+Key responsibilities:
+- Managing credential retrieval from environment variables.
+- Defining the business logic for 'relevance' via MATCH_THRESHOLD.
+- Configuring the execution window for the background scheduler.
+
+Notes:
+- Relies on a .env file for sensitive information like SMTP credentials.
+"""
 import os
 from dotenv import load_dotenv
 

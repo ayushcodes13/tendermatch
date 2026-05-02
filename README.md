@@ -10,7 +10,7 @@
 
 ### 📖 The Tender Hunter's Dream
 
-*Imagine this: You're a specialized equipment manufacturer in the UK, and every 30 minutes, your phone buzzes with a perfectly scored lead. "Tender #2024/XYZ-123: Fuel cell testing system for national renewable energy lab - **97.2%** match with Thesix Solutions. Closing in 6 days."
+Imagine this: You're a specialized equipment manufacturer in the UK, and every 30 minutes, your phone buzzes with a perfectly scored lead. "Tender #2024/XYZ-123: Fuel cell testing system for national renewable energy lab - **97.2%** match with Thesix Solutions. Closing in 6 days."
 
 *No more drowning in irrelevant construction tenders. No more missed opportunities buried under "road repair" and "catering" contracts. Just pure, distilled opportunity - the exact projects your equipment was built for, delivered with surgical precision.*
 
