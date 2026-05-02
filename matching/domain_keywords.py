@@ -1,3 +1,20 @@
+"""
+Registry of niche keywords associated with specific manufacturers.
+
+Pipeline role:
+Provides the 'keyword boost' layer for the matching engine. While semantic 
+matching captures general themes, this file captures precise technical terms 
+(e.g., specific model numbers, proprietary technologies) that guarantee 
+a match with nearly 100% precision.
+
+Key responsibilities:
+- Mapping manufacturer names to lists of high-intent technical keywords.
+- Defining global keyword pools used for classifying tender relevance.
+
+Notes:
+- This is a manually curated list and is the primary source of 'truth' for 
+  the hybrid matching strategy.
+"""
 company_keywords = {
     "Korvus Technology": [
         "Physical Vapour Deposition",
@@ -1041,6 +1058,203 @@ company_keywords = {
     "Preventive maintenance diagnostic",
     "Melt analysis"
 ], 
+    "adnanotech": [
+        # Core Technologies
+        "Ultrahigh Vacuum",
+        "UHV",
+        "Molecular Beam Epitaxy",
+        "MBE",
+        "Laser MBE",
+        "E-Beam Evaporation",
+        "Electron Beam Evaporation",
+        "Magnetron Sputtering",
+        "DC Magnetron Sputtering",
+        "RF Magnetron Sputtering",
+        "Pulsed Laser Deposition",
+        "PLD",
+        "Thermal Evaporation",
+        "Ion Beam Sputtering Deposition",
+        "IBSD",
+        "IBD",
+        "Reactive Ion Etching",
+        "RIE",
+        "Inductively Coupled Plasma RIE",
+        "ICP-RIE",
+        "Electron Cyclotron Resonance RIE",
+        "ECR-RIE",
+        "Ion Beam Etching",
+        "IBE",
+        "Dry Etching",
+        "Josephson Junction fabrication",
+        "Thin Film Deposition",
+        "Physical Vapor Deposition",
+        "PVD",
 
+        # Product Names / Series
+        "EBS series",
+        "JEB series",
+        "JEB-2",
+        "JEB-3",
+        "JEB-4",
+        "JEB Cluster System",
+        "Linear Transfer System",
+        "Automatic Transfer Arm",
+        "UHV Transfer Robot",
+        "Laser Heater Manipulator",
+        "Multi-source deposition tool",
 
+        # Tender Language Variants
+        "Thin film deposition unit",
+        "Vacuum coating machine",
+        "PVD coating system",
+        "UHV deposition system",
+        "Plasma etching system",
+        "Ion milling system",
+        "Multi-chamber cluster tool",
+        "Load-lock chamber system",
+        "Substrate heating system",
+        "Laser substrate heater",
+        "High-temperature manipulator",
+        "Automatic wafer transfer system",
+        "Oxygen-compatible heater",
+        "Multi-target PLD system",
+        "Josephson Junction evaporator",
+
+        # Industry / Use-case Terms
+        "Quantum computing deposition",
+        "Semiconductor fabrication equipment",
+        "High-k dielectric deposition",
+        "III-V material growth",
+        "II-VI material growth",
+        "Metal oxide deposition",
+        "Elemental semiconductor deposition",
+        "Organic thin film deposition",
+        "Josephson Junction devices",
+        "8-inch substrate processing",
+        "12-inch wafer handling",
+        "Research grade UHV system",
+
+        # Related Synonyms / Hidden Recall Terms
+        "e-beam coater",
+        "sputter coater",
+        "electron beam gun",
+        "ion source",
+        "plasma coil",
+        "RF sample bias",
+        "microwave plasma",
+        "electro magnet plasma",
+        "resistance heater",
+        "ozone-rich deposition",
+        "vacuum robot",
+        "sample manipulator",
+        "HfO2",
+        "ZrO2",
+        "Al2O3",
+        "Sc2O3",
+        "epitaxial growth system"
+    ],
+
+    "agnitron": [
+        # Core Technologies & Process Names
+        "MOCVD",
+        "Metal Organic Chemical Vapor Deposition",
+        "MOVPE",
+        "Metalorganic Vapor Phase Epitaxy",
+        "OMCVD",
+        "Organometallic Chemical Vapor Deposition",
+        "Epitaxial Growth",
+        "Epitaxy",
+        "CVD",
+        "Chemical Vapor Deposition",
+        "SCADA",
+        "In-situ Monitoring",
+        "Multiwavelength Pyrometry",
+        "Emissivity Corrected Pyrometry",
+        "Thin Film Deposition",
+        "Ultra-wide bandgap",
+        "UWBG",
+        "Wide bandgap",
+        "WBG",
+
+        # Product Names / Series / Internal Naming
+        "Agilis",
+        "Agilis Mini",
+        "Agilis 100",
+        "Agilis 500",
+        "Agilis 700",
+        "Agilis A Series",
+        "GOX Series",
+        "GOX 300",
+        "Imperium-MOCVD",
+        "AgniTemp",
+
+        # Tender Language Variants
+        "MOCVD Reactor",
+        "Epitaxial Growth System",
+        "Semiconductor Deposition Tool",
+        "Thin Film Deposition Unit",
+        "MOCVD Control Software",
+        "MOCVD Automation System",
+        "Legacy MOCVD Upgrade",
+        "Wafer Surface Temperature Measurement System",
+        "Non-contact Temperature Sensor",
+        "III-V Compound Semiconductor System",
+        "Gallium Oxide Growth System",
+        "2D Material Deposition System",
+        "MOCVD Retrofitting Kit",
+        "Epitaxy Process Controller",
+
+        # Industry / Use-case / Materials
+        "Semiconductor R&D",
+        "Power Electronics",
+        "RF Device Fabrication",
+        "Optoelectronics",
+        "High Electron Mobility Transistors",
+        "HEMT",
+        "Transition Metal Dichalcogenides",
+        "TMD",
+        "ScAlN",
+        "Scandium Aluminum Nitride",
+        "Ga2O3",
+        "Gallium Oxide",
+        "beta-Ga2O3",
+        "AlGaO",
+        "GaN",
+        "Gallium Nitride",
+        "AlGaN",
+        "AlN",
+        "InGaN",
+        "MgZnO",
+        "ZnO",
+        "Zinc Oxide",
+        "III-IV compounds",
+        "As/P alloys",
+        "AlGaAs",
+        "InGaAlP",
+        "MoS2",
+        "MoSe2",
+        "WS2",
+        "WSe",
+        "2D BN",
+        "Boron Nitride",
+        "Phosphorene",
+        "SiC",
+        "Silicon Carbide",
+
+        # Related Synonyms / Hidden Recall Terms
+        "Susceptor Rotation Control",
+        "Wafer Heater Controller",
+        "Gas Manifold System",
+        "Mass Flow Controller Interface",
+        "Vapor Phase Epitaxy System",
+        "Crystal Growth Equipment",
+        "Emcore Upgrade",
+        "Veeco MOCVD Support",
+        "Thomas Swan System Service",
+        "Aixtron Control Replacement",
+        "Structured Material Inc",
+        "SMI MOCVD",
+        "Process Data Logging Software",
+        "Thermal Monitoring UXnit"
+    ]
 }

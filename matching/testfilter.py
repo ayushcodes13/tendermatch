@@ -1,3 +1,10 @@
+"""
+Unit tests for the tender classification logic.
+
+Purpose:
+Verifies that the classification engine correctly identifies high_signal, 
+low_signal, and blocked tenders based on title strings.
+"""
 from matching.filter import classify_tender
 
 # =========================
