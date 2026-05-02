@@ -830,7 +830,7 @@
         "website": "https://www.teercoatings.co.uk"
     },
     {
-        "id": "mfr_012",
+        "id": "mfr_019",
         "name": "SALD B.V.",
         "aliases": [
             "SALD",
@@ -878,5 +878,145 @@
             "barrier layers"
         ],
         "website": "https://www.sald.nl"
+    },
+    {
+        "id": "mfr_020",
+        "name": "Agnitron Technology",
+        "country": "USA",
+        "active": true,
+        "product_categories": [
+            "MOCVD systems",
+            "semiconductor deposition equipment",
+            "process control software",
+            "in-situ monitoring instruments"
+        ],
+        "products": [
+            "Agilis Series MOCVD reactors",
+            "GOX Series Gallium Oxide systems",
+            "Imperium-MOCVD control software",
+            "AgniTemp multiwavelength pyrometer",
+            "Legacy MOCVD system upgrades"
+        ],
+        "industries_served": [
+            "semiconductor R&D",
+            "power electronics",
+            "optoelectronics",
+            "academic and industrial research labs",
+            "material science"
+        ],
+        "embedding_text": "Agnitron Technology specializes in custom Metal Organic Chemical Vapor Deposition (MOCVD) systems and advanced process control solutions for the semiconductor industry. Their product line includes the Agilis and GOX series reactors, optimized for the growth of ultra-wide bandgap materials such as Gallium Oxide (Ga2O3), III-Nitrides, and 2D materials. They offer the Imperium-MOCVD SCADA software for upgrading legacy systems from manufacturers like Veeco and Aixtron, along with AgniTemp pyrometry for high-speed in-situ thermal monitoring. These solutions are highly relevant for tenders involving epitaxial growth, wide bandgap semiconductor research, and laboratory-scale semiconductor fabrication.",
+        "keywords": [
+            "MOCVD",
+            "Gallium Oxide",
+            "epitaxial growth",
+            "semiconductor",
+            "SCADA",
+            "pyrometer",
+            "thin film deposition",
+            "wide bandgap"
+        ],
+        "website": "https://agnitron.com/"
+    },
+    {
+        "id": "mfr_021",
+        "name": "AdNaNoTek Corporation",
+        "country": "Taiwan",
+        "active": true,
+        "product_categories": [
+            "UHV deposition systems",
+            "plasma etching systems",
+            "thin film characterization",
+            "quantum computing fabrication tools"
+        ],
+        "products": [
+            "E-beam evaporator (EBS and JEB series)",
+            "Molecular Beam Epitaxy (MBE) systems",
+            "Magnetron sputtering system",
+            "Pulsed Laser Deposition (PLD) system",
+            "Ion Beam Sputtering Deposition (IBSD)",
+            "Reactive Ion Etching (RIE/ICP-RIE/ECR-RIE)",
+            "Ion Beam Etching (IBE)",
+            "Josephson Junction Cluster systems",
+            "UHV transfer robots and manipulators"
+        ],
+        "industries_served": [
+            "quantum computing",
+            "semiconductor research",
+            "materials science",
+            "nanotechnology",
+            "academic and industrial R&D"
+        ],
+        "embedding_text": "AdNaNoTek Corporation specializes in the design and manufacture of ultrahigh vacuum (UHV) deposition and plasma etching systems. Their core expertise includes Physical Vapor Deposition (PVD) technologies such as E-beam evaporation, Molecular Beam Epitaxy (MBE), and Magnetron Sputtering, alongside advanced dry etching solutions like ICP-RIE and Ion Beam Etching. They provide specialized cluster tools for Josephson Junction fabrication, essential for quantum computing devices. These systems are highly relevant for high-end research tenders involving thin-film growth, semiconductor fabrication, and UHV material processing.",
+        "keywords": [
+            "UHV",
+            "MBE",
+            "PVD",
+            "E-beam evaporation",
+            "Magnetron sputtering",
+            "PLD",
+            "RIE",
+            "Ion Beam Etching",
+            "Josephson Junction",
+            "thin film deposition",
+            "vacuum chamber"
+        ],
+        "website": "https://adnano-tek.com/"
+    },
+    {
+        "id": "mfr_onnano_001",
+        "name": "ON NANO",
+        "aliases": [
+            "ON Nano GmbH",
+            "ON-NANO"
+        ],
+        "country": "Germany",
+        "active": true,
+        "product_categories": [
+            "spin coating systems",
+            "spray coating equipment",
+            "automated coater and developer tracks",
+            "thermal processing and hotplates",
+            "HMDS systems",
+            "cleaning and etching systems",
+            "semiconductor processing modules"
+        ],
+        "products": [
+            "World's Largest Spin Coater (C3+ Technology)",
+            "ON Nano Matrix Coater",
+            "ON Nano Matrix Developer",
+            "ON Nano Matrix Hot Module",
+            "nanoCOAT 1800",
+            "nanoLAB 750",
+            "300mm Coater Developer for High Throughput",
+            "Single Substrate Cleaning and Etching System",
+            "Multi-chamber Cleaning and Etching System",
+            "Large Size Hotplate",
+            "Hydraulic Dispense Pump"
+        ],
+        "industries_served": [
+            "semiconductor manufacturing",
+            "AI and microchip production",
+            "advanced packaging",
+            "GPS (Glass Panel Substrates) and glass core substrates",
+            "organic panels",
+            "OLED and micro OLED manufacturing",
+            "sensor production",
+            "defense and security manufacturing",
+            "scientific R&D"
+        ],
+        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm. \n Featured technology includes the patented C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput. \n Offers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production 'Matrix' systems. \n Key applications include GPTG projects, high-density packaging, and glass core substrate processing. \n Systems are designed with a compact footprint, SECS/GEM compatibility, and gas phase cleaning processes that reduce chemical usage by over 90%.",
+        "keywords": [
+            "C3+ technology",
+            "spin coater",
+            "glass panel substrates",
+            "GPS",
+            "wafer processing",
+            "matrix coater",
+            "large area coating",
+            "semiconductor equipment",
+            "gas phase etching",
+            "thin film processing"
+        ],
+        "website": "https://on-nano.com/"
     }
 ]
