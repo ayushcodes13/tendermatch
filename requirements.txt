@@ -1,0 +1,9 @@
+playwright
+beautifulsoup4
+requests
+sentence-transformers
+faiss-cpu
+pandas
+openpyxl
+apscheduler
+python-dotenv
