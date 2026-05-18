@@ -2,8 +2,8 @@
 Central orchestrator for the tender intelligence pipeline.
 
 Pipeline role:
-Coordinates the end-to-end flow: scraping from multiple portals, deduplication 
-via database hashing, classification of tender relevance, semantic matching 
+Coordinates the end-to-end flow: scraping from multiple portals, deduplication
+via database hashing, classification of tender relevance, semantic matching
 against manufacturer profiles, and generation of digest emails.
 
 Key responsibilities:
@@ -31,6 +31,8 @@ from scrapers.iit_palakkad import scrape_iit_palakkad
 from scrapers.iit_goa import scrape_iit_goa
 from scrapers.iisc import scrape_iisc
 
+from pipeline.freshness import is_recent_tender
+
 from data.db import (
     get_connection,
     init_db,
@@ -39,7 +41,7 @@ from data.db import (
     insert_match,
     mark_as_emailed,
     is_already_emailed,
-    normalize_title
+    normalize_title,
 )
 
 from matching.filter import classify_tender
@@ -85,9 +87,10 @@ def run_pipeline():
         - Updates persistence flags for emailed/processed status.
 
     Notes:
-        - Implements a multi-stage duplicate check: (1) DB check via content hash, 
+        - Implements a multi-stage duplicate check:
+          (1) DB check via content hash,
           (2) Runtime check via normalized title set.
-        - Classification results determine whether a tender enters the 
+        - Classification results determine whether a tender enters the
           computational intensive matching phase.
     """
     conn = get_connection()
@@ -97,6 +100,8 @@ def run_pipeline():
 
     processed = []
     duplicates = 0
+    stale_skipped = 0
+    already_emailed = 0
 
     blocked = 0
     low_signal = 0
@@ -118,6 +123,24 @@ def run_pipeline():
             duplicates += 1
             continue
 
+        # -------------------------
+        # FRESHNESS GATE
+        # -------------------------
+        # This prevents old archive tenders from being emailed just because
+        # they appeared in the latest scrape.
+        if not is_recent_tender(new_t, max_age_hours=24):
+            stale_skipped += 1
+            print(
+                f"Skipping stale tender: {new_t.get('title')} | "
+                f"published_date={new_t.get('published_date')} | "
+                f"updated_date={new_t.get('updated_date')} | "
+                f"corrigendum_date={new_t.get('corrigendum_date')}"
+            )
+            continue
+
+        # -------------------------
+        # RUNTIME TITLE DEDUPE
+        # -------------------------
         title = new_t.get("title") or ""
         normalized_title = normalize_title(title)
 
@@ -129,16 +152,22 @@ def run_pipeline():
 
         content_hash = new_t["content_hash"]
 
-        # skip if already emailed
+        # -------------------------
+        # EMAIL DEDUPE
+        # -------------------------
         if is_already_emailed(conn, content_hash):
+            already_emailed += 1
             continue
 
-        # only count truly processable tenders
+        # only count truly processable fresh tenders
         processed.append(new_t)
 
+        # -------------------------
+        # CLASSIFY
+        # -------------------------
         result = classify_tender(new_t)
 
-        print(f"\n--- CLASSIFICATION ---")
+        print("\n--- CLASSIFICATION ---")
         print(f"TITLE: {new_t['title']}")
         print(f"CATEGORY: {result['category']}")
         print(f"REASON: {result['reason']}")
@@ -147,7 +176,7 @@ def run_pipeline():
         portal = (new_t.get("source_portal") or "").lower()
         new_t["portal_link"] = PORTAL_LINKS.get(
             portal,
-            new_t.get("source_url", "https://eprocure.gov.in")
+            new_t.get("source_url", "https://eprocure.gov.in"),
         )
 
         # -------------------------
@@ -186,7 +215,7 @@ def run_pipeline():
             conn,
             content_hash,
             result["is_blocked"],
-            result["has_signal"]
+            result["has_signal"],
         )
 
         # -------------------------
@@ -210,23 +239,31 @@ def run_pipeline():
     # SUMMARY
     # -------------------------
     print(f"\nTotal scraped: {len(tenders)}")
-    print(f"New tenders: {len(processed)}")
+    print(f"Fresh processed: {len(processed)}")
     print(f"Duplicates skipped: {duplicates}")
+    print(f"Stale skipped: {stale_skipped}")
+    print(f"Already emailed skipped: {already_emailed}")
 
     print("\nFILTER RESULTS:")
-    print({
-        "blocked": blocked,
-        "low_signal": low_signal,
-        "high_signal": high_signal,
-        "explore": explore_count
-    })
+    print(
+        {
+            "blocked": blocked,
+            "low_signal": low_signal,
+            "high_signal": high_signal,
+            "explore": explore_count,
+        }
+    )
 
     evaluation = {
-        "total": len(tenders),
+        "total_scraped": len(tenders),
+        "fresh_processed": len(processed),
+        "duplicates_skipped": duplicates,
+        "stale_skipped": stale_skipped,
+        "already_emailed_skipped": already_emailed,
         "high": high_signal,
         "explore": explore_count,
         "low": low_signal,
-        "blocked": blocked
+        "blocked": blocked,
     }
 
     print("\n📊 EVALUATION:")
@@ -238,16 +275,21 @@ def run_pipeline():
     if high_tenders or low_tenders or explore_tenders:
         stats = {
             "total": len(tenders),
+            "fresh": len(processed),
+            "stale_skipped": stale_skipped,
+            "duplicates_skipped": duplicates,
+            "already_emailed_skipped": already_emailed,
             "high": high_signal,
             "explore": explore_count,
-            "low": low_signal
+            "low": low_signal,
+            "blocked": blocked,
         }
 
         subject, body = format_email(
             high_tenders,
             explore_tenders,
             low_tenders,
-            stats
+            stats,
         )
 
         try:
@@ -270,7 +312,9 @@ def run_pipeline():
             print(f"\n❌ Email failed: {e}")
 
     else:
-        print("\n📭 No relevant tenders. Email skipped.")
+        print("\n📭 No relevant fresh tenders. Email skipped.")
+
+    conn.close()
 
 
 if __name__ == "__main__":
