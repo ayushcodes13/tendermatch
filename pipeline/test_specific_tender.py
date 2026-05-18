@@ -7,7 +7,7 @@ def test_specific_tender():
         "title": "Sputter Deposition Setup",
         "organization": "Indian Institute of Science",
         "published_date": "08/04/2026",
-        "raw_text": "Sputter Deposition Setup"
+        "raw_text": "Sputter Deposition Setupt"
     }
 
     print("\n" + "=" * 60)
