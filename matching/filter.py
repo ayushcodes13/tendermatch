@@ -25,10 +25,11 @@ Notes:
 - Designed to prioritize precision over recall for 'high_signal' to maintain digest quality.
 """
 
-import re
-import numpy as np
-from matching.embedder import ManufacturerEmbedder
-from matching.domain_keywords import company_keywords
+from matching.signals import detect_signals
+from matching.concepts import detect_concepts
+from matching.scoring import score_tender
+from matching.decision import decide_tender
+from matching.trace import build_trace
 
 # -----------------------
 # BLOCKLIST
