@@ -24,6 +24,11 @@ tests = [
         "title": "Spatial ALD coating system",
         "raw_text": "Spatial atomic layer deposition for battery coating",
     },
+    {
+    "title": "Water testing equipment for municipal laboratory",
+    "raw_text": "Supply of water testing instruments for municipal drinking water analysis",
+    "organization": "Municipal Corporation",
+    }
 ]
 
 for tender in tests:
