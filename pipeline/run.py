@@ -22,9 +22,10 @@ Outputs:
 
 Notes:
 - Uses a title+organization normalization strategy to handle cross-portal duplicates.
-- Semantic matching is only triggered for 'high_signal' tenders to optimize resource usage.
+- Semantic matching is integrated into the classification phase to ensure strong manufacturer relevance can rescue borderline tenders.
 """
 
+from config import RECEIVER_EMAIL
 from scrapers.cppp import scrape_all as scrape_cppp, PORTAL_LINKS
 from scrapers.iitm import scrape_iitm
 from scrapers.iit_palakkad import scrape_iit_palakkad
@@ -162,16 +163,12 @@ def run_pipeline():
         # only count truly processable fresh tenders
         processed.append(new_t)
 
-        # -------------------------
-        # CLASSIFY
-        # -------------------------
-        result = classify_tender(new_t)
+        manufacturer_candidates = matcher.match_topk(new_t, top_k=5)
 
-        print("\n--- CLASSIFICATION ---")
-        print(f"TITLE: {new_t['title']}")
-        print(f"CATEGORY: {result['category']}")
-        print(f"REASON: {result['reason']}")
-        print("----------------------")
+        result = classify_tender(
+            new_t,
+            manufacturer_candidates=manufacturer_candidates,
+        )
 
         portal = (new_t.get("source_portal") or "").lower()
         new_t["portal_link"] = PORTAL_LINKS.get(
@@ -179,38 +176,16 @@ def run_pipeline():
             new_t.get("source_url", "https://eprocure.gov.in"),
         )
 
-        # -------------------------
-        # MATCH + STORE + EMAIL COLLECT
-        # -------------------------
-        if result["category"] == "high_signal":
-            matches = matcher.match(new_t)
+        new_t["classification"] = result
 
-            if not matches:
-                continue
+        print("\n--- CLASSIFICATION ---")
+        print(f"TITLE: {new_t.get('title')}")
+        print(f"DECISION: {result.get('decision')}")
+        print(f"CATEGORY: {result.get('category')}")
+        print(f"SCORE: {result.get('score')}")
+        print(f"REASON: {result.get('reason')}")
+        print("----------------------")
 
-            print("\n=== MATCHES ===")
-            print(f"TENDER: {new_t['title']}")
-            print(f"ORG: {new_t['organization']}")
-
-            for m in matches:
-                print(f"- {m['manufacturer_name']} ({m['score']})")
-                insert_match(conn, content_hash, m)
-
-            print(f"LINK: {new_t['portal_link']}")
-            print("================\n")
-
-            new_t["matches"] = matches
-            high_tenders.append(new_t)
-
-        elif result["category"] == "low_signal":
-            low_tenders.append(new_t)
-
-        elif result["category"] == "explore":
-            explore_tenders.append(new_t)
-
-        # -------------------------
-        # UPDATE FLAGS
-        # -------------------------
         update_flags(
             conn,
             content_hash,
@@ -218,20 +193,47 @@ def run_pipeline():
             result["has_signal"],
         )
 
-        # -------------------------
-        # STATS
-        # -------------------------
-        if result["category"] == "blocked":
+        decision = result.get("decision")
+        category = result.get("category")
+
+        if category == "blocked":
             blocked += 1
+            continue
 
-        elif result["category"] == "low_signal":
+        if category == "low_signal":
             low_signal += 1
+            continue
 
-        elif result["category"] == "high_signal":
+        if category == "high_signal":
             high_signal += 1
 
-        elif result["category"] == "explore":
+        elif category == "explore":
             explore_count += 1
+
+        else:
+            continue
+
+        matches = [
+            m for m in manufacturer_candidates
+            if (
+                m.get("score", 0) >= 0.60
+                or m.get("keyword_hits")
+                or m.get("product_hits")
+                or m.get("category_hits")
+                or m.get("concept_hits")
+            )
+        ]
+
+        for m in matches:
+            insert_match(conn, content_hash, m)
+
+        new_t["matches"] = matches
+
+        if category == "high_signal":
+            high_tenders.append(new_t)
+
+        elif category == "explore":
+            explore_tenders.append(new_t)
 
     conn.commit()
 
@@ -244,17 +246,7 @@ def run_pipeline():
     print(f"Stale skipped: {stale_skipped}")
     print(f"Already emailed skipped: {already_emailed}")
 
-    print("\nFILTER RESULTS:")
-    print(
-        {
-            "blocked": blocked,
-            "low_signal": low_signal,
-            "high_signal": high_signal,
-            "explore": explore_count,
-        }
-    )
-
-    evaluation = {
+    stats = {
         "total_scraped": len(tenders),
         "fresh_processed": len(processed),
         "duplicates_skipped": duplicates,
@@ -267,41 +259,25 @@ def run_pipeline():
     }
 
     print("\n📊 EVALUATION:")
-    print(evaluation)
+    print(stats)
 
     # -------------------------
     # EMAIL
     # -------------------------
-    if high_tenders or low_tenders or explore_tenders:
-        stats = {
-            "total": len(tenders),
-            "fresh": len(processed),
-            "stale_skipped": stale_skipped,
-            "duplicates_skipped": duplicates,
-            "already_emailed_skipped": already_emailed,
-            "high": high_signal,
-            "explore": explore_count,
-            "low": low_signal,
-            "blocked": blocked,
-        }
-
+    if high_tenders or explore_tenders:
         subject, body = format_email(
             high_tenders,
             explore_tenders,
-            low_tenders,
             stats,
         )
 
         try:
-            send_email(subject, body, "devayushrout@gmail.com")
+            if not RECEIVER_EMAIL:
+                raise ValueError("RECEIVER_EMAIL is missing")
 
-            for t in high_tenders:
-                mark_as_emailed(conn, t["content_hash"])
+            send_email(subject, body, RECEIVER_EMAIL)
 
-            for t in low_tenders:
-                mark_as_emailed(conn, t["content_hash"])
-
-            for t in explore_tenders:
+            for t in high_tenders + explore_tenders:
                 mark_as_emailed(conn, t["content_hash"])
 
             conn.commit()
