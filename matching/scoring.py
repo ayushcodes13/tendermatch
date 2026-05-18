@@ -72,9 +72,7 @@ def score_tender(tender, signals, concepts, manufacturer_candidates=None):
     # --------------------------------------------------
     # 8. Source / organization prior
     # --------------------------------------------------
-    source_bonus = score_source_prior(tender)
-    breakdown["source_bonus"] = source_bonus
-    score += source_bonus
+    breakdown["source_bonus"] = 0
 
     final_score = max(0, min(100, score))
 
