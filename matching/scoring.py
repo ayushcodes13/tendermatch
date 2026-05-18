@@ -293,11 +293,10 @@ def score_rescue(signals, concepts, manufacturer_candidates):
     if not has_real_negative:
         return 0
 
-    has_rescue_term = signals.get("has_rescue", False)
     has_rescue_concept = concepts.get("has_rescue_concept", False)
     has_mfr_evidence = has_strong_manufacturer_evidence(manufacturer_candidates)
 
-    if has_rescue_term or has_rescue_concept or has_mfr_evidence:
+    if has_rescue_concept or has_mfr_evidence:
         return 22
 
     return 0
