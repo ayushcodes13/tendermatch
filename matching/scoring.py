@@ -98,10 +98,10 @@ def score_hard_junk(signals):
 
 
 def score_rescue(signals, concepts, manufacturer_candidates):
-    has_soft_or_junk = bool(
-        signals.get("soft_risk_terms")
+    has_real_negative = bool(
+        signals.get("hard_junk_clusters")
         or signals.get("contextual_negative_hits")
-        or signals.get("hard_junk_clusters")
+        or has_strong_soft_risk(signals)
     )
 
     has_rescue_term = signals.get("has_rescue", False)
@@ -116,10 +116,31 @@ def score_rescue(signals, concepts, manufacturer_candidates):
         )
     )
 
-    if has_soft_or_junk and (has_rescue_term or has_concept or has_manufacturer_evidence):
+    if has_real_negative and (has_rescue_term or has_concept or has_manufacturer_evidence):
         return 25
 
     return 0
+
+
+def has_strong_soft_risk(signals):
+    strong_soft_terms = {
+        "amc",
+        "annual maintenance",
+        "maintenance",
+        "repair",
+        "rectification",
+        "upgradation",
+        "service contract",
+        "warranty extension",
+        "replacement",
+    }
+
+    soft_terms = {
+        str(term).lower()
+        for term in signals.get("soft_risk_terms", [])
+    }
+
+    return bool(soft_terms.intersection(strong_soft_terms))
 
 
 def score_source_prior(tender):
