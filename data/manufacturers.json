@@ -1,6 +1,6 @@
 [
     {
-        "id": "mfr_001",
+        "id": "korvus_technology",
         "name": "Korvus Technology",
         "aliases": [
             "Korvus",
@@ -46,10 +46,32 @@
             "HEX series",
             "material research"
         ],
+        "concepts": [
+            "thin_film_deposition",
+            "pvd",
+            "sputtering",
+            "magnetron_sputtering",
+            "electron_beam_evaporation",
+            "thermal_evaporation",
+            "vacuum_system",
+            "materials_research"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://korvustech.com/"
     },
     {
-        "id": "mfr_008",
+        "id": "gnr_analytical",
         "name": "G.N.R. S.r.l. - Analytical Instruments Group",
         "aliases": [
             "GNR",
@@ -86,7 +108,7 @@
             "chemical and pharmaceutical",
             "environmental and forensic"
         ],
-        "embedding_text": "Manufacturer of advanced analytical instrumentation specializing in Optical Emission Spectrometry (OES) for metal analysis and X-Ray Diffraction (XRD/XRF) for structural characterization. GNR supplies high-precision laboratory and portable systems used in foundries, research centers, and industrial quality control for elemental analysis and residual stress measurement. Unlike general lab suppliers, GNR is a direct developer of specialized RDE-OES technology for predictive maintenance through used oil analysis. In tenders, equipment is typically specified as 'optical emission spectrometer for metal alloys', 'benchtop X-ray diffractometer', 'retained austenite analyzer', or 'rotating disc electrode spectrometer'. Its specialization lies in the proprietary integration of CCD and PMT detectors for ultra-trace element detection in complex metallic matrices.",
+        "embedding_text": "Manufacturer of advanced analytical instrumentation specializing in Optical Emission Spectrometry (OES) for metal analysis and X-Ray Diffraction (XRD/XRF) for structural characterization. GNR supplies high-precision laboratory and portable systems used in foundries, research centers, and industrial quality control for elemental analysis and residual stress measurement. Unlike general lab suppliers, GNR is a direct developer of specialized RDE-OES technology for predictive maintenance through used oil analysis. In tenders, equipment is typically specified as optical emission spectrometer for metal alloys, benchtop X-ray diffractometer, retained austenite analyzer, or rotating disc electrode spectrometer. Its specialization lies in the proprietary integration of CCD and PMT detectors for ultra-trace element detection in complex metallic matrices.",
         "keywords": [
             "spectrometry",
             "X-ray diffraction",
@@ -99,10 +121,32 @@
             "XRF",
             "metallurgy"
         ],
+        "concepts": [
+            "xrd",
+            "xrf",
+            "oes",
+            "spectroscopy",
+            "metal_analysis",
+            "residual_stress",
+            "oil_analysis",
+            "material_characterization"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://gnr.it"
     },
     {
-        "id": "mfr_003",
+        "id": "madur",
         "name": "Madur",
         "country": "Poland",
         "active": true,
@@ -135,10 +179,29 @@
             "combustion analysis",
             "environment monitoring"
         ],
+        "concepts": [
+            "gas_analyzer",
+            "flue_gas_analysis",
+            "emissions_monitoring",
+            "combustion_analysis",
+            "environmental_monitoring"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.madur.com"
     },
     {
-        "id": "mfr_004",
+        "id": "parteq",
         "name": "ParteQ GmbH",
         "country": "Germany",
         "active": true,
@@ -174,10 +237,31 @@
             "materials research",
             "nano fabrication"
         ],
+        "concepts": [
+            "nanoparticle_synthesis",
+            "flame_spray_pyrolysis",
+            "aerosol_measurement",
+            "particle_engineering",
+            "nanopowder",
+            "cvd_functionalization",
+            "materials_research"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://parteq.net"
     },
     {
-        "id": "mfr_005",
+        "id": "sint_technology",
         "name": "Sint Technology S.r.l.",
         "country": "Italy",
         "active": true,
@@ -211,10 +295,38 @@
             "nanomaterials",
             "high temperature sintering"
         ],
+        "concepts": [
+            "spark_plasma_sintering",
+            "sps",
+            "field_assisted_sintering",
+            "fast",
+            "powder_metallurgy",
+            "ceramics_processing",
+            "high_temperature_processing",
+            "vacuum_furnace"
+        ],
+        "negative_keywords": [
+            "thin film deposition",
+            "PVD coating",
+            "sputtering",
+            "coating system",
+            "deposition system"
+        ],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.sintechnology.com"
     },
     {
-        "id": "mfr_006",
+        "id": "pg_instruments",
         "name": "P.G. Instruments Ltd.",
         "country": "UK",
         "active": true,
@@ -248,10 +360,32 @@
             "chemical analysis",
             "lab instruments"
         ],
+        "concepts": [
+            "aas",
+            "atomic_absorption",
+            "uv_vis",
+            "spectrophotometer",
+            "flame_photometer",
+            "elemental_analysis",
+            "chemical_analysis",
+            "analytical_instrument"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.pginstruments.com"
     },
     {
-        "id": "mfr_007",
+        "id": "thesix_solutions",
         "name": "Thesix Solutions Technology",
         "aliases": [
             "Thesix",
@@ -280,7 +414,7 @@
             "electrochemistry",
             "academic R&D"
         ],
-        "embedding_text": "Supply and installation of fuel cell testing systems, electrolyzer test stations, battery testing equipment, and electrochemical analysis systems used in energy research and hydrogen technology./n Includes equipment for testing performance, durability, and efficiency of fuel cells, batteries, and energy storage systems in research laboratories and R&D facilities./n Also referred to in tenders as fuel cell test system, electrolyzer testing setup, battery testing system, electrochemical testing equipment, or hydrogen energy research system.",
+        "embedding_text": "Supply and installation of fuel cell testing systems, electrolyzer test stations, battery testing equipment, and electrochemical analysis systems used in energy research and hydrogen technology.\nIncludes equipment for testing performance, durability, and efficiency of fuel cells, batteries, and energy storage systems in research laboratories and R&D facilities.\nAlso referred to in tenders as fuel cell test system, electrolyzer testing setup, battery testing system, electrochemical testing equipment, or hydrogen energy research system.",
         "keywords": [
             "fuel cell",
             "electrolyzer",
@@ -291,10 +425,30 @@
             "fuel cell test station",
             "energy storage"
         ],
+        "concepts": [
+            "fuel_cell_testing",
+            "electrolyzer_testing",
+            "battery_testing",
+            "electrochemical_testing",
+            "hydrogen_research",
+            "energy_storage"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.thesixsolutions.com"
     },
     {
-        "id": "mfr_008",
+        "id": "genicore",
         "name": "GeniCore",
         "aliases": [
             "GeniCore Sp. z o.o.",
@@ -330,7 +484,7 @@
             "mining and road milling",
             "electronics and thermoelectrics"
         ],
-        "embedding_text": "Supply and installation of spark plasma sintering (SPS) systems and field assisted sintering technology (FAST) equipment used for powder metallurgy and advanced material consolidation. \n Used in research and industrial environments for producing high-density ceramics, composites, and advanced materials through rapid thermal processing. \n Also referred to as SPS system, spark plasma sintering machine, field assisted sintering equipment, or powder consolidation furnace. \n Not related to thin film deposition, PVD coating, or sputtering systems. \n Specialized in sintering and powder processing technologies, not coating or deposition systems.",
+        "embedding_text": "Supply and installation of spark plasma sintering (SPS) systems and field assisted sintering technology (FAST) equipment used for powder metallurgy and advanced material consolidation.\nUsed in research and industrial environments for producing high-density ceramics, composites, and advanced materials through rapid thermal processing.\nAlso referred to as SPS system, spark plasma sintering machine, field assisted sintering equipment, or powder consolidation furnace.\nSpecialized in sintering and powder processing technologies.",
         "keywords": [
             "U-FAST",
             "Spark Plasma Sintering",
@@ -343,10 +497,38 @@
             "composite sintering",
             "vacuum furnace"
         ],
+        "concepts": [
+            "spark_plasma_sintering",
+            "sps",
+            "field_assisted_sintering",
+            "fast",
+            "powder_metallurgy",
+            "composite_sintering",
+            "vacuum_furnace",
+            "advanced_material_consolidation"
+        ],
+        "negative_keywords": [
+            "thin film deposition",
+            "PVD coating",
+            "sputtering",
+            "coating system",
+            "deposition system"
+        ],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://genicore.eu"
     },
     {
-        "id": "mfr_009",
+        "id": "nordiko",
         "name": "Nordiko Technical Services Ltd.",
         "aliases": [
             "Nordiko",
@@ -388,7 +570,7 @@
             "aerospace and telecommunications",
             "academic and industrial R&D"
         ],
-        "embedding_text": "Supply, procurement, and installation of industrial-scale PVD coating systems including ion beam deposition, ion beam milling, and magnetron sputtering systems used for semiconductor manufacturing, magnetic sensors, and advanced materials production.\n Used in production environments for high-volume thin film coating, MRAM devices, and precision surface engineering requiring high uniformity and large-area processing.\n Also referred to as ion beam deposition system, ion beam sputtering system, industrial PVD coating system, or thin film production equipment.\n Specialized in large-scale industrial PVD systems and ion beam technologies for semiconductor and manufacturing applications.",
+        "embedding_text": "Supply, procurement, and installation of industrial-scale PVD coating systems including ion beam deposition, ion beam milling, and magnetron sputtering systems used for semiconductor manufacturing, magnetic sensors, and advanced materials production.\nUsed in production environments for high-volume thin film coating, MRAM devices, and precision surface engineering requiring high uniformity and large-area processing.\nAlso referred to as ion beam deposition system, ion beam sputtering system, industrial PVD coating system, or thin film production equipment.\nSpecialized in large-scale industrial PVD systems and ion beam technologies for semiconductor and manufacturing applications.",
         "keywords": [
             "ion beam deposition",
             "ion beam milling",
@@ -403,10 +585,34 @@
             "MTJ",
             "broad ion beam"
         ],
+        "concepts": [
+            "thin_film_deposition",
+            "pvd",
+            "sputtering",
+            "magnetron_sputtering",
+            "ion_beam_deposition",
+            "ion_beam_milling",
+            "rie",
+            "pecvd",
+            "wafer_processing",
+            "vacuum_system"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://nordiko-tech.co.uk"
     },
     {
-        "id": "mfr_010",
+        "id": "nippon_instruments",
         "name": "Nippon Instruments Corporation",
         "country": "Japan",
         "active": true,
@@ -439,10 +645,31 @@
             "environmental monitoring",
             "trace detection"
         ],
+        "concepts": [
+            "mercury_analyzer",
+            "trace_metal_analysis",
+            "cold_vapor_aas",
+            "atomic_absorption",
+            "heavy_metal_analysis",
+            "environmental_monitoring",
+            "water_testing"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.nic-usa.com"
     },
     {
-        "id": "mfr_011",
+        "id": "spinflex",
         "name": "Spinflex Instruments Ltd",
         "country": "Israel",
         "active": true,
@@ -474,10 +701,31 @@
             "non-destructive testing",
             "benchtop NMR"
         ],
+        "concepts": [
+            "nmr",
+            "time_domain_nmr",
+            "material_characterization",
+            "relaxation_time",
+            "porosity_analysis",
+            "non_destructive_testing",
+            "benchtop_nmr"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.spinflex.com"
     },
     {
-        "id": "mfr_011",
+        "id": "staton",
         "name": "STATON, s.r.o.",
         "aliases": [
             "Staton",
@@ -514,7 +762,7 @@
             "minting and decorative arts",
             "academic R&D"
         ],
-        "embedding_text": "Supply and installation of turn-key PVD and PECVD coating systems including cathodic arc evaporation and magnetron sputtering equipment for industrial coating applications.\n Used in manufacturing environments for coating cutting tools, forming dies, and automotive components with hard, wear-resistant, and low-friction coatings.\n Also referred to as PVD coating machine, cathodic arc evaporation system, magnetron sputtering unit, or turn-key coating system.\n Specialized in complete industrial coating solutions with integrated process optimization, not modular research or laboratory-scale systems.",
+        "embedding_text": "Supply and installation of turn-key PVD and PECVD coating systems including cathodic arc evaporation and magnetron sputtering equipment for industrial coating applications.\nUsed in manufacturing environments for coating cutting tools, forming dies, and automotive components with hard, wear-resistant, and low-friction coatings.\nAlso referred to as PVD coating machine, cathodic arc evaporation system, magnetron sputtering unit, or turn-key coating system.\nSpecialized in complete industrial coating solutions with integrated process optimization.",
         "keywords": [
             "PVD",
             "PECVD",
@@ -529,10 +777,33 @@
             "OCTOARC",
             "OCTOMAG"
         ],
+        "concepts": [
+            "thin_film_deposition",
+            "pvd",
+            "pecvd",
+            "magnetron_sputtering",
+            "cathodic_arc",
+            "hipims",
+            "hard_coatings",
+            "tool_coating",
+            "tribological_coatings"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.staton.sk/en/home/"
     },
     {
-        "id": "mfr_013",
+        "id": "eralytics",
         "name": "Eralytics",
         "aliases": [
             "Eralytics GmbH",
@@ -569,10 +840,31 @@
             "distillation",
             "fuel quality"
         ],
+        "concepts": [
+            "fuel_analysis",
+            "petroleum_testing",
+            "density_analysis",
+            "viscosity_analysis",
+            "vapor_pressure",
+            "distillation",
+            "fuel_quality_testing"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.eralytics.com"
     },
     {
-        "id": "mfr_014",
+        "id": "cox_analytical",
         "name": "Cox Analytical Systems",
         "aliases": [
             "Cox Analytical",
@@ -599,7 +891,7 @@
             "chemical processing",
             "industrial utilities"
         ],
-        "embedding_text": "Supply and installation of online water analyzers, process monitoring systems, and continuous water quality monitoring equipment used in industrial and environmental applications./n Includes systems for real-time measurement of chemical parameters such as pH, conductivity, dissolved oxygen, and contaminants in water treatment plants, power plants, and industrial processes./n Also referred to in tenders as online water analyzer, water quality monitoring system, environmental monitoring equipment, or process analyzer for industrial water systems.",
+        "embedding_text": "Supply and installation of online water analyzers, process monitoring systems, and continuous water quality monitoring equipment used in industrial and environmental applications.\nIncludes systems for real-time measurement of chemical parameters such as pH, conductivity, dissolved oxygen, and contaminants in water treatment plants, power plants, and industrial processes.\nAlso referred to in tenders as online water analyzer, water quality monitoring system, environmental monitoring equipment, or process analyzer for industrial water systems.",
         "keywords": [
             "online analyzer",
             "water monitoring",
@@ -609,10 +901,30 @@
             "water quality",
             "industrial analysis"
         ],
+        "concepts": [
+            "online_analyzer",
+            "water_quality_monitoring",
+            "process_monitoring",
+            "continuous_analysis",
+            "environmental_monitoring",
+            "industrial_analysis"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.coxsystems.co.uk"
     },
     {
-        "id": "mfr_015",
+        "id": "lumex_instruments",
         "name": "Lumex Instruments",
         "aliases": [
             "Lumex",
@@ -652,10 +964,31 @@
             "air monitoring",
             "trace detection"
         ],
+        "concepts": [
+            "mercury_analyzer",
+            "atomic_absorption",
+            "environmental_monitoring",
+            "heavy_metal_analysis",
+            "water_testing",
+            "air_monitoring",
+            "trace_detection"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.lumexinstruments.com"
     },
     {
-        "id": "mfr_016",
+        "id": "thermal_lube",
         "name": "Thermal-Lube",
         "aliases": [
             "Thermal Lube",
@@ -693,10 +1026,32 @@
             "vacuum systems",
             "maintenance materials"
         ],
+        "concepts": [
+            "vacuum_grease",
+            "high_temperature_lubricant",
+            "thermal_paste",
+            "anti_seize",
+            "thermal_interface",
+            "vacuum_system",
+            "maintenance_materials"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "consumables",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.thermal-lube.com"
     },
     {
-        "id": "mfr_017",
+        "id": "versamelt",
         "name": "VersaMelt",
         "aliases": [
             "VersaMelt Systems",
@@ -733,10 +1088,31 @@
             "high temperature",
             "materials processing"
         ],
+        "concepts": [
+            "induction_melting",
+            "metal_melting",
+            "alloy_development",
+            "furnace",
+            "metallurgy",
+            "high_temperature_processing",
+            "materials_processing"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.versamelt.com"
     },
     {
-        "id": "mfr_018",
+        "id": "abecta",
         "name": "ABECTA",
         "aliases": [
             "ABECTA Ltd",
@@ -762,7 +1138,7 @@
             "academic laboratories",
             "clinical research"
         ],
-        "embedding_text": "Supply, procurement, and installation of automated liquid handling systems, pipetting robots, and sample preparation workstations used for high-throughput laboratory workflows./n Includes equipment for precise liquid dispensing, sample processing, reagent handling, and automated lab workflows in biotechnology, molecular biology, and pharmaceutical laboratories./n Also referred to in tenders as liquid handling system, automated pipetting system, sample preparation workstation, lab automation system, or robotic liquid handling equipment.",
+        "embedding_text": "Supply, procurement, and installation of automated liquid handling systems, pipetting robots, and sample preparation workstations used for high-throughput laboratory workflows.\nIncludes equipment for precise liquid dispensing, sample processing, reagent handling, and automated lab workflows in biotechnology, molecular biology, and pharmaceutical laboratories.\nAlso referred to in tenders as liquid handling system, automated pipetting system, sample preparation workstation, lab automation system, or robotic liquid handling equipment.",
         "keywords": [
             "liquid handling",
             "pipetting",
@@ -772,10 +1148,30 @@
             "automation system",
             "dispensing"
         ],
+        "concepts": [
+            "liquid_handling",
+            "pipetting",
+            "sample_preparation",
+            "lab_automation",
+            "biotech",
+            "robotic_liquid_handling"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.abecta.com"
     },
     {
-        "id": "mfr_010",
+        "id": "teer_coatings",
         "name": "Teer Coatings Limited",
         "aliases": [
             "TCL",
@@ -812,7 +1208,7 @@
             "optical and photonics",
             "academic R&D"
         ],
-        "embedding_text": "Supply, procurement, and installation of industrial PVD coating systems using magnetron sputtering and ion plating technologies for high-performance surface coatings. \n Used for applying hard, wear-resistant, and low-friction coatings on cutting tools, automotive components, and industrial parts requiring tribological performance and durability. \n Also referred to as PVD coating system, magnetron sputtering system, ion plating system, or industrial coating equipment. \n Specialized in advanced industrial coatings for tools and components, including tribological and solid lubricant coatings, not research-focused deposition systems.",
+        "embedding_text": "Supply, procurement, and installation of industrial PVD coating systems using magnetron sputtering and ion plating technologies for high-performance surface coatings.\nUsed for applying hard, wear-resistant, and low-friction coatings on cutting tools, automotive components, and industrial parts requiring tribological performance and durability.\nAlso referred to as PVD coating system, magnetron sputtering system, ion plating system, or industrial coating equipment.\nSpecialized in advanced industrial coatings for tools and components, including tribological and solid lubricant coatings.",
         "keywords": [
             "PVD",
             "magnetron sputtering",
@@ -827,10 +1223,33 @@
             "sputtering target",
             "ion source"
         ],
+        "concepts": [
+            "thin_film_deposition",
+            "pvd",
+            "magnetron_sputtering",
+            "cluster_beam_deposition",
+            "ion_source",
+            "ion_plating",
+            "tribology",
+            "hard_coatings",
+            "sputtering_target"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.teercoatings.co.uk"
     },
     {
-        "id": "mfr_019",
+        "id": "sald",
         "name": "SALD B.V.",
         "aliases": [
             "SALD",
@@ -864,7 +1283,7 @@
             "membranes and porous materials",
             "textiles and medical packaging"
         ],
-        "embedding_text": "Supply and installation of spatial atomic layer deposition (ALD) systems for high-throughput, atmospheric pressure thin film coating applications. \n Used for conformal coating of materials, catalysts, and flexible substrates in energy systems, batteries, and industrial coating processes, especially where uniform coating on complex or porous surfaces is required.\n Also referred to as spatial ALD system, atmospheric pressure deposition system, roll-to-roll ALD coater, or conformal coating system.\n Not related to PVD sputtering, magnetron sputtering, or vacuum-based thin film deposition systems used in research or conventional coating equipment. \n Specialized in atomic layer deposition (ALD) for large-area and industrial applications, not PVD-based coating systems.",
+        "embedding_text": "Supply and installation of spatial atomic layer deposition (ALD) systems for high-throughput, atmospheric pressure thin film coating applications.\nUsed for conformal coating of materials, catalysts, and flexible substrates in energy systems, batteries, and industrial coating processes, especially where uniform coating on complex or porous surfaces is required.\nAlso referred to as spatial ALD system, atmospheric pressure deposition system, roll-to-roll ALD coater, or conformal coating system.\nSpecialized in atomic layer deposition (ALD) for large-area and industrial applications.",
         "keywords": [
             "Spatial ALD",
             "sALD",
@@ -877,10 +1296,37 @@
             "hydrogen electrolyzer",
             "barrier layers"
         ],
+        "concepts": [
+            "ald",
+            "spatial_ald",
+            "thin_film_deposition",
+            "atmospheric_pressure_deposition",
+            "roll_to_roll",
+            "battery_coating",
+            "solar_passivation",
+            "hydrogen_electrolyzer",
+            "barrier_layers"
+        ],
+        "negative_keywords": [
+            "PVD sputtering",
+            "magnetron sputtering",
+            "vacuum-based thin film deposition"
+        ],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://www.sald.nl"
     },
     {
-        "id": "mfr_020",
+        "id": "agnitron",
         "name": "Agnitron Technology",
         "country": "USA",
         "active": true,
@@ -915,10 +1361,34 @@
             "thin film deposition",
             "wide bandgap"
         ],
+        "concepts": [
+            "mocvd",
+            "epitaxial_growth",
+            "semiconductor_deposition",
+            "gallium_oxide",
+            "wide_bandgap",
+            "pyrometer",
+            "thin_film_deposition",
+            "process_control"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement",
+            "upgrade",
+            "legacy system upgrade"
+        ],
         "website": "https://agnitron.com/"
     },
     {
-        "id": "mfr_021",
+        "id": "adnanotek",
         "name": "AdNaNoTek Corporation",
         "country": "Taiwan",
         "active": true,
@@ -960,10 +1430,37 @@
             "thin film deposition",
             "vacuum chamber"
         ],
+        "concepts": [
+            "uhv",
+            "thin_film_deposition",
+            "pvd",
+            "electron_beam_evaporation",
+            "mbe",
+            "magnetron_sputtering",
+            "pld",
+            "rie",
+            "icp_rie",
+            "ion_beam_etching",
+            "josephson_junction",
+            "quantum_fabrication",
+            "vacuum_system"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement"
+        ],
         "website": "https://adnano-tek.com/"
     },
     {
-        "id": "mfr_022",
+        "id": "on_nano",
         "name": "ON NANO",
         "aliases": [
             "ON Nano GmbH",
@@ -1004,7 +1501,7 @@
             "defense and security manufacturing",
             "scientific R&D"
         ],
-        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm. \n Featured technology includes the patented C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput. \n Offers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production 'Matrix' systems. \n Key applications include GPTG projects, high-density packaging, and glass core substrate processing. \n Systems are designed with a compact footprint, SECS/GEM compatibility, and gas phase cleaning processes that reduce chemical usage by over 90%.",
+        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm.\nFeatured technology includes the patented C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput.\nOffers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production Matrix systems.\nKey applications include GPTG projects, high-density packaging, and glass core substrate processing.\nSystems are designed with a compact footprint, SECS/GEM compatibility, and gas phase cleaning processes that reduce chemical usage by over 90%.",
         "keywords": [
             "C3+ technology",
             "spin coater",
@@ -1016,6 +1513,33 @@
             "semiconductor equipment",
             "gas phase etching",
             "thin film processing"
+        ],
+        "concepts": [
+            "spin_coating",
+            "spray_coating",
+            "coater_developer",
+            "semiconductor_processing",
+            "wafer_processing",
+            "glass_panel_substrate",
+            "thermal_processing",
+            "hotplate",
+            "hmds",
+            "cleaning_etching",
+            "gas_phase_etching",
+            "thin_film_processing"
+        ],
+        "negative_keywords": [],
+        "service_keywords": [
+            "AMC",
+            "annual maintenance",
+            "maintenance",
+            "repair",
+            "spares",
+            "installation",
+            "commissioning",
+            "calibration",
+            "replacement",
+            "upgrade"
         ],
         "website": "https://on-nano.com/"
     }
