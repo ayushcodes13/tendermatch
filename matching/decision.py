@@ -51,7 +51,7 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
             "agent_review_required": True,
         }
 
-    if soft_risks and has_rescue and score >= 45:
+    if has_rescuable_negative(signals) and has_rescue and score >= 45:
         return {
             "decision": "rescued",
             "reason_codes": reason_codes + ["SOFT_RISK_RESCUED"],
@@ -113,3 +113,29 @@ def normalize_reason(text):
         .replace(" ", "_")
         .replace("/", "_")
     )
+
+def has_rescuable_negative(signals):
+    if signals.get("hard_junk_clusters"):
+        return True
+
+    if signals.get("contextual_negative_hits"):
+        return True
+
+    strong_soft_terms = {
+        "amc",
+        "annual maintenance",
+        "maintenance",
+        "repair",
+        "rectification",
+        "upgradation",
+        "service contract",
+        "warranty extension",
+        "replacement",
+    }
+
+    soft_terms = {
+        str(term).lower()
+        for term in signals.get("soft_risk_terms", [])
+    }
+
+    return bool(soft_terms.intersection(strong_soft_terms))
