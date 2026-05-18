@@ -19,7 +19,6 @@ match() is only for legacy compatibility.
 """
 
 import re
-# pyrefly: ignore [missing-import]
 import numpy as np
 
 from matching.domain_keywords import company_keywords
@@ -46,20 +45,22 @@ class TenderMatcher:
         self.manufacturers = embedder.get_manufacturers()
         self.mfr_embeddings = embedder.get_embeddings()
 
+        if self.mfr_embeddings is None:
+            raise ValueError(
+                "Manufacturer embeddings are None. "
+                "Call embedder.load_manufacturers(...) and embedder.build_embeddings(...) "
+                "before creating TenderMatcher, or use matching.embedder.build_matcher()."
+            )
+
+        if not self.manufacturers:
+            raise ValueError(
+                "No manufacturers loaded. "
+                "Use matching.embedder.build_matcher() or call embedder.load_manufacturers(...)."
+            )
+
     def match_topk(self, tender, top_k=None):
         """
         Return top-k manufacturer candidates regardless of absolute score.
-
-        Correct tenders can have mediocre absolute embedding scores but still
-        have strong relative manufacturer evidence through product/category/
-        concept hits.
-
-        Args:
-            tender (dict): normalized tender
-            top_k (int): number of candidates to return
-
-        Returns:
-            list[dict]: ranked manufacturer candidates
         """
         if top_k is None:
             top_k = self.k
@@ -85,9 +86,6 @@ class TenderMatcher:
 
             final_scores[idx] += evidence["total_boost"]
             final_scores[idx] -= evidence["negative_penalty"]
-
-            # Keep scores bounded. Embedding dot products are usually 0-1,
-            # but boosts can push over 1.0.
             final_scores[idx] = max(0.0, min(float(final_scores[idx]), 1.0))
 
             evidence_by_idx[idx] = evidence
@@ -141,12 +139,6 @@ class TenderMatcher:
     def match(self, tender):
         """
         Legacy method.
-
-        Old behavior filtered before returning.
-        New behavior still returns only decent matches for old pipeline
-        compatibility, but internally uses match_topk().
-
-        Later, pipeline/run.py should call match_topk() directly.
         """
         candidates = self.match_topk(tender, top_k=self.k)
 
@@ -162,9 +154,6 @@ class TenderMatcher:
         ]
 
     def _score_manufacturer_evidence(self, text_lower, manufacturer):
-        """
-        Scores structured evidence from one manufacturer profile.
-        """
         manufacturer_name = manufacturer.get("name", "")
 
         keyword_pool = self._build_keyword_pool(manufacturer_name, manufacturer)
@@ -189,8 +178,6 @@ class TenderMatcher:
         alias_boost = min(0.025 * len(alias_hits), 0.08)
         concept_boost = min(0.035 * len(concept_hits), 0.18)
 
-        # Service words alone should not create a strong manufacturer match.
-        # They only help when there is already technical evidence.
         has_technical_evidence = bool(
             keyword_hits
             or product_hits
@@ -234,12 +221,6 @@ class TenderMatcher:
         }
 
     def _build_keyword_pool(self, manufacturer_name, manufacturer):
-        """
-        Combines legacy domain_keywords.py with structured manufacturer fields.
-
-        This is the important upgrade:
-        manufacturers.json now becomes active matching data, not metadata.
-        """
         pool = []
 
         pool.extend(company_keywords.get(manufacturer_name, []) or [])
@@ -279,14 +260,6 @@ class TenderMatcher:
         return term.strip()
 
     def _find_phrase_hits(self, text_lower, terms):
-        """
-        Finds phrase hits using safer matching.
-
-        Short technical acronyms use boundaries:
-        xrd, xrf, oes, pld, ald, pvd, rie, mbe, sps, aas
-
-        Longer phrases use normalized substring matching.
-        """
         hits = []
 
         for term in terms:
@@ -303,16 +276,6 @@ class TenderMatcher:
         return self._dedupe_terms(hits)[:30]
 
     def _find_concept_hits(self, text_lower, concepts):
-        """
-        Matches concept IDs against tender text.
-
-        Example:
-        concept_id = "thin_film_deposition"
-        variants:
-        - "thin film deposition"
-        - "thin-film deposition"
-        - "thinfilmdeposition" is intentionally not used
-        """
         hits = []
 
         for concept in concepts:
@@ -326,8 +289,6 @@ class TenderMatcher:
                 concept_norm.replace("-", " "),
             }
 
-            # Since _normalize_term already replaces "_" with spaces,
-            # add a direct version from raw concept too.
             raw = str(concept).lower().strip()
             variants.add(raw.replace("_", " "))
             variants.add(raw.replace("-", " "))
@@ -346,7 +307,6 @@ class TenderMatcher:
 
         compact = term_norm.replace(" ", "")
 
-        # Acronyms and short terms need boundaries.
         if len(compact) <= 4 and compact.replace("-", "").isalnum():
             pattern = r"(?<![a-z0-9])" + re.escape(term_norm) + r"(?![a-z0-9])"
             return bool(re.search(pattern, text_lower))
