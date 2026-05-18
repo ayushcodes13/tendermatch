@@ -200,15 +200,19 @@ def build_reason_codes(signals, concepts, manufacturer_candidates):
 def has_real_rescue_evidence(signals, concepts, manufacturer_candidates):
     """
     Real rescue evidence means:
-    - explicit rescue term from signals
-    - rescue concept from concepts
+    - rescue concept from active concepts
     - strong manufacturer evidence
 
-    Support-only concepts must NOT rescue hard/negative tenders.
+    Important:
+    signals["has_rescue"] is intentionally NOT used here.
+
+    Why?
+    Because signals may contain broad/static rescue terms like XRD.
+    If the concept is not active and no manufacturer strongly matches,
+    it should not rescue the tender.
     """
     return bool(
-        signals.get("has_rescue", False)
-        or concepts.get("has_rescue_concept", False)
+        concepts.get("has_rescue_concept", False)
         or has_strong_manufacturer_evidence(manufacturer_candidates)
     )
 
