@@ -34,14 +34,13 @@ def normalize(title):
     """
     return re.sub(r'[^a-z0-9 ]', '', title.lower()).strip()
 
-def format_email(high_tenders, explore_tenders, low_tenders, stats):
+def format_email(high_tenders, explore_tenders, stats):
     """
     Constructs the full email body from processed tender data.
 
     Args:
         high_tenders (list): Tenders with confirmed manufacturer matches.
         explore_tenders (list): Tenders with moderate semantic signal.
-        low_tenders (list): Tenders with weak signals.
         stats (dict): Counts for total scanned and category breakdowns.
 
     Returns:
