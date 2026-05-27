@@ -118,12 +118,3 @@ def scrape_iisc():
     print(f"IISc total tenders scraped: {len(tenders)}")
 
     return tenders
-
-
-if __name__ == "__main__":
-    tenders = scrape_iisc()
-
-    print(f"\nTotal: {len(tenders)}")
-
-    for t in tenders[:20]:
-        print(t["title"])
