@@ -94,11 +94,3 @@ def scrape_iit_palakkad():
         })
 
     return tenders
-
-
-if __name__ == "__main__":
-    tenders = scrape_iit_palakkad()
-
-    print(len(tenders))
-    for t in tenders[:3]:
-        print(t)
