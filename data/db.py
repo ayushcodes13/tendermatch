@@ -238,6 +238,67 @@ def update_flags(conn, content_hash, is_blocked, has_signal):
 
 
 # -------- MAIN PROCESS --------
+def get_tender_by_hash(conn, content_hash):
+    """
+    Retrieves an existing tender from the database by its content hash.
+    
+    Args:
+        conn (sqlite3.Connection): Active connection.
+        content_hash (str): Target tender hash.
+        
+    Returns:
+        dict: The tender record if found, else None.
+    """
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT * FROM tenders
+        WHERE content_hash = ?
+        LIMIT 1
+    """, (content_hash,))
+    
+    # We want to return a dict, so we can access columns by name
+    columns = [col[0] for col in cursor.description]
+    row = cursor.fetchone()
+    
+    if row:
+        return dict(zip(columns, row))
+    return None
+
+
+def upsert_or_get_tender(conn, tender):
+    """
+    Handles insertion or retrieval of a tender, enabling reprocessing.
+
+    Args:
+        conn (sqlite3.Connection): Active connection.
+        tender (dict): Raw tender data from scraper.
+
+    Returns:
+        tuple (dict, bool): 
+            - dict: The merged tender (if existing) or new tender (if new).
+            - bool: True if the tender is NEW, False if it EXISTING_NOT_EMAILED (or already emailed).
+
+    Notes:
+        - Replaces the hard gate in process_tender.
+    """
+    content_hash = generate_hash(tender)
+    existing = get_tender_by_hash(conn, content_hash)
+    
+    if existing:
+        # Merge the scraped fields with the existing DB row.
+        # This preserves DB flags while allowing scraped fields to refresh.
+        merged = {**existing, **tender}
+        merged["content_hash"] = content_hash
+        merged["emailed"] = existing.get("emailed", 0)
+        return merged, False
+    
+    # Insert new
+    insert_tender(conn, tender, content_hash)
+    tender["content_hash"] = content_hash
+    tender["emailed"] = 0
+    return tender, True
+
+
 def process_tender(conn, tender):
     """
     Main entry point for persisting a scraped tender.
