@@ -38,6 +38,7 @@ from data.db import (
     get_connection,
     init_db,
     process_tender,
+    upsert_or_get_tender,
     update_flags,
     insert_match,
     mark_as_emailed,
@@ -62,17 +63,26 @@ def collect_all_tenders():
     Notes:
         - Sources include CPPP (Central, State, GeM) and specific Tier-1 institutions.
         - No deduplication is performed at this stage.
+        - Individual scraper failures are isolated so other sources can still run.
     """
     tenders = []
 
-    # CPPP ecosystem
-    tenders.extend(scrape_cppp())
+    scraper_jobs = [
+        ("cppp", scrape_cppp),
+        ("iitm", scrape_iitm),
+        ("iit_palakkad", scrape_iit_palakkad),
+        ("iit_goa", scrape_iit_goa),
+        ("iisc", scrape_iisc),
+    ]
 
-    # institute sources
-    tenders.extend(scrape_iitm())
-    tenders.extend(scrape_iit_palakkad())
-    tenders.extend(scrape_iit_goa())
-    tenders.extend(scrape_iisc())
+    for name, scraper_fn in scraper_jobs:
+        try:
+            results = scraper_fn() or []
+            print(f"[SCRAPER OK] {name}: {len(results)} tenders")
+            tenders.extend(results)
+        except Exception as e:
+            print(f"[SCRAPER FAILED] {name}: {type(e).__name__}: {e}")
+            continue
 
     return tenders
 
@@ -118,11 +128,19 @@ def run_pipeline():
     matcher = build_matcher()
 
     for t in tenders:
-        new_t = process_tender(conn, t)
+        new_t, is_new = upsert_or_get_tender(conn, t)
+        content_hash = new_t["content_hash"]
+        status_str = "NEW" if is_new else "EXISTING_NOT_EMAILED"
 
-        if not new_t:
-            duplicates += 1
+        # -------------------------
+        # EMAIL DEDUPE
+        # -------------------------
+        if is_already_emailed(conn, content_hash):
+            already_emailed += 1
+            print(f"[{status_str}] Skipping already emailed tender: {new_t.get('title')}")
             continue
+
+        print(f"[{status_str}] Processing tender: {new_t.get('title')}")
 
         # -------------------------
         # FRESHNESS GATE
@@ -132,7 +150,7 @@ def run_pipeline():
         if not is_recent_tender(new_t, max_age_hours=24):
             stale_skipped += 1
             print(
-                f"Skipping stale tender: {new_t.get('title')} | "
+                f"[{status_str}] Skipping stale tender: {new_t.get('title')} | "
                 f"published_date={new_t.get('published_date')} | "
                 f"updated_date={new_t.get('updated_date')} | "
                 f"corrigendum_date={new_t.get('corrigendum_date')}"
@@ -150,15 +168,6 @@ def run_pipeline():
             continue
 
         seen_titles.add(normalized_title)
-
-        content_hash = new_t["content_hash"]
-
-        # -------------------------
-        # EMAIL DEDUPE
-        # -------------------------
-        if is_already_emailed(conn, content_hash):
-            already_emailed += 1
-            continue
 
         # only count truly processable fresh tenders
         processed.append(new_t)
