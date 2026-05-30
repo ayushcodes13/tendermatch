@@ -77,9 +77,3 @@ def scrape_iit_goa():
         })
 
     return tenders
-
-
-if __name__ == "__main__":
-    tenders = scrape_iit_goa()
-    print(len(tenders))
-    print(tenders[:3])
