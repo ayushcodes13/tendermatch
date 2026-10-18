@@ -156,6 +156,10 @@ Perfect for:
 
 ---
 
+## Deployment and runtime
+
+No Vercel deployment is configured. TenderMatch is a Python pipeline with scheduled scraping, model-based matching, SQLite state, and email delivery; it has no browser application for Vercel to serve. For manual runs, use the documented Python 3.12 environment. For recurring runs, use a persistent Python VM or container with a scheduler (such as cron), outbound access to the tender portals, durable storage for the SQLite database and exports, and email credentials supplied through a secret store or protected environment variables. The current repository does not provide a hosted dashboard or managed deployment configuration.
+
 ## 📄 License
 
 MIT License - See [LICENSE](LICENSE) for details.
