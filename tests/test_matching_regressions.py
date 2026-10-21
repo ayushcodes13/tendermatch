@@ -1,5 +1,8 @@
 """Adversarial matcher cases that run without models, portals, or SMTP."""
 
+import json
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -108,3 +111,20 @@ def test_candidate_generation_keeps_semantic_and_lexical_candidates_before_top_k
     assert matcher.rank_candidates(pool, top_k=0) == []
     with pytest.raises(ValueError, match="non-negative integer"):
         matcher.rank_candidates(pool, top_k=-1)
+
+
+def test_spinflex_profile_has_epr_evidence_but_no_nmr_lexical_evidence():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    spinflex = next(profile for profile in manufacturers if profile["id"] == "spinflex")
+    matcher = make_matcher([spinflex], [[1.0]], [1.0])
+
+    epr_match = matcher.match_topk({"title": "Supply of spinUP pulse EPR/ESR systems"})[0]
+    nmr_match = matcher.match_topk({"title": "Time-domain NMR analyzer for relaxation and diffusion"})[0]
+
+    assert epr_match["product_hits"]
+    assert epr_match["category_hits"]
+    assert nmr_match["product_hits"] == []
+    assert nmr_match["category_hits"] == []
+    assert nmr_match["keyword_hits"] == []
+    assert nmr_match["concept_hits"] == []

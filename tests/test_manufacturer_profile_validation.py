@@ -27,13 +27,13 @@ def test_current_profiles_match_contract_and_only_unverified_profiles_warn():
     warnings = [issue for issue in issues if issue["severity"] == "warning"]
     assert len(profiles) == 14
     assert errors == []
-    assert len(warnings) == 6
+    assert len(warnings) == 3
     assert {issue["code"] for issue in warnings} == {
         "missing_source_links",
         "missing_profile_version",
         "missing_profile_last_updated",
     }
-    assert {issue["path"].split(".")[0] for issue in warnings} == {"$[2]", "$[7]"}
+    assert {issue["path"].split(".")[0] for issue in warnings} == {"$[2]"}
 
 
 def test_json_schema_documents_the_same_required_and_optional_fields():
@@ -91,4 +91,4 @@ def test_profile_cli_reports_warnings_but_only_fails_on_errors(capsys):
 
     output = capsys.readouterr().out
     assert result == 0
-    assert "Validated 14 profiles: 0 errors, 6 warnings" in output
+    assert "Validated 14 profiles: 0 errors, 3 warnings" in output
