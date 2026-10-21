@@ -21,6 +21,7 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     hard_junk_clusters = signals.get("hard_junk_clusters", [])
     soft_risks = signals.get("soft_risk_terms", [])
     contextual_negatives = signals.get("contextual_negative_hits", [])
+    domain_review_hits = signals.get("domain_review_hits", [])
 
     has_rescue = has_real_rescue_evidence(signals, concepts, manufacturer_candidates)
     has_support_only = concepts.get("has_support_only_concepts", False)
@@ -32,6 +33,15 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
         concepts=concepts,
         manufacturer_candidates=manufacturer_candidates,
     )
+
+    # Conflicting domain/specification evidence is ambiguous and must remain
+    # visible to a person, even when no current manufacturer has a strong hit.
+    if domain_review_hits:
+        return {
+            "decision": "agent_review",
+            "reason_codes": reason_codes,
+            "agent_review_required": True,
+        }
 
     # --------------------------------------------------
     # 1. Hard junk gates
@@ -187,6 +197,9 @@ def build_reason_codes(signals, concepts, manufacturer_candidates):
 
     for hit in signals.get("contextual_negative_hits", []):
         reason_codes.append(f"CONTEXT_NEGATIVE_{hit['rule_id']}")
+
+    for hit in signals.get("domain_review_hits", []):
+        reason_codes.append(f"DOMAIN_COMPATIBILITY_REVIEW_{hit['rule_id']}")
 
     for concept in concepts.get("matched_concepts", []):
         reason_codes.append(concept["reason_code"])
