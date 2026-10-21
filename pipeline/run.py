@@ -25,9 +25,9 @@ Notes:
 - Semantic matching is integrated into the classification phase to ensure strong manufacturer relevance can rescue borderline tenders.
 """
 
-from config import RECEIVER_EMAIL
-from config import DOCUMENT_ALLOWED_HOSTS, DOCUMENT_STORAGE_DIR
+from config import DOCUMENT_ALLOWED_HOSTS, DOCUMENT_STORAGE_DIR, RECEIVER_EMAIL
 from data.documents import retrieve_candidate_documents
+from data.extraction import extract_pdf_requirements, record_extraction_result
 from scrapers.cppp import scrape_all as scrape_cppp, PORTAL_LINKS
 from scrapers.iitm import scrape_iitm
 from scrapers.iit_palakkad import scrape_iit_palakkad
@@ -313,7 +313,21 @@ def run_pipeline():
             max_candidates=10,
             max_documents_per_candidate=2,
         )
-        print(f"[DOCUMENT RETRIEVAL] {len(retrievals)} explicitly linked files attempted")
+        extracted_count = 0
+        for document in retrievals:
+            if document.status != "downloaded" or not document.storage_path:
+                continue
+            extraction = extract_pdf_requirements(
+                document.storage_path,
+                source_url=document.source_url,
+                content_fingerprint=document.content_fingerprint,
+            )
+            record_extraction_result(conn, extraction)
+            extracted_count += extraction["status"] == "extracted"
+        print(
+            f"[DOCUMENT RETRIEVAL] {len(retrievals)} linked files attempted; "
+            f"{extracted_count} native-text extractions completed"
+        )
 
     conn.commit()
 
