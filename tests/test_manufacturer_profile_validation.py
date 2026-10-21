@@ -215,8 +215,9 @@ def test_sald_profile_links_official_technology_and_market_sources():
         "https://spatialald.com/markets/solar-energy/",
         "https://spatialald.com/markets/green-hydrogen/",
         "https://spatialald.com/markets/barriers-and-packaging/",
+        "https://www2.avs.org/symposium2019/Papers/Paper_TF-TuA3.html",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
 
 
 def test_sald_industries_do_not_overclaim_textiles_or_medical_packaging():
