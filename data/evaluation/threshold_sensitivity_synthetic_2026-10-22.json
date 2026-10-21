@@ -1,0 +1,118 @@
+{
+  "dataset_case_count": 16,
+  "dataset_id": "tendermatch-manufacturer-match-v1",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "generated_at_utc": "2026-10-21T19:26:00+00:00",
+  "human_reviewed_case_count": 0,
+  "input_sha256": {
+    "code": {
+      "matching/concepts.py": "20103092a966bbea2cd1b1b4e903d932698c61eebdfcda6721ecd71bd7d5f8bb",
+      "matching/decision.py": "28776084256ca9e0439c4616130b8a55ce9ad09b79a071bda6856989830439d6",
+      "matching/filter.py": "b412603aa35df3ccbfb302db53c2bd301a0fa35022a9480cdeef7ba0cf1dfad1",
+      "matching/matcher.py": "73c1697e78cbc5427aee768b5b0811f9ef9afe29e8387b2ce243876a97a5d234",
+      "matching/scoring.py": "9cbafb6fdaa05d4ccf1909fcc7b3affc6716392fbe60bbf1b1ab4433b3efb15b",
+      "matching/signals.py": "66973a752443fa1a4f1f6efdd6d952af80b05f48acf8dd09492b29381a3b0820",
+      "matching/threshold_evaluation.py": "5f126add037cea5f5658c67667806a1c9f9c3459ff4e0e7efe4bfac177209712",
+      "matching/thresholds.py": "31d755f051c2d163fa5862a181a5a4f8cecd2651816dcdb9855f9120618e8ee2"
+    },
+    "dataset": "28644fbbc1bf9dc696b79eebc8d8aa3ab122fc358fdf1794e28090e0f562f796",
+    "manufacturer_profiles": "42cee2a509a500508cc7c8b27684c980b74880e37b0e31418a67a4499cc94f87",
+    "threshold_scenarios": "090911a164b3d4e43e19c6c0b9074712efc4c7f1c2ca1e15a269082c3d78e6de"
+  },
+  "label_counts": {
+    "insufficient_information": 2,
+    "not_relevant": 3,
+    "potentially_relevant_needs_review": 4,
+    "relevant": 7
+  },
+  "matcher": "TenderMatcher.match_topk",
+  "metric_scope": {
+    "candidate_top_k": 5,
+    "digest_categories": [
+      "explore",
+      "high_signal"
+    ],
+    "displayed_match_rule": "Candidate score >= 0.60 or at least one keyword, product, category, or concept hit; matches the current pipeline filter.",
+    "unjudged_policy": "Unjudged displayed candidates are counted separately, never treated as negative."
+  },
+  "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+  "runtime": {
+    "packages": {
+      "numpy": "2.5.4",
+      "sentence-transformers": "6.2.0",
+      "torch": "2.14.1"
+    },
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "python": "3.14.7"
+  },
+  "scenarios": {
+    "configured_default": {
+      "case_count": 16,
+      "decision_counts_by_tender": {
+        "agent_review": 2,
+        "high_signal": 8,
+        "low_signal": 1,
+        "reject_hard": 1,
+        "reject_soft": 3
+      },
+      "definitive_labeled_pair_precision": 1.0,
+      "definitive_labeled_pairs_delivered": 7,
+      "delivered_tender_count": 10,
+      "false_positive_case_ids": [],
+      "labeled_positive_case_count": 7,
+      "labeled_positive_pair_digest_recall": 1.0,
+      "missed_relevant_case_ids": [],
+      "review_or_insufficient_pairs_delivered": 4,
+      "thresholds": {
+        "explore": 55,
+        "high_signal": 75,
+        "manufacturer_explore": 65,
+        "manufacturer_semantic_only_min_percent": 78,
+        "manufacturer_semantic_with_evidence_min_percent": 55,
+        "rescue_concept_review_max_exclusive": 75,
+        "rescue_concept_review_min": 35,
+        "review": 35,
+        "soft_risk_high_signal": 70,
+        "soft_risk_rescued": 40,
+        "soft_risk_review_below": 60,
+        "support_review": 45
+      },
+      "unjudged_displayed_candidate_count": 36
+    },
+    "diagnostic_review_min_20": {
+      "case_count": 16,
+      "decision_counts_by_tender": {
+        "agent_review": 3,
+        "high_signal": 8,
+        "reject_hard": 1,
+        "reject_soft": 3
+      },
+      "definitive_labeled_pair_precision": 1.0,
+      "definitive_labeled_pairs_delivered": 7,
+      "delivered_tender_count": 11,
+      "false_positive_case_ids": [],
+      "labeled_positive_case_count": 7,
+      "labeled_positive_pair_digest_recall": 1.0,
+      "missed_relevant_case_ids": [],
+      "review_or_insufficient_pairs_delivered": 5,
+      "thresholds": {
+        "explore": 55,
+        "high_signal": 75,
+        "manufacturer_explore": 65,
+        "manufacturer_semantic_only_min_percent": 78,
+        "manufacturer_semantic_with_evidence_min_percent": 55,
+        "rescue_concept_review_max_exclusive": 75,
+        "rescue_concept_review_min": 35,
+        "review": 20,
+        "soft_risk_high_signal": 70,
+        "soft_risk_rescued": 40,
+        "soft_risk_review_below": 60,
+        "support_review": 45
+      },
+      "unjudged_displayed_candidate_count": 37
+    }
+  },
+  "scope": "Pairs are joined only when an explicitly judged manufacturer appears in the digest match list. Unjudged candidates are counted separately and never treated as negative. All current labels are synthetic.",
+  "synthetic_case_count": 16,
+  "top_k": 5
+}
