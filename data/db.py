@@ -111,6 +111,43 @@ def init_db(conn):
     )
     """)
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS email_batches (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        digest_key TEXT NOT NULL UNIQUE,
+        recipient TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        body TEXT NOT NULL,
+        state TEXT NOT NULL DEFAULT 'pending',
+        attempt_count INTEGER NOT NULL DEFAULT 0,
+        next_attempt_at TEXT,
+        last_error_type TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        sent_at TEXT
+    )
+    """)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS email_notifications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        batch_id INTEGER NOT NULL,
+        recipient TEXT NOT NULL,
+        tender_identity_key TEXT NOT NULL,
+        tender_version TEXT NOT NULL,
+        notification_type TEXT NOT NULL,
+        state TEXT NOT NULL DEFAULT 'pending',
+        attempt_count INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        sent_at TEXT,
+        UNIQUE(recipient, tender_identity_key, tender_version, notification_type)
+    )
+    """)
+    cursor.execute("""
+        CREATE INDEX IF NOT EXISTS idx_email_batches_due
+        ON email_batches (state, next_attempt_at)
+    """)
+
     _ensure_column(conn, "tenders", "identity_key", "TEXT")
     _ensure_column(conn, "tenders", "updated_date", "TEXT")
     _ensure_column(conn, "tenders", "corrigendum_date", "TEXT")

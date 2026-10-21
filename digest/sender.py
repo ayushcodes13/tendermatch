@@ -54,15 +54,23 @@ def send_email(subject, body, recipient_email):
 
     msg.attach(MIMEText(body, "plain"))
 
+    server = None
     try:
-        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server = smtplib.SMTP("smtp.gmail.com", 587, timeout=30)
         server.starttls()
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
         server.sendmail(SENDER_EMAIL, recipient_email, msg.as_string())
-        server.quit()
 
         print("📩 Email sent successfully.")
 
-    except Exception as e:
-        print(f"❌ Email failed: {e}")
+    except Exception as exc:
+        print(f"❌ Email failed ({type(exc).__name__}).")
         raise
+    finally:
+        if server is not None:
+            try:
+                server.quit()
+            except Exception:
+                # SMTP accepted the message before cleanup; a QUIT failure does
+                # not make the delivery outcome uncertain or trigger a retry.
+                pass
