@@ -33,7 +33,7 @@ def normalize(title):
     """
     return re.sub(r'[^a-z0-9 ]', '', title.lower()).strip()
 
-def format_email(high_tenders, explore_tenders, stats):
+def format_email(high_tenders, explore_tenders, stats, updated_tenders=None):
     """
     Constructs the full email body from processed tender data.
 
@@ -45,11 +45,17 @@ def format_email(high_tenders, explore_tenders, stats):
     Returns:
         tuple: (subject_string, body_string)
     """
+    updated_tenders = updated_tenders or []
     high_signal_label = "Opportunity" if len(high_tenders) == 1 else "Opportunities"
-    subject = (
-        f"Tender Intelligence Report | {len(high_tenders)} "
-        f"High-Signal {high_signal_label}"
-    )
+    if updated_tenders and not high_tenders and not explore_tenders:
+        subject = f"Tender Intelligence Update | {len(updated_tenders)} Updated"
+    else:
+        subject = (
+            f"Tender Intelligence Report | {len(high_tenders)} "
+            f"High-Signal {high_signal_label}"
+        )
+        if updated_tenders:
+            subject += f" | {len(updated_tenders)} Updated"
 
     lines = []
 
@@ -100,6 +106,32 @@ def format_email(high_tenders, explore_tenders, stats):
         lines.append(f"- {t['title']} ({t['organization']})")
         lines.append(f"  Portal: {t.get('portal_link', 'N/A')}")
         lines.append("")
+
+    if updated_tenders:
+        lines.append("=" * 50)
+        lines.append("UPDATED TENDERS")
+        lines.append("=" * 50)
+        lines.append("")
+        for tender in updated_tenders:
+            amendment = tender.get("amendment", {})
+            lines.append(f"- {tender.get('title', 'Untitled tender')} ({tender.get('organization', 'Unknown organization')})")
+            if amendment.get("status") == "needs_review":
+                lines.append("  Update detected; review the official tender source.")
+            labels = [item.replace("_", " ").capitalize() for item in amendment.get("change_types", [])]
+            if labels:
+                lines.append(f"  Change indicators: {', '.join(labels)}")
+            closing = amendment.get("evidence", {}).get("closing_date", {})
+            if closing:
+                change_types = amendment.get("change_types", [])
+                if "deadline_extended" in change_types:
+                    message = "Closing date extended"
+                elif "deadline_shortened" in change_types:
+                    message = "Closing date shortened"
+                else:
+                    message = "Closing date changed"
+                lines.append(f"  {message} from {closing.get('from') or 'unknown'} to {closing.get('to') or 'unknown'}.")
+            lines.append(f"  Official tender: {tender.get('source_url') or tender.get('portal_link', 'N/A')}")
+            lines.append("")
 
     body = "\n".join(lines)
 

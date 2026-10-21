@@ -49,3 +49,21 @@ def test_format_email_handles_empty_digest_and_missing_optional_stats():
     assert "Total scraped: 0" in body
     assert "No high-signal opportunities identified." in body
     assert "EXPLORATION (REQUIRES REVIEW)" in body
+
+
+def test_format_email_renders_amendment_update_separately():
+    subject, body = format_email([], [], {}, updated_tenders=[{
+        "title": "Pump procurement",
+        "organization": "Agency",
+        "source_url": "https://agency.example/tender/1",
+        "amendment": {
+            "status": "meaningful",
+            "change_types": ["deadline_extended"],
+            "evidence": {"closing_date": {"from": "2026-11-01", "to": "2026-11-20"}},
+        },
+    }])
+
+    assert subject == "Tender Intelligence Update | 1 Updated"
+    assert "UPDATED TENDERS" in body
+    assert "Closing date extended from 2026-11-01 to 2026-11-20." in body
+    assert "https://agency.example/tender/1" in body

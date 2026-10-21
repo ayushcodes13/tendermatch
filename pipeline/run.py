@@ -45,6 +45,7 @@ from data.db import (
     upsert_or_get_tender,
     update_flags,
     insert_match,
+    get_tender_amendment,
 )
 
 from matching.filter import classify_tender
@@ -56,6 +57,9 @@ from digest.outbox import (
     deliver_batch,
     deliver_due_batches,
     notification_exists,
+    recipient_has_notification,
+    AMENDMENT_UPDATE,
+    NEW_OPPORTUNITY,
     queue_digest,
 )
 
@@ -135,6 +139,7 @@ def run_pipeline():
     high_tenders = []
     low_tenders = []
     explore_tenders = []
+    updated_tenders = []
 
     matcher = build_matcher()
 
@@ -142,22 +147,44 @@ def run_pipeline():
         new_t, is_new = upsert_or_get_tender(conn, t)
         identity_key = new_t["identity_key"]
         status_str = "NEW" if is_new else "EXISTING_NOT_EMAILED"
+        new_t["portal_link"] = PORTAL_LINKS.get(
+            (new_t.get("source_portal") or "").lower(),
+            new_t.get("source_url", "https://eprocure.gov.in"),
+        )
 
         # -------------------------
         # EMAIL DEDUPE
         # -------------------------
-        # Legacy databases only stored a global emailed flag. With a configured
-        # recipient, trust the recipient-scoped outbox; this can resend once to
-        # the old recipient because the legacy record cannot identify it.
-        was_notified = (
-            notification_exists(conn, RECEIVER_EMAIL, new_t)
-            if RECEIVER_EMAIL
-            else bool(new_t.get("emailed"))
-        )
-        if was_notified:
+        notification_type = NEW_OPPORTUNITY
+        if RECEIVER_EMAIL:
+            already_notified = recipient_has_notification(
+                conn, RECEIVER_EMAIL, identity_key
+            )
+            if already_notified:
+                latest_amendment = get_tender_amendment(
+                    conn, identity_key, new_t.get("version_fingerprint")
+                )
+                if (
+                    latest_amendment is None
+                    or latest_amendment["status"] == "formatting_only"
+                    or notification_exists(conn, RECEIVER_EMAIL, new_t, AMENDMENT_UPDATE)
+                ):
+                    already_emailed += 1
+                    print(f"[{status_str}] No new recipient-worthy tender update: {new_t.get('title')}")
+                    continue
+                notification_type = AMENDMENT_UPDATE
+                new_t["amendment"] = latest_amendment
+                new_t["notification_type"] = notification_type
+                updated_tenders.append(new_t)
+            elif notification_exists(conn, RECEIVER_EMAIL, new_t, NEW_OPPORTUNITY):
+                already_emailed += 1
+                print(f"[{status_str}] Skipping tender already notified to this recipient: {new_t.get('title')}")
+                continue
+        elif new_t.get("emailed"):
             already_emailed += 1
-            print(f"[{status_str}] Skipping tender already notified to this recipient: {new_t.get('title')}")
+            print(f"[{status_str}] Skipping legacy emailed tender: {new_t.get('title')}")
             continue
+        new_t.setdefault("notification_type", notification_type)
 
         print(f"[{status_str}] Processing tender: {new_t.get('title')}")
 
@@ -207,8 +234,7 @@ def run_pipeline():
 
         portal = (new_t.get("source_portal") or "").lower()
         new_t["portal_link"] = PORTAL_LINKS.get(
-            portal,
-            new_t.get("source_url", "https://eprocure.gov.in"),
+            portal, new_t.get("source_url", "https://eprocure.gov.in")
         )
 
         new_t["classification"] = result
@@ -265,10 +291,12 @@ def run_pipeline():
         new_t["matches"] = matches
 
         if category == "high_signal":
-            high_tenders.append(new_t)
+            if notification_type != AMENDMENT_UPDATE:
+                high_tenders.append(new_t)
 
         elif category == "explore":
-            explore_tenders.append(new_t)
+            if notification_type != AMENDMENT_UPDATE:
+                explore_tenders.append(new_t)
 
     conn.commit()
 
@@ -302,26 +330,40 @@ def run_pipeline():
     # -------------------------
     # EMAIL
     # -------------------------
-    if (high_tenders or explore_tenders) and not RECEIVER_EMAIL:
+    if (high_tenders or explore_tenders or updated_tenders) and not RECEIVER_EMAIL:
         print("\n[EMAIL OUTBOX] Cannot queue a new digest: RECEIVER_EMAIL is missing.")
-    elif high_tenders or explore_tenders:
+    elif high_tenders or explore_tenders or updated_tenders:
         eligible_high = [
             tender for tender in high_tenders
-            if not notification_exists(conn, RECEIVER_EMAIL, tender)
+            if not notification_exists(
+                conn, RECEIVER_EMAIL, tender, tender.get("notification_type", NEW_OPPORTUNITY)
+            )
         ]
         eligible_explore = [
             tender for tender in explore_tenders
-            if not notification_exists(conn, RECEIVER_EMAIL, tender)
+            if not notification_exists(
+                conn, RECEIVER_EMAIL, tender, tender.get("notification_type", NEW_OPPORTUNITY)
+            )
         ]
-        digest_tenders = eligible_high + eligible_explore
+        eligible_updates = [
+            tender for tender in updated_tenders
+            if not notification_exists(conn, RECEIVER_EMAIL, tender, AMENDMENT_UPDATE)
+        ]
+        digest_tenders = eligible_high + eligible_explore + eligible_updates
         if not digest_tenders:
             print("\n[EMAIL OUTBOX] Matching opportunities already have a delivery record.")
         else:
-            digest_stats = {**stats, "high": len(eligible_high), "explore": len(eligible_explore)}
+            digest_stats = {
+                **stats,
+                "high": len(eligible_high),
+                "explore": len(eligible_explore),
+                "updated": len(eligible_updates),
+            }
             subject, body = format_email(
                 eligible_high,
                 eligible_explore,
                 digest_stats,
+                updated_tenders=eligible_updates,
             )
             batch_id = queue_digest(
                 conn,

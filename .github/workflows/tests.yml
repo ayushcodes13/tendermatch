@@ -38,4 +38,7 @@ jobs:
           tests/test_db_identity.py
           tests/test_scraper_identity_links.py
           tests/test_tender_amendments.py
+          tests/test_email_outbox.py
+          tests/test_digest_formatter.py
+          tests/test_pipeline_digest.py
           tests/test_specific_tender.py
