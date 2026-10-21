@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `e29e1c6` after merged P4.1 retrieval PR #23; `codex/feat-source-grounded-document-extraction` starts directly from this commit.
+- Current base: `main` at `9f8a34c` after merged P5 digest PR #25; `codex/feat-salesperson-feedback-capture` starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -58,8 +58,8 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P5 Actionable digest | In progress | `codex/feat-actionable-sales-digest` | Renders references, deadline, source link, manufacturer/product evidence, concerns, unverified requirements, update status, and suggested review action; validates links and avoids heuristic score claims. | Review digest behavior against realistic evidence payloads and amendment cases. |
-| P6 Feedback collection and evaluation improvements | Not started | — | — | Smallest practical interaction and integrity requirements. |
+| P5 Actionable digest | Complete | `codex/feat-actionable-sales-digest`; [PR #25](https://github.com/ayushcodes13/tendermatch/pull/25) | Formatter tests: 6 passed; full local suite: 134 passed. CI included formatter tests (108 selected tests passed). Merged as `9f8a34c`; no live email sent. | Real tender/evidence examples still need human review. |
+| P6 Feedback collection and evaluation improvements | In progress | `codex/feat-salesperson-feedback-capture` | Adds allowlist-gated CLI capture into append-only SQLite with reviewer/timestamp/version, supported labels, 1,000-character reason cap, immutable update/delete triggers, and no automatic matcher changes. 8 focused tests and 142 full tests pass; compile and diff checks pass. | No hosted interface; Actions/cache DB is not durable; human feedback still needs a reviewed evaluation-import process. |
 
 ## Phase 6 — Production readiness
 

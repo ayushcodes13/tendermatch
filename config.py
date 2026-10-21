@@ -32,6 +32,11 @@ DOCUMENT_ALLOWED_HOSTS = frozenset(
     if host.strip()
 )
 DOCUMENT_STORAGE_DIR = os.getenv("TENDERMATCH_DOCUMENT_DIR")
+FEEDBACK_REVIEWERS = frozenset(
+    reviewer.strip()
+    for reviewer in os.getenv("TENDERMATCH_FEEDBACK_REVIEWERS", "").split(",")
+    if reviewer.strip()
+)
 
 # Matching
 MATCH_THRESHOLD = 0.65
