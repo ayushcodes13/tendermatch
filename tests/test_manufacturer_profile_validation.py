@@ -99,7 +99,16 @@ def test_teer_profile_does_not_claim_nordiko_products():
     assert not any("Mnem-iX" in product or "N300" in product for product in teer["products"])
     assert "plasma assisted CVD systems" not in teer["product_categories"]
     assert "https://www.teercoatings.co.uk/pvd" in teer["source_links"]
-    assert teer["profile_version"] == "1.2"
+    assert teer["profile_version"] == "1.3"
+
+
+def test_teer_fuel_cell_and_electrolyser_scope_is_limited_to_documented_r_and_d():
+    teer = next(profile for profile in load_profiles() if profile["id"] == "teer_coatings")
+
+    assert "fuel cell and electrolyser coating R&D" in teer["industries_served"]
+    assert "fuel cells and electrolysers" not in teer["industries_served"]
+    assert "https://www.teercoatings.co.uk/current-r-d-projects" in teer["source_links"]
+    assert teer["profile_version"] == "1.3"
 
 
 def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():

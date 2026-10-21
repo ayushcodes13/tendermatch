@@ -791,7 +791,7 @@
             "automotive and motorsport",
             "medical and healthcare",
             "minting and coin production",
-            "fuel cells and electrolysers",
+            "fuel cell and electrolyser coating R&D",
             "semiconductor and data storage",
             "optical and photonics",
             "academic R&D"
@@ -838,9 +838,10 @@
         "source_links": [
             "https://www.teercoatings.co.uk/standard-systems",
             "https://www.teercoatings.co.uk/clusterbeam",
-            "https://www.teercoatings.co.uk/pvd"
+            "https://www.teercoatings.co.uk/pvd",
+            "https://www.teercoatings.co.uk/current-r-d-projects"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {
