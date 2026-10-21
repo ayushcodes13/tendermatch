@@ -29,6 +29,7 @@ import hashlib
 import json
 import os
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
@@ -88,12 +89,25 @@ def init_db(conn):
         source_portal TEXT,
         raw_text TEXT,
         scraped_at TEXT,
+        version_fingerprint TEXT,
 
         is_blocked INTEGER DEFAULT 0,
         has_signal INTEGER DEFAULT 0,
         emailed INTEGER DEFAULT 0,
 
         UNIQUE(tender_id, content_hash)
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS tender_versions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tender_identity_key TEXT NOT NULL,
+        content_fingerprint TEXT NOT NULL,
+        snapshot_json TEXT NOT NULL,
+        first_seen_at TEXT NOT NULL,
+        last_seen_at TEXT NOT NULL,
+        UNIQUE(tender_identity_key, content_fingerprint)
     )
     """)
 
@@ -151,10 +165,12 @@ def init_db(conn):
     _ensure_column(conn, "tenders", "identity_key", "TEXT")
     _ensure_column(conn, "tenders", "updated_date", "TEXT")
     _ensure_column(conn, "tenders", "corrigendum_date", "TEXT")
+    _ensure_column(conn, "tenders", "version_fingerprint", "TEXT")
     _ensure_column(conn, "tender_matches", "tender_identity_key", "TEXT")
 
     _migrate_tender_identity_keys(conn)
     _migrate_match_identity_keys(conn)
+    _backfill_tender_versions(conn)
 
     cursor.execute("""
         CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_tender_identity
@@ -295,6 +311,80 @@ def generate_legacy_content_hash(tender):
     title = _normalize_identity_text(tender.get("title"))
     organization = _normalize_identity_text(tender.get("organization"))
     return hashlib.md5(f"{title}_{organization}".encode("utf-8")).hexdigest()
+
+
+VERSION_CONTENT_FIELDS = (
+    "title",
+    "organization",
+    "published_date",
+    "updated_date",
+    "corrigendum_date",
+    "closing_date",
+    "raw_text",
+)
+
+
+def _tender_snapshot(tender):
+    """Return a stable, JSON-safe snapshot separating content from provenance."""
+    content = {}
+    for field in VERSION_CONTENT_FIELDS:
+        value = tender.get(field)
+        if isinstance(value, str):
+            value = value.replace("\r\n", "\n").replace("\r", "\n")
+        content[field] = value
+    return {
+        "tender_id": tender.get("tender_id"),
+        "source_portal": tender.get("source_portal"),
+        "source_url": tender.get("source_url"),
+        "content": content,
+    }
+
+
+def generate_content_fingerprint(tender):
+    """Return a SHA-256 fingerprint for tender content, independent of identity."""
+    snapshot = _tender_snapshot(tender)
+    canonical_content = json.dumps(
+        snapshot["content"], ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
+    return hashlib.sha256(canonical_content.encode("utf-8")).hexdigest()
+
+
+def _record_tender_version(conn, tender):
+    identity_key = tender["identity_key"]
+    snapshot = _tender_snapshot(tender)
+    fingerprint = generate_content_fingerprint(tender)
+    snapshot_json = json.dumps(
+        snapshot, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
+    observed_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    conn.execute(
+        """
+        INSERT INTO tender_versions (
+            tender_identity_key, content_fingerprint, snapshot_json, first_seen_at, last_seen_at
+        ) VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(tender_identity_key, content_fingerprint) DO UPDATE SET
+            last_seen_at=excluded.last_seen_at
+        """,
+        (identity_key, fingerprint, snapshot_json, observed_at, observed_at),
+    )
+    conn.execute(
+        "UPDATE tenders SET version_fingerprint=? WHERE identity_key=?",
+        (fingerprint, identity_key),
+    )
+    return fingerprint
+
+
+def _backfill_tender_versions(conn):
+    """Seed one version row for existing records without rewriting their history."""
+    rows = conn.execute(
+        "SELECT * FROM tenders WHERE version_fingerprint IS NULL ORDER BY id"
+    ).fetchall()
+    columns = [column[0] for column in conn.execute("SELECT * FROM tenders LIMIT 0").description]
+    for row in rows:
+        tender = dict(zip(columns, row))
+        # Existing records have no historical version trail. Seed their current
+        # persisted content as the earliest version available to this schema.
+        _record_tender_version(conn, tender)
 
 
 # -------- DUP CHECK --------
@@ -509,8 +599,10 @@ def upsert_or_get_tender(conn, tender):
         tender.get("scraped_at"), identity_key,
     ))
     existing = get_tender_by_identity(conn, identity_key)
+    version_fingerprint = _record_tender_version(conn, existing)
     merged = {**tender, **existing}
     merged["identity_key"] = identity_key
+    merged["version_fingerprint"] = version_fingerprint
     merged["emailed"] = existing.get("emailed", 0)
     return merged, is_new
 

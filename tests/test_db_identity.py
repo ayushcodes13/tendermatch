@@ -2,6 +2,7 @@ import sqlite3
 import threading
 
 from data.db import (
+    generate_content_fingerprint,
     generate_hash,
     get_high_signal_matches,
     init_db,
@@ -117,6 +118,75 @@ def test_iisc_detail_urls_separate_distinct_notices():
     first = tender(tender_id="iisc_a", source_portal="iisc", source_url="https://iisc.ac.in/tenders/1")
     second = tender(tender_id="iisc_b", source_portal="iisc", source_url="https://iisc.ac.in/tenders/2")
     assert generate_hash(first) != generate_hash(second)
+
+
+def test_content_fingerprint_is_sha256_and_independent_of_tender_identity():
+    original = tender(raw_text="Specs\r\nFlow rate: 12 L/min")
+    same_content_other_identity = tender(
+        tender_id="REF-200",
+        source_url="https://other.example/notice/200",
+        raw_text="Specs\nFlow rate: 12 L/min",
+    )
+    changed_content = tender(raw_text="Specs\nFlow rate: 15 L/min")
+
+    fingerprint = generate_content_fingerprint(original)
+    assert len(fingerprint) == 64
+    assert generate_content_fingerprint(same_content_other_identity) == fingerprint
+    assert generate_content_fingerprint(changed_content) != fingerprint
+
+
+def test_upsert_tracks_distinct_content_versions_and_repeat_observations():
+    conn = db()
+    first, is_new = upsert_or_get_tender(conn, tender())
+    repeated, repeated_is_new = upsert_or_get_tender(conn, tender())
+    updated, updated_is_new = upsert_or_get_tender(
+        conn, tender(raw_text="Supply of a spectrometer; closing date extended")
+    )
+
+    versions = conn.execute(
+        "SELECT content_fingerprint, snapshot_json FROM tender_versions "
+        "WHERE tender_identity_key=? ORDER BY id",
+        (first["identity_key"],),
+    ).fetchall()
+    assert is_new and not repeated_is_new and not updated_is_new
+    assert repeated["version_fingerprint"] == first["version_fingerprint"]
+    assert updated["version_fingerprint"] != first["version_fingerprint"]
+    assert len(versions) == 2
+    assert "Supply of a spectrometer" in versions[0][1]
+    assert "closing date extended" in versions[1][1]
+    assert conn.execute(
+        "SELECT COUNT(*) FROM tender_versions WHERE tender_identity_key=? AND content_fingerprint=?",
+        (first["identity_key"], first["version_fingerprint"]),
+    ).fetchone()[0] == 1
+
+
+def test_legacy_tender_rows_receive_one_version_during_migration():
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        "CREATE TABLE tenders (id INTEGER PRIMARY KEY, tender_id TEXT, content_hash TEXT, "
+        "title TEXT, organization TEXT, published_date TEXT, closing_date TEXT, source_url TEXT, "
+        "source_portal TEXT, raw_text TEXT, scraped_at TEXT, is_blocked INTEGER DEFAULT 0, "
+        "has_signal INTEGER DEFAULT 0, emailed INTEGER DEFAULT 0)"
+    )
+    conn.execute(
+        "INSERT INTO tenders (id, tender_id, content_hash, title, organization, raw_text) "
+        "VALUES (1, 'OLD-1', 'legacy', 'Legacy title', 'Agency', 'Legacy text')"
+    )
+    init_db(conn)
+    first = conn.execute(
+        "SELECT version_fingerprint FROM tenders WHERE id=1"
+    ).fetchone()[0]
+    first_seen = conn.execute(
+        "SELECT first_seen_at, last_seen_at FROM tender_versions"
+    ).fetchone()
+
+    init_db(conn)
+
+    assert first and len(first) == 64
+    assert conn.execute("SELECT COUNT(*) FROM tender_versions").fetchone()[0] == 1
+    assert conn.execute(
+        "SELECT first_seen_at, last_seen_at FROM tender_versions"
+    ).fetchone() == first_seen
 
 
 def test_repeated_manufacturer_match_is_idempotent():
