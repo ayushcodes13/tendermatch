@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TenderMatch manufacturer capability profile",
+  "description": "Structural contract for capability profiles. This schema does not verify that claims are true.",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "country",
+    "active",
+    "website",
+    "embedding_text",
+    "product_categories",
+    "products",
+    "industries_served",
+    "keywords",
+    "concepts",
+    "negative_keywords",
+    "service_keywords"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "aliases": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "country": { "type": "string", "minLength": 1 },
+    "active": { "type": "boolean" },
+    "website": { "type": "string", "format": "uri" },
+    "embedding_text": { "type": "string", "minLength": 1 },
+    "product_categories": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "products": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "industries_served": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "keywords": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "concepts": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "negative_keywords": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "service_keywords": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "exclusions": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "supported_services": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "source_links": {
+      "type": "array",
+      "items": { "type": "string", "format": "uri" }
+    },
+    "profile_version": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+){0,2}$"
+    },
+    "profile_last_updated": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "$defs": {
+    "nonEmptyStringArray": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": true
+}
