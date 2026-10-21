@@ -49,6 +49,7 @@ from data.db import (
     insert_match,
     get_tender_amendment,
 )
+from data.run_ledger import complete_run, fail_run, start_run
 
 from matching.filter import classify_tender
 from matching.embedder import build_matcher
@@ -66,6 +67,14 @@ from digest.outbox import (
 )
 
 
+class TenderCollection(list):
+    """Collected tender rows with per-source run outcomes attached."""
+
+    def __init__(self):
+        super().__init__()
+        self.source_results = {}
+
+
 def collect_all_tenders():
     """
     Aggregates tender data from all configured scraping sources.
@@ -78,7 +87,7 @@ def collect_all_tenders():
         - No deduplication is performed at this stage.
         - Individual scraper failures are isolated so other sources can still run.
     """
-    tenders = []
+    tenders = TenderCollection()
 
     scraper_jobs = [
         ("cppp", scrape_cppp),
@@ -91,9 +100,11 @@ def collect_all_tenders():
     for name, scraper_fn in scraper_jobs:
         try:
             results = scraper_fn() or []
+            tenders.source_results[name] = {"status": "ok", "tenders": len(results)}
             print(f"[SCRAPER OK] {name}: {len(results)} tenders")
             tenders.extend(results)
         except Exception as e:
+            tenders.source_results[name] = {"status": "failed", "error_type": type(e).__name__}
             # Exception strings can include credential-bearing URLs or response data.
             print(f"[SCRAPER FAILED] {name}: {type(e).__name__}")
             continue
@@ -120,9 +131,27 @@ def run_pipeline():
     """
     conn = get_connection()
     init_db(conn)
+    run_id, started_clock = start_run(conn)
+    source_results = {}
+    print(f"[PIPELINE RUN] {run_id} started")
+    try:
+        _execute_pipeline(conn, run_id, started_clock, source_results)
+    except Exception as exc:
+        # Keep a failed run from committing partially processed tender state.
+        conn.rollback()
+        fail_run(conn, run_id, started_clock, source_results, exc)
+        print(f"[PIPELINE RUN] {run_id} failed ({type(exc).__name__})")
+        raise
+    finally:
+        conn.close()
+
+
+def _execute_pipeline(conn, run_id, started_clock, source_results):
+    """Run pipeline work using the connection and run record opened by the wrapper."""
     deliver_due_batches(conn, send_email)
 
     tenders = collect_all_tenders()
+    source_results.update(getattr(tenders, "source_results", {}))
 
     processed = []
     duplicates = 0
@@ -136,6 +165,7 @@ def run_pipeline():
     low_signal = 0
     high_signal = 0
     explore_count = 0
+    needs_review_count = 0
 
     seen_identity_keys = set()
 
@@ -242,6 +272,7 @@ def run_pipeline():
         )
 
         new_t["classification"] = result
+        needs_review_count += bool(result.get("agent_review_required"))
 
         print("\n--- CLASSIFICATION ---")
         print(f"TITLE: {new_t.get('title')}")
@@ -354,6 +385,8 @@ def run_pipeline():
         "explore": explore_count,
         "low": low_signal,
         "blocked": blocked,
+        "needs_review": needs_review_count,
+        "updated": len(updated_tenders),
     }
 
     print("\n📊 EVALUATION:")
@@ -362,7 +395,9 @@ def run_pipeline():
     # -------------------------
     # EMAIL
     # -------------------------
+    email_delivery = "not_attempted"
     if (high_tenders or explore_tenders or updated_tenders) and not RECEIVER_EMAIL:
+        email_delivery = "skipped_missing_recipient"
         print("\n[EMAIL OUTBOX] Cannot queue a new digest: RECEIVER_EMAIL is missing.")
     elif high_tenders or explore_tenders or updated_tenders:
         eligible_high = [
@@ -383,6 +418,7 @@ def run_pipeline():
         ]
         digest_tenders = eligible_high + eligible_explore + eligible_updates
         if not digest_tenders:
+            email_delivery = "skipped_already_notified"
             print("\n[EMAIL OUTBOX] Matching opportunities already have a delivery record.")
         else:
             digest_stats = {
@@ -405,14 +441,21 @@ def run_pipeline():
                 digest_tenders,
             )
             if batch_id is not None and deliver_batch(conn, batch_id, send_email):
+                email_delivery = "sent"
                 print("\n📩 Email sent and recorded.")
             elif batch_id is not None:
+                email_delivery = "queued_for_retry"
                 print("\n[EMAIL OUTBOX] Digest stored for a later retry.")
+            else:
+                email_delivery = "skipped_already_notified"
 
     else:
+        email_delivery = "skipped_no_opportunities"
         print("\n📭 No relevant fresh tenders. Email skipped.")
 
-    conn.close()
+    stats["email_delivery"] = email_delivery
+    complete_run(conn, run_id, started_clock, source_results, stats)
+    print(f"[PIPELINE RUN] {run_id} completed")
 
 
 if __name__ == "__main__":

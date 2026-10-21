@@ -47,3 +47,4 @@ jobs:
           tests/test_salesperson_feedback.py
           tests/test_feedback_export.py
           tests/test_feedback_adjudication.py
+          tests/test_pipeline_run_ledger.py

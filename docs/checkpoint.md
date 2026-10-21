@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `2f249b8` after merged P6 adjudication PR #28; `codex/fix-secret-safe-failure-logging` starts directly from this commit.
+- Current base: `main` at `8a19860` after merged P7.1 secret-safe logging PR #29; `codex/feat-pipeline-run-ledger` starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -65,10 +65,10 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| Security, reliability, observability, and recovery | In progress | `codex/fix-secret-safe-failure-logging` | This PR redacts raw exception payloads and tracebacks from scraper, pipeline, and scheduler logs; 4 focused tests and 159 full tests pass locally. | Additional security and operational work remains; Actions/cache SQLite is not durable. |
+| Security, reliability, observability, and recovery | In progress | Secret-safe logs: [PR #29](https://github.com/ayushcodes13/tendermatch/pull/29), merged `8a19860`; run ledger: `codex/feat-pipeline-run-ledger` | PR #29 removes raw exception payloads and tracebacks from scraper, pipeline, and scheduler logs; 4 focused tests, 159 full tests, and CI passed. Current run-ledger change records start/end/failure state, duration, per-source outcomes, tender/match counts, review-required matches, and email outcome; 9 focused and 163 full tests pass locally. | Actions/cache SQLite is not durable. Run-ledger PR is not yet merged. |
 | Deployment smoke verification | Not started | — | — | Authorized deployment target and credentials. |
 | README and operational documentation reconciliation | Not started | — | — | Update against final verified behavior and evaluation. |
 
 ## Next
 
-P7.1: remove secret-bearing exception details from logs. P4.3 remains gated on measured evidence, cost, latency, and safety value.
+P7.2: persist compact per-run status and source/count summaries (current PR candidate). P4.3 remains gated on measured evidence, cost, latency, and safety value.
