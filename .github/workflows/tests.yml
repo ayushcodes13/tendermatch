@@ -37,4 +37,5 @@ jobs:
           tests/test_threshold_evaluation.py
           tests/test_db_identity.py
           tests/test_scraper_identity_links.py
+          tests/test_tender_amendments.py
           tests/test_specific_tender.py
