@@ -187,6 +187,18 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
     assert profile["profile_version"] == "1.1"
 
 
+def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "thesix_solutions")
+
+    assert {
+        "https://thesixtech.com/collections/fuel-cell-testing-hardware",
+        "https://thesixtech.com/products/ionic-conductivity-cell",
+        "https://thesixtech.com/collections/fuel-cell-production-units",
+        "https://thesixtech.com/products/electrolyzer-test-cell",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
