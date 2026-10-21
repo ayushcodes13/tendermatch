@@ -1,46 +1,18 @@
+"""Deterministic regression coverage for the previously debugged tender."""
+
 from matching.filter import classify_tender
-from matching.embedder import build_matcher
 
 
-def test_specific_tender():
+def test_thermovac_sputter_tender_is_retained_for_review():
     tender = {
         "title": "Thermal and Vacuum Cycling Chamber (Thermovac)",
         "organization": "Thermal and Vacuum Cycling Chamber (Thermovac)",
         "published_date": "08/04/2026",
-        "raw_text": "Sputter Deposition Setupt"
+        "raw_text": "Sputter Deposition Setupt",
     }
 
-    print("\n" + "=" * 60)
-    print("TESTING SPECIFIC TENDER")
-    print("=" * 60)
-    print("Title:", tender["title"])
-    print("Organization:", tender["organization"])
+    result = classify_tender(tender)
 
-    # -----------------------
-    # CLASSIFICATION
-    # -----------------------
-    classification = classify_tender(tender)
-
-    print("\n[CLASSIFICATION RESULT]")
-    print(classification)
-
-    if classification["category"] == "blocked":
-        print("\n❌ Tender blocked")
-        return
-
-    # -----------------------
-    # MATCHING
-    # -----------------------
-    matcher = build_matcher()
-    matches = matcher.match(tender)
-
-    print("\n[MATCHING RESULT]")
-    if not matches:
-        print("❌ No manufacturer matches found")
-    else:
-        for i, match in enumerate(matches, 1):
-            print(f"{i}. {match}")
-
-
-if __name__ == "__main__":
-    test_specific_tender()
+    assert result["decision"] == "agent_review"
+    assert result["agent_review_required"] is True
+    assert "TECH_CONCEPT_SPUTTERING" in result["reason_codes"]
