@@ -211,6 +211,18 @@ def init_db(conn):
     )
     """)
     cursor.execute("""
+    CREATE TABLE IF NOT EXISTS pipeline_runs (
+        run_id TEXT PRIMARY KEY,
+        status TEXT NOT NULL,
+        started_at TEXT NOT NULL,
+        completed_at TEXT,
+        duration_seconds REAL,
+        source_results_json TEXT NOT NULL DEFAULT '{}',
+        summary_json TEXT,
+        error_type TEXT
+    )
+    """)
+    cursor.execute("""
     CREATE TABLE IF NOT EXISTS email_notifications (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         batch_id INTEGER NOT NULL,
