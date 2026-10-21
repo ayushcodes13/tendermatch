@@ -4,10 +4,10 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `c029b5d` after merged P0.6 outbox PR #9; this P1.1 branch starts directly from that commit.
+- Current base: `main` at `f7aa1e8` after merged P1.1 dataset PR #10; this P1.2 branch starts directly from that commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. The repository has no PR status checks configured; the existing workflow is schedule/manual only.
-- No live scraper, model download, or SMTP delivery has been run as verification.
+- No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
 - Required runtime setup still missing: GitHub Actions secret `RECEIVER_EMAIL`.
 
 ## Phase 0 — Reliability
@@ -25,8 +25,8 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P1.1 Golden tender matching dataset | Implemented; independently reviewed; PR pending | `test/golden-tender-dataset`; PR pending | Dataset integrity test: 1 passed; P0.6 outbox/pipeline regression subset: 10 passed; compileall and `git diff --check` passed. Independent review findings were fixed and rechecked. 16 synthetic tender/manufacturer pairs cover required adversarial categories; zero human-reviewed cases are labeled as such. | Human-reviewed labels and source provenance are still needed before ground-truth evaluation. |
-| P1.2 Measurable matching evaluation | Not started | — | — | P1.1 labelled cases. |
+| P1.1 Golden tender matching dataset | Complete | `test/golden-tender-dataset`; [PR #10](https://github.com/ayushcodes13/tendermatch/pull/10) | Dataset integrity test: 1 passed; independent review findings fixed and rechecked; merged as `f7aa1e8`. 16 synthetic pairs cover required adversarial categories; zero human-reviewed cases. | Human-reviewed labels and source provenance are still needed before ground-truth evaluation. |
+| P1.2 Measurable matching evaluation | Partially verified; reproducible synthetic baseline recorded | `feat/matching-evaluation-metrics`; PR pending | Metric/dataset plus outbox/pipeline subset: 18 passed; compileall and `git diff --check` passed. Current matcher baseline used SentenceTransformers 6.2.0, PyTorch 2.14.1, model `BAAI/bge-small-en-v1.5` revision `5c38ec7`. On 16 synthetic pairs / 15 tender IDs: labeled-positive candidate recall 7/7; definitive retrieved-pair precision 7/8; 61 candidates unjudged; P@K/R@K withheld; median latency 15.0 ms, mean 15.8 ms; cost unavailable. Full suite: 57 passed, 1 known stub failure. Independent metric review findings fixed and rechecked. | Zero human-reviewed labels and no exhaustive per-tender judgments; do not treat synthetic metrics as ground truth or production accuracy. |
 | P1.3 Adversarial/regression suite and PR CI | Not started | — | — | Stable deterministic cases and current model dependency boundaries. |
 
 ## Phase 2 — Manufacturer matching
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P1.1: review and merge the synthetic dataset PR, then build reproducible metrics on clearly separated synthetic and human-reviewed cases.
+P1.3: add deterministic adversarial and regression coverage around confirmed matching failures, then establish PR CI without live scrapers, model downloads, or SMTP.
