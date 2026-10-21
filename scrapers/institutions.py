@@ -104,7 +104,9 @@ def parse_generic_links(soup, source_name, source_url):
             tender_url = source_url.rstrip("/") + "/" + tender_url.lstrip("/")
 
         tenders.append({
-            "tender_id": f"{source_name}_{hash(text)}",
+            # The heuristic listing has no official reference. The resolved
+            # detail URL is the stable identity fallback used by the database.
+            "tender_id": None,
             "title": text,
             "organization": source_name,
             "published_date": None,

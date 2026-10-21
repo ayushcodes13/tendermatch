@@ -1,5 +1,5 @@
 from data.db import generate_hash
-from scrapers import iisc, iit_goa
+from scrapers import iisc, iit_goa, institutions
 
 
 class FakeResponse:
@@ -66,3 +66,39 @@ def test_iit_goa_scraper_resolves_relative_notice_links(monkeypatch):
 
     assert tender["source_url"] == "https://iitgoa.ac.in/tenders/files/tender-2.pdf"
     assert tender["tender_id"] == tender["source_url"]
+
+
+def test_generic_institution_scraper_uses_detail_url_not_process_random_hash():
+    class Link:
+        def __init__(self, text, href):
+            self.text = text
+            self.href = href
+
+        def get_text(self, strip=False):
+            return self.text.strip() if strip else self.text
+
+        def __getitem__(self, key):
+            assert key == "href"
+            return self.href
+
+    class Soup:
+        def __init__(self, link):
+            self.link = link
+
+        def find_all(self, name, href=False):
+            return [self.link] if name == "a" else []
+
+    first = institutions.parse_generic_links(
+        Soup(Link("Tender for laboratory equipment", "/files/tender.pdf")),
+        "research_unit",
+        "https://example.edu/tenders",
+    )[0]
+    refreshed = institutions.parse_generic_links(
+        Soup(Link("Revised tender for laboratory equipment", "/files/tender.pdf")),
+        "research_unit",
+        "https://example.edu/tenders",
+    )[0]
+
+    assert first["tender_id"] is None
+    assert refreshed["tender_id"] is None
+    assert generate_hash(first) == generate_hash(refreshed)

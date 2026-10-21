@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `0f92d4e` after merged P2.4 sensitivity-evaluation PR #18; `feat/stable-tender-version-fingerprints` starts directly from that commit.
+- Current base: `main` at `9992849` after merged P3.1 tender-version PR #19; `fix/institution-source-identity` addresses an unstable generic scraper ID before P3.2.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -42,8 +42,8 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P3.1 Stable identity and version fingerprints | In progress | `feat/stable-tender-version-fingerprints` | Adds a SHA-256 fingerprint over canonical tender content, a `tender_versions` history keyed independently by the existing stable identity key, and a current-version pointer. Repeat observations update `last_seen_at`; changed content adds a preserved snapshot. Focused database/outbox/pipeline tests: 22 passed. | Migration seeds the current persisted contents as the earliest version available; no earlier snapshots can be reconstructed. Fingerprints detect content changes but do not assess whether changes are meaningful. |
-| P3.2 Meaningful amendment detection and history | Not started | — | — | Source-specific change fixtures. |
+| P3.1 Stable identity and version fingerprints | In progress | [PR #19](https://github.com/ayushcodes13/tendermatch/pull/19) merged as `9992849`; follow-up `fix/institution-source-identity` | Version history passed 22 focused and 95 full-suite tests. Follow-up removes the generic institution scraper's process-randomized Python hash identity; focused suite: 15 passed, full suite: 96 passed with one LibreSSL warning. | Migration seeds current persisted content; older overwritten versions are unavailable. Identity stability still depends on IDs/URLs supplied by individual sources. |
+| P3.2 Meaningful amendment detection and history | Deferred pending P3.1 identity follow-up | — | Initial implementation and its 33 focused/106 full-suite test results are preserved in the local stash `wip meaningful tender amendment comparison`; it is not yet based on the corrected identity state. | Resume on a fresh branch from updated `main` after the identity follow-up merges. |
 | P3.3 Amendment-specific notifications | Not started | — | — | P0.6 recoverable delivery and P3.2 version history. |
 
 ## Phase 4 — Document intelligence
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P3.1: add deterministic content fingerprints and persisted version snapshots on stable tender identities. Preserve the existing record and match keys; do not yet infer amendment meaning. Then P3.2 can classify meaningful changes against the version history.
+P3.1: merge the generic institution source-identity correction. Then restore P3.2 on a new branch from updated `main` and rerun its validation.
