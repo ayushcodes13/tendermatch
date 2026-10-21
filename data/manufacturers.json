@@ -68,7 +68,12 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://korvustech.com/"
+        "website": "https://korvustech.com/",
+        "source_links": [
+            "https://korvustech.com/pvd-systems/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "parteq",
@@ -128,7 +133,13 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://parteq.net"
+        "website": "https://parteq.net",
+        "source_links": [
+            "https://parteq.net/en/products/",
+            "https://parteq.net/en/products/nanopowder-synthesis/flammensynthese/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "pg_instruments",
@@ -250,7 +261,14 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://www.thesixsolutions.com"
+        "website": "https://thesixtech.com/",
+        "source_links": [
+            "https://thesixtech.com/",
+            "https://thesixtech.com/collections/fuel-cell-test-systems",
+            "https://thesixtech.com/products/electrolyzer-test-cell"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "genicore",
@@ -330,7 +348,13 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://genicore.eu"
+        "website": "https://genicore.eu",
+        "source_links": [
+            "https://genicore.eu/products/",
+            "https://genicore.eu/products/devices/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "nordiko",
@@ -414,7 +438,12 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://nordiko-tech.co.uk"
+        "website": "https://nordiko-tech.co.uk",
+        "source_links": [
+            "https://nordiko-tech.co.uk/products"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "nippon_instruments",
@@ -471,7 +500,13 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://www.nic-usa.com"
+        "website": "https://www.hg-nic.com/",
+        "source_links": [
+            "https://www.hg-nic.com/",
+            "https://www.hg-nic.com/product-brochure/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "spinflex",
@@ -605,7 +640,14 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://www.staton.sk/en/home/"
+        "website": "https://www.staton.sk/en/home/",
+        "source_links": [
+            "https://statoncoating.com/products/",
+            "https://statoncoating.com/products/octoarc-series/",
+            "https://statoncoating.com/products/octomag-series/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "teer_coatings",
@@ -683,7 +725,12 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://www.teercoatings.co.uk"
+        "website": "https://www.teercoatings.co.uk",
+        "source_links": [
+            "https://www.teercoatings.co.uk/standard-systems"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "sald",
@@ -760,7 +807,13 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://www.sald.nl"
+        "website": "https://spatialald.com/",
+        "source_links": [
+            "https://spatialald.com/solutions/rd-system/",
+            "https://spatialald.com/solutions/high-volume-production-systems/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "agnitron",
@@ -822,7 +875,12 @@
             "upgrade",
             "legacy system upgrade"
         ],
-        "website": "https://agnitron.com/"
+        "website": "https://agnitron.com/",
+        "source_links": [
+            "https://agnitron.com/products/mocvd/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "adnanotek",
@@ -894,7 +952,13 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://adnano-tek.com/"
+        "website": "https://adnano-tek.com/",
+        "source_links": [
+            "https://adnano-tek.com/about-adnanotek/",
+            "https://adnano-tek.com/deposition-system/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "on_nano",
@@ -978,6 +1042,11 @@
             "replacement",
             "upgrade"
         ],
-        "website": "https://on-nano.com/"
+        "website": "https://on-nano.com/",
+        "source_links": [
+            "https://on-nano.com/products/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     }
 ]
