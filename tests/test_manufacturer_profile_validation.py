@@ -77,6 +77,17 @@ def test_pg_instruments_profile_has_official_product_and_application_sources():
     assert "food and beverage quality control and monitoring" in profile["industries_served"]
 
 
+def test_nippon_profile_sources_and_capabilities_are_specific_to_mercury_analysis():
+    profile = next(p for p in load_profiles() if p["id"] == "nippon_instruments")
+
+    assert "https://www.hg-nic.com/products/" in profile["source_links"]
+    assert "https://www.hg-nic.com/industries-application/" in profile["source_links"]
+    assert "MA Series direct mercury analyzers" in profile["products"]
+    assert "atomic absorption systems" not in profile["product_categories"]
+    assert "trace metal analyzers" not in profile["product_categories"]
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
