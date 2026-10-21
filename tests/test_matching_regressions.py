@@ -194,3 +194,15 @@ def test_staton_profile_does_not_match_tool_reconditioning_as_equipment():
     match = matcher.match_topk({"title": "Procurement of tool sharpening and regrinding equipment"})[0]
 
     assert match["category_hits"] == []
+
+
+def test_genicore_toll_sintering_matches_service_not_product():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    genicore = next(profile for profile in manufacturers if profile["id"] == "genicore")
+    matcher = make_matcher([genicore], [[1.0]], [1.0])
+
+    match = matcher.match_topk({"title": "Toll sintering services for ceramic powders"})[0]
+
+    assert match["product_hits"] == []
+    assert "Toll Sintering Services" in match["service_hits"]

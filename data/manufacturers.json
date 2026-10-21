@@ -318,8 +318,7 @@
             "Diamond Enhanced Cemented Carbide (DEC)",
             "Super Enhanced Ceramic - Whiskers (SEC-W)",
             "CUBNEC (cBN Composite)",
-            "Precision Graphite Dies",
-            "Toll Sintering Services"
+            "Precision Graphite Dies"
         ],
         "industries_served": [
             "academic R&D",
@@ -360,6 +359,7 @@
             "deposition system"
         ],
         "service_keywords": [
+            "Toll Sintering Services",
             "AMC",
             "annual maintenance",
             "maintenance",
@@ -373,9 +373,10 @@
         "website": "https://genicore.eu",
         "source_links": [
             "https://genicore.eu/products/",
-            "https://genicore.eu/products/devices/"
+            "https://genicore.eu/products/devices/",
+            "https://genicore.eu/products/services/"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {

@@ -110,6 +110,15 @@ def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
     assert profile["profile_version"] == "1.1"
 
 
+def test_genicore_toll_sintering_is_a_service_not_a_product():
+    profile = next(p for p in load_profiles() if p["id"] == "genicore")
+
+    assert "Toll Sintering Services" not in profile["products"]
+    assert "Toll Sintering Services" in profile["service_keywords"]
+    assert "https://genicore.eu/products/services/" in profile["source_links"]
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
