@@ -110,6 +110,7 @@ def classify_tender(tender, manufacturer_candidates=None):
         "reason_codes": decision.get("reason_codes", []),
         "agent_review_required": decision.get("agent_review_required", False),
         "trace": trace,
+        "explanation": trace["explanation"],
     }
 
 

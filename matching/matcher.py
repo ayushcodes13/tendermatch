@@ -115,6 +115,7 @@ class TenderMatcher:
             results.append({
                 "manufacturer_id": manufacturer.get("id"),
                 "manufacturer_name": manufacturer.get("name"),
+                "manufacturer_source_links": manufacturer.get("source_links", []) or [],
                 "rank": rank,
 
                 "base_semantic_score": round(base_score, 4),
