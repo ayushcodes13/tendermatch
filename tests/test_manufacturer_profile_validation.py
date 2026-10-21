@@ -223,6 +223,21 @@ def test_on_nano_profile_links_official_products_and_subsystems():
     assert profile["profile_version"] == "1.1"
 
 
+def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "adnanotek")
+
+    assert {
+        "https://adnano-tek.com/quantum-computing-deposition-system/",
+        "https://adnano-tek.com/quantum-computing-deposition-system/jeb-2/",
+        "https://adnano-tek.com/quantum-computing-deposition-system/jeb-3/",
+        "https://adnano-tek.com/ion-beam-etching/",
+        "https://adnano-tek.com/ion-beam-sputter-deposition/",
+        "https://adnano-tek.com/plasma-system/",
+        "https://adnano-tek.com/thermo-evaporator-system/",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
