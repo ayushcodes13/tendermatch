@@ -316,6 +316,7 @@
         "active": true,
         "product_categories": [
             "field assisted sintering technology",
+            "multi-energy field-assisted sintering systems",
             "spark plasma sintering systems",
             "advanced material manufacturing",
             "powder metallurgy equipment",
@@ -327,6 +328,7 @@
             "U-FAST Glovebox (GC)",
             "U-FAST (SPS) MASS",
             "U-FAST (SPS) Hybrid",
+            "U-FAST FLASH multi-energy sintering platform",
             "Pulse Plasma Compaction (PPC)",
             "Diamond Enhanced Cemented Carbide (DEC)",
             "Super Enhanced Ceramic - Whiskers (SEC-W)",
@@ -387,9 +389,10 @@
         "source_links": [
             "https://genicore.eu/products/",
             "https://genicore.eu/products/devices/",
+            "https://genicore.eu/products/devices/flash/",
             "https://genicore.eu/products/services/"
         ],
-        "profile_version": "1.1",
+        "profile_version": "1.2",
         "profile_last_updated": "2026-10-22"
     },
     {

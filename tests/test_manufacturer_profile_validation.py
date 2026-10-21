@@ -116,7 +116,16 @@ def test_genicore_toll_sintering_is_a_service_not_a_product():
     assert "Toll Sintering Services" not in profile["products"]
     assert "Toll Sintering Services" in profile["service_keywords"]
     assert "https://genicore.eu/products/services/" in profile["source_links"]
-    assert profile["profile_version"] == "1.1"
+    assert profile["profile_version"] == "1.2"
+
+
+def test_genicore_profile_includes_documented_u_fast_flash_platform():
+    profile = next(p for p in load_profiles() if p["id"] == "genicore")
+
+    assert "U-FAST FLASH multi-energy sintering platform" in profile["products"]
+    assert "multi-energy field-assisted sintering systems" in profile["product_categories"]
+    assert "https://genicore.eu/products/devices/flash/" in profile["source_links"]
+    assert profile["profile_version"] == "1.2"
 
 
 def test_korvus_profile_links_named_deposition_sources():
