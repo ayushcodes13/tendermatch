@@ -13,8 +13,12 @@ Decision buckets:
 - agent_review
 """
 
-def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
+from matching.thresholds import resolve_thresholds
+
+
+def decide_tender(signals, concepts, scoring, manufacturer_candidates=None, thresholds=None):
     manufacturer_candidates = manufacturer_candidates or []
+    thresholds = resolve_thresholds(thresholds)
 
     score = scoring["score"]
 
@@ -23,15 +27,16 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     contextual_negatives = signals.get("contextual_negative_hits", [])
     domain_review_hits = signals.get("domain_review_hits", [])
 
-    has_rescue = has_real_rescue_evidence(signals, concepts, manufacturer_candidates)
+    has_rescue = has_real_rescue_evidence(signals, concepts, manufacturer_candidates, thresholds)
     has_support_only = concepts.get("has_support_only_concepts", False)
     has_rescue_concept = concepts.get("has_rescue_concept", False)
-    has_mfr_evidence = has_strong_manufacturer_evidence(manufacturer_candidates)
+    has_mfr_evidence = has_strong_manufacturer_evidence(manufacturer_candidates, thresholds)
 
     reason_codes = build_reason_codes(
         signals=signals,
         concepts=concepts,
         manufacturer_candidates=manufacturer_candidates,
+        thresholds=thresholds,
     )
 
     # Conflicting domain/specification evidence is ambiguous and must remain
@@ -81,24 +86,24 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     # 3. Soft-risk rescue gate
     # --------------------------------------------------
     if has_strong_soft_risk(signals) and has_rescue:
-        if score >= 70 and (has_rescue_concept or has_mfr_evidence):
+        if score >= thresholds["soft_risk_high_signal"] and (has_rescue_concept or has_mfr_evidence):
             return {
                 "decision": "high_signal",
                 "reason_codes": reason_codes + ["SOFT_RISK_RESCUED_HIGH_CONFIDENCE"],
                 "agent_review_required": False,
             }
 
-        if score >= 40:
+        if score >= thresholds["soft_risk_rescued"]:
             return {
                 "decision": "rescued",
                 "reason_codes": reason_codes + ["SOFT_RISK_RESCUED"],
-                "agent_review_required": score < 60,
+                "agent_review_required": score < thresholds["soft_risk_review_below"],
             }
 
     # --------------------------------------------------
     # 4. Clean high-signal gate
     # --------------------------------------------------
-    if score >= 75 and (has_rescue_concept or has_mfr_evidence):
+    if score >= thresholds["high_signal"] and (has_rescue_concept or has_mfr_evidence):
         return {
             "decision": "high_signal",
             "reason_codes": reason_codes + ["SCORE_HIGH_SIGNAL"],
@@ -108,7 +113,7 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     # --------------------------------------------------
     # 5. Strong manufacturer match without concept
     # --------------------------------------------------
-    if score >= 65 and has_mfr_evidence:
+    if score >= thresholds["manufacturer_explore"] and has_mfr_evidence:
         return {
             "decision": "explore",
             "reason_codes": reason_codes + ["MANUFACTURER_EVIDENCE_EXPLORE"],
@@ -118,7 +123,7 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     # --------------------------------------------------
     # 6. Rescue concept but borderline score
     # --------------------------------------------------
-    if has_rescue_concept and 35 <= score < 75:
+    if has_rescue_concept and thresholds["rescue_concept_review_min"] <= score < thresholds["rescue_concept_review_max_exclusive"]:
         return {
             "decision": "agent_review",
             "reason_codes": reason_codes + ["RESCUE_CONCEPT_BORDERLINE_SCORE"],
@@ -129,7 +134,7 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     # 7. Support-only concepts
     # --------------------------------------------------
     if has_support_only and not has_rescue_concept and not has_mfr_evidence:
-        if score >= 45:
+        if score >= thresholds["support_review"]:
             return {
                 "decision": "agent_review",
                 "reason_codes": reason_codes + ["SUPPORT_ONLY_CONCEPT_REVIEW"],
@@ -145,14 +150,14 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     # --------------------------------------------------
     # 8. Explore / borderline
     # --------------------------------------------------
-    if score >= 55:
+    if score >= thresholds["explore"]:
         return {
             "decision": "explore",
             "reason_codes": reason_codes + ["SCORE_EXPLORE"],
             "agent_review_required": False,
         }
 
-    if score >= 35:
+    if score >= thresholds["review"]:
         return {
             "decision": "agent_review",
             "reason_codes": reason_codes + ["BORDERLINE_SCORE"],
@@ -186,7 +191,8 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None):
     }
 
 
-def build_reason_codes(signals, concepts, manufacturer_candidates):
+def build_reason_codes(signals, concepts, manufacturer_candidates, thresholds=None):
+    thresholds = resolve_thresholds(thresholds)
     reason_codes = []
 
     for cluster in signals.get("hard_junk_clusters", []):
@@ -204,13 +210,13 @@ def build_reason_codes(signals, concepts, manufacturer_candidates):
     for concept in concepts.get("matched_concepts", []):
         reason_codes.append(concept["reason_code"])
 
-    if has_strong_manufacturer_evidence(manufacturer_candidates):
+    if has_strong_manufacturer_evidence(manufacturer_candidates, thresholds):
         reason_codes.append("MANUFACTURER_EVIDENCE_PRESENT")
 
     return dedupe_preserve_order(reason_codes)
 
 
-def has_real_rescue_evidence(signals, concepts, manufacturer_candidates):
+def has_real_rescue_evidence(signals, concepts, manufacturer_candidates, thresholds=None):
     """
     Real rescue evidence means:
     - rescue concept from active concepts
@@ -226,11 +232,12 @@ def has_real_rescue_evidence(signals, concepts, manufacturer_candidates):
     """
     return bool(
         concepts.get("has_rescue_concept", False)
-        or has_strong_manufacturer_evidence(manufacturer_candidates)
+        or has_strong_manufacturer_evidence(manufacturer_candidates, thresholds)
     )
 
 
-def has_strong_manufacturer_evidence(candidates):
+def has_strong_manufacturer_evidence(candidates, thresholds=None):
+    thresholds = resolve_thresholds(thresholds)
     if not candidates:
         return False
 
@@ -252,11 +259,13 @@ def has_strong_manufacturer_evidence(candidates):
     )
 
     # Concrete evidence + acceptable semantic score.
-    if evidence_count >= 1 and top_score >= 0.55:
+    with_evidence_min = thresholds["manufacturer_semantic_with_evidence_min_percent"] / 100
+    semantic_only_min = thresholds["manufacturer_semantic_only_min_percent"] / 100
+    if evidence_count >= 1 and top_score >= with_evidence_min:
         return True
 
     # Very high semantic score can count, but only at a stricter threshold.
-    if top_score >= 0.78:
+    if top_score >= semantic_only_min:
         return True
 
     return False

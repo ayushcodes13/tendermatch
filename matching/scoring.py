@@ -9,8 +9,12 @@ Important:
 - Final bucketing belongs only in matching.decision.
 """
 
-def score_tender(tender, signals, concepts, manufacturer_candidates=None):
+from matching.thresholds import resolve_thresholds
+
+
+def score_tender(tender, signals, concepts, manufacturer_candidates=None, thresholds=None):
     manufacturer_candidates = manufacturer_candidates or []
+    thresholds = resolve_thresholds(thresholds)
 
     score = 0
     breakdown = {}
@@ -65,7 +69,7 @@ def score_tender(tender, signals, concepts, manufacturer_candidates=None):
     # --------------------------------------------------
     # 7. Rescue bonus
     # --------------------------------------------------
-    rescue_bonus = score_rescue(signals, concepts, manufacturer_candidates)
+    rescue_bonus = score_rescue(signals, concepts, manufacturer_candidates, thresholds)
     breakdown["rescue_bonus"] = rescue_bonus
     score += rescue_bonus
 
@@ -275,7 +279,7 @@ def score_hard_junk(signals):
     return max(penalty, -75)
 
 
-def score_rescue(signals, concepts, manufacturer_candidates):
+def score_rescue(signals, concepts, manufacturer_candidates, thresholds=None):
     """
     Rescue bonus is only for cases where negative evidence exists
     and real positive evidence also exists.
@@ -292,7 +296,7 @@ def score_rescue(signals, concepts, manufacturer_candidates):
         return 0
 
     has_rescue_concept = concepts.get("has_rescue_concept", False)
-    has_mfr_evidence = has_strong_manufacturer_evidence(manufacturer_candidates)
+    has_mfr_evidence = has_strong_manufacturer_evidence(manufacturer_candidates, thresholds)
 
     if has_rescue_concept or has_mfr_evidence:
         return 22
@@ -321,7 +325,8 @@ def has_strong_soft_risk(signals):
     return bool(soft_terms.intersection(strong_soft_terms))
 
 
-def has_strong_manufacturer_evidence(candidates):
+def has_strong_manufacturer_evidence(candidates, thresholds=None):
+    thresholds = resolve_thresholds(thresholds)
     if not candidates:
         return False
 
@@ -342,10 +347,12 @@ def has_strong_manufacturer_evidence(candidates):
         + len(alias_hits)
     )
 
-    if evidence_count >= 1 and top_score >= 0.55:
+    with_evidence_min = thresholds["manufacturer_semantic_with_evidence_min_percent"] / 100
+    semantic_only_min = thresholds["manufacturer_semantic_only_min_percent"] / 100
+    if evidence_count >= 1 and top_score >= with_evidence_min:
         return True
 
-    if top_score >= 0.78:
+    if top_score >= semantic_only_min:
         return True
 
     return False

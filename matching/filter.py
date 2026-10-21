@@ -31,6 +31,7 @@ from matching.concepts import detect_concepts
 from matching.scoring import score_tender
 from matching.decision import decide_tender
 from matching.trace import build_trace
+from matching.thresholds import resolve_thresholds
 
 
 SIGNAL_DECISIONS = {
@@ -48,7 +49,7 @@ BLOCKED_DECISIONS = {
 }
 
 
-def classify_tender(tender, manufacturer_candidates=None):
+def classify_tender(tender, manufacturer_candidates=None, thresholds=None):
     """
     Classifies one tender using the v2 evidence-based classifier.
 
@@ -65,6 +66,7 @@ def classify_tender(tender, manufacturer_candidates=None):
             Legacy-compatible + v2 classification result.
     """
     manufacturer_candidates = manufacturer_candidates or []
+    active_thresholds = resolve_thresholds(thresholds)
 
     signals = detect_signals(tender)
     concepts = detect_concepts(tender)
@@ -74,6 +76,7 @@ def classify_tender(tender, manufacturer_candidates=None):
         signals=signals,
         concepts=concepts,
         manufacturer_candidates=manufacturer_candidates,
+        thresholds=active_thresholds,
     )
 
     decision = decide_tender(
@@ -81,6 +84,7 @@ def classify_tender(tender, manufacturer_candidates=None):
         concepts=concepts,
         scoring=scoring,
         manufacturer_candidates=manufacturer_candidates,
+        thresholds=active_thresholds,
     )
 
     trace = build_trace(
@@ -90,6 +94,7 @@ def classify_tender(tender, manufacturer_candidates=None):
         scoring=scoring,
         decision=decision,
         manufacturer_candidates=manufacturer_candidates,
+        thresholds=active_thresholds,
     )
 
     final_decision = decision["decision"]

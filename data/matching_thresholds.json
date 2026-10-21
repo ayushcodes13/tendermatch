@@ -1,0 +1,14 @@
+{
+  "soft_risk_high_signal": 70,
+  "soft_risk_rescued": 40,
+  "soft_risk_review_below": 60,
+  "high_signal": 75,
+  "manufacturer_explore": 65,
+  "manufacturer_semantic_with_evidence_min_percent": 55,
+  "manufacturer_semantic_only_min_percent": 78,
+  "rescue_concept_review_min": 35,
+  "rescue_concept_review_max_exclusive": 75,
+  "support_review": 45,
+  "explore": 55,
+  "review": 35
+}
