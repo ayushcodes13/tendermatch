@@ -128,3 +128,16 @@ def test_spinflex_profile_has_epr_evidence_but_no_nmr_lexical_evidence():
     assert nmr_match["category_hits"] == []
     assert nmr_match["keyword_hits"] == []
     assert nmr_match["concept_hits"] == []
+
+
+def test_pg_instruments_profile_matches_documented_icp_oes_equipment():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    pg_instruments = next(profile for profile in manufacturers if profile["id"] == "pg_instruments")
+    matcher = make_matcher([pg_instruments], [[1.0]], [1.0])
+
+    match = matcher.match_topk({"title": "Supply of ICP-OES spectrometers"})[0]
+
+    assert "ICP-OES spectrometers" in match["product_hits"]
+    assert "ICP-OES spectrometers" in match["category_hits"]
+    assert "ICP-OES" in match["keyword_hits"]
