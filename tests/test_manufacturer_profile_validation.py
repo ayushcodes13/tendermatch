@@ -158,6 +158,22 @@ def test_nordiko_n1500_is_classified_as_pecvd_not_sputtering():
     assert profile["profile_version"] == "1.2"
 
 
+def test_agnitron_profile_links_official_products_software_and_service_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "agnitron")
+
+    assert {
+        "https://agnitron.com/products/",
+        "https://agnitron.com/products/control-software/",
+        "https://agnitron.com/services-and-support/",
+        "https://agnitron.com/products/mocvd/agilis-100/",
+        "https://agnitron.com/products/mocvd/agilis-500/",
+        "https://agnitron.com/products/mocvd/agilis-700/",
+        "https://agnitron.com/products/mocvd/agilis-series-300/",
+        "https://agnitron.com/products/mocvd/a-series/",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
