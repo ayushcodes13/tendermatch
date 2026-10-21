@@ -146,7 +146,16 @@ def test_nordiko_profile_links_official_model_and_process_sources():
         "https://nordiko-tech.co.uk/ion-beam-technology",
         "https://nordiko-tech.co.uk/sputtering-technology",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.1"
+    assert profile["profile_version"] == "1.2"
+
+
+def test_nordiko_n1500_is_classified_as_pecvd_not_sputtering():
+    profile = next(p for p in load_profiles() if p["id"] == "nordiko")
+
+    assert "N1500-600 Large-area PECVD reactor" in profile["products"]
+    assert "N1500 Sputtering System" not in profile["products"]
+    assert "plasma-enhanced chemical vapour deposition systems" in profile["product_categories"]
+    assert profile["profile_version"] == "1.2"
 
 
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
