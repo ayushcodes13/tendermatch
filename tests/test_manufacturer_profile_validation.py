@@ -132,6 +132,23 @@ def test_korvus_profile_links_named_deposition_sources():
     assert profile["profile_version"] == "1.1"
 
 
+def test_nordiko_profile_links_official_model_and_process_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "nordiko")
+
+    assert {
+        "https://nordiko-tech.co.uk/nordiko-mnem-ix-broad-ion-beam-system",
+        "https://nordiko-tech.co.uk/nordiko-3000",
+        "https://nordiko-tech.co.uk/nordiko-i-octave",
+        "https://nordiko-tech.co.uk/nordiko-3400-broad-ion-beam-deposition-system",
+        "https://nordiko-tech.co.uk/nordiko-5000-configurable-module",
+        "https://nordiko-tech.co.uk/nordiko-9000-9550-series",
+        "https://nordiko-tech.co.uk/nordiko-n1500",
+        "https://nordiko-tech.co.uk/ion-beam-technology",
+        "https://nordiko-tech.co.uk/sputtering-technology",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
