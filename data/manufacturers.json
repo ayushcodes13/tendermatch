@@ -977,9 +977,17 @@
         ],
         "website": "https://agnitron.com/",
         "source_links": [
-            "https://agnitron.com/products/mocvd/"
+            "https://agnitron.com/products/mocvd/",
+            "https://agnitron.com/products/",
+            "https://agnitron.com/products/control-software/",
+            "https://agnitron.com/services-and-support/",
+            "https://agnitron.com/products/mocvd/agilis-100/",
+            "https://agnitron.com/products/mocvd/agilis-500/",
+            "https://agnitron.com/products/mocvd/agilis-700/",
+            "https://agnitron.com/products/mocvd/agilis-series-300/",
+            "https://agnitron.com/products/mocvd/a-series/"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {
