@@ -83,12 +83,9 @@ pip install -r requirements.txt
 ### 2️⃣ Configuration
 ```bash
 # Copy and configure
- cp .env.example .env
+cp .env.example .env
 
- # Set your credentials
-echo "SENDER_EMAIL=your@email.com" >> .env
-echo "SENDER_PASSWORD=your_app_password" >> .env
-echo "RECEIVER_EMAIL=target@email.com" >> .env
+# Edit .env with your SMTP sender, app password, and digest recipient.
 ```
 
 ### 3️⃣ Initialize Database
