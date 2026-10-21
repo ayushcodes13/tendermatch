@@ -1165,9 +1165,11 @@
         ],
         "website": "https://on-nano.com/",
         "source_links": [
-            "https://on-nano.com/products/"
+            "https://on-nano.com/products/",
+            "https://on-nano.com/sub-systems/",
+            "https://on-nano.com/"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     }
 ]
