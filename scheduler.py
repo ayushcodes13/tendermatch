@@ -12,10 +12,9 @@ Key responsibilities:
 
 Notes:
 - Default interval is 30 minutes, configurable via global constants.
-- Error logs include full tracebacks for debugging pipeline failures.
+- Failure logs retain exception types without printing raw exception payloads.
 """
 import time
-import traceback
 
 from pipeline.run import run_pipeline
 
@@ -40,8 +39,8 @@ def start_scheduler():
             print("✅ Run complete.")
 
         except Exception as e:
-            print("❌ Error occurred:")
-            traceback.print_exc()
+            # Avoid tracebacks and exception payloads that may expose secrets.
+            print(f"❌ Pipeline run failed ({type(e).__name__}).")
 
         print(f"😴 Sleeping for {INTERVAL/60} minutes...\n")
         time.sleep(INTERVAL)
