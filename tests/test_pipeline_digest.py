@@ -63,3 +63,38 @@ def test_pipeline_generates_digest_with_its_statistics_schema(monkeypatch):
     assert "Total scraped: 1" in sent["body"]
     assert "Fresh tenders processed: 1" in sent["body"]
     assert "High-signal opportunities: 1" in sent["body"]
+
+
+def test_pipeline_does_not_suppress_distinct_tenders_with_the_same_title(monkeypatch):
+    classified = []
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(":memory:"))
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [
+        {
+            "tender_id": "REF-1", "title": "Supply of a spectrometer",
+            "organization": "Research Institute", "published_date": "2026-10-21",
+            "source_portal": "cppp", "raw_text": "First procurement",
+        },
+        {
+            "tender_id": "REF-2", "title": "Supply of a spectrometer",
+            "organization": "Research Institute", "published_date": "2026-10-21",
+            "source_portal": "cppp", "raw_text": "Second procurement",
+        },
+    ])
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(pipeline, "is_recent_tender", lambda tender, max_age_hours: True)
+    monkeypatch.setattr(pipeline, "classify_tender", lambda tender, manufacturer_candidates: (
+        classified.append(tender["raw_text"]) or {
+            "is_blocked": False,
+            "has_signal": True,
+            "category": "high_signal",
+            "decision": "high_signal",
+            "score": 80,
+            "reason": "test fixture",
+        }
+    ))
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(pipeline, "send_email", lambda *args: None)
+
+    pipeline.run_pipeline()
+
+    assert classified == ["First procurement", "Second procurement"]

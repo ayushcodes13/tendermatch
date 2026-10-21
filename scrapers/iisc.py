@@ -17,7 +17,9 @@ Notes:
 """
 
 import requests
+import hashlib
 from datetime import datetime
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 from scrapers.iisc_dates import extract_iisc_date_fields
 
@@ -94,15 +96,17 @@ def scrape_iisc():
         date_fields = extract_iisc_date_fields(text)
         published_date = date_fields["published_date"]
         corrigendum_date = date_fields["corrigendum_date"]
+        link = item.find("a", href=True)
+        source_url = urljoin(URL, link["href"]) if link else URL
 
         tender = {
-            "tender_id": f"iisc_{abs(hash(text))}",
+            "tender_id": f"iisc_{hashlib.sha256(text.encode('utf-8')).hexdigest()[:20]}",
             "title": text,
             "organization": "Indian Institute of Science Bangalore",
             "published_date": published_date.isoformat() if published_date else None,
             "corrigendum_date": corrigendum_date.isoformat() if corrigendum_date else None,
             "closing_date": None,
-            "source_url": URL,
+            "source_url": source_url,
             "source_portal": "iisc",
             "raw_text": text,
             "scraped_at": datetime.now().isoformat()

@@ -141,7 +141,7 @@ def parse_cppp_row(cells, link):
         tender_id = raw[match.start():].strip()
     else:
         title = raw
-        tender_id = raw
+        tender_id = None
 
     organization = cells[5].strip() if len(cells) > 5 else None
 

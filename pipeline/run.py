@@ -47,7 +47,6 @@ from data.db import (
     insert_match,
     mark_as_emailed,
     is_already_emailed,
-    normalize_title,
 )
 
 from matching.filter import classify_tender
@@ -126,7 +125,7 @@ def run_pipeline():
     high_signal = 0
     explore_count = 0
 
-    seen_titles = set()
+    seen_identity_keys = set()
 
     high_tenders = []
     low_tenders = []
@@ -136,13 +135,13 @@ def run_pipeline():
 
     for t in tenders:
         new_t, is_new = upsert_or_get_tender(conn, t)
-        content_hash = new_t["content_hash"]
+        identity_key = new_t["identity_key"]
         status_str = "NEW" if is_new else "EXISTING_NOT_EMAILED"
 
         # -------------------------
         # EMAIL DEDUPE
         # -------------------------
-        if is_already_emailed(conn, content_hash):
+        if is_already_emailed(conn, identity_key):
             already_emailed += 1
             print(f"[{status_str}] Skipping already emailed tender: {new_t.get('title')}")
             continue
@@ -177,14 +176,11 @@ def run_pipeline():
         # -------------------------
         # RUNTIME TITLE DEDUPE
         # -------------------------
-        title = new_t.get("title") or ""
-        normalized_title = normalize_title(title)
-
-        if normalized_title in seen_titles:
+        if identity_key in seen_identity_keys:
             duplicates += 1
             continue
 
-        seen_titles.add(normalized_title)
+        seen_identity_keys.add(identity_key)
 
         # only count truly processable fresh tenders
         processed.append(new_t)
@@ -214,7 +210,7 @@ def run_pipeline():
 
         update_flags(
             conn,
-            content_hash,
+            identity_key,
             result["is_blocked"],
             result["has_signal"],
         )
@@ -251,7 +247,7 @@ def run_pipeline():
         ]
 
         for m in matches:
-            insert_match(conn, content_hash, m)
+            insert_match(conn, identity_key, m)
 
         new_t["matches"] = matches
 
@@ -307,7 +303,7 @@ def run_pipeline():
             send_email(subject, body, RECEIVER_EMAIL)
 
             for t in high_tenders + explore_tenders:
-                mark_as_emailed(conn, t["content_hash"])
+                mark_as_emailed(conn, t["identity_key"])
 
             conn.commit()
 

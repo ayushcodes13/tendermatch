@@ -7,8 +7,8 @@ Ensures data integrity and implements the deduplication logic used to prevent
 re-processing of known tenders.
 
 Key responsibilities:
-- Schema management and database initialization.
-- Content-based hashing for tender deduplication (title + organization).
+- Schema management and backward-compatible database initialization.
+- Stable source-identity hashing with title/date fallback for tender deduplication.
 - CRUD operations for tender records and manufacturer match results.
 - State management for email dispatch tracking.
 
@@ -21,12 +21,16 @@ Outputs:
 - Result sets for email formatting and pipeline statistics.
 
 Notes:
-- Uses an MD5 hash of 'title_organization' as the primary uniqueness constraint 
-  to handle the same tender appearing across different portals with different IDs.
+- Uses SHA-256 source identity keys for tender state and manufacturer matches.
+- Retains the former title/organization digest for migration compatibility only.
 """
 import sqlite3
 import hashlib
+import json
 import re
+from urllib.parse import urlsplit, urlunsplit
+
+from pipeline.freshness import parse_date
 
 DB_PATH = "data/tenders.db"
 
@@ -38,7 +42,7 @@ def get_connection():
     Returns:
         sqlite3.Connection: An active database connection object.
     """
-    return sqlite3.connect(DB_PATH)
+    return sqlite3.connect(DB_PATH, timeout=30)
 
 
 def init_db(conn):
@@ -62,9 +66,12 @@ def init_db(conn):
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tender_id TEXT,
         content_hash TEXT,
+        identity_key TEXT,
         title TEXT,
         organization TEXT,
         published_date TEXT,
+        updated_date TEXT,
+        corrigendum_date TEXT,
         closing_date TEXT,
         source_url TEXT,
         source_portal TEXT,
@@ -88,11 +95,30 @@ def init_db(conn):
         manufacturer_name TEXT,
         score REAL,
         confidence TEXT,
+        tender_identity_key TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
 
-    # -------- UNIQUE INDEX --------
+    _ensure_column(conn, "tenders", "identity_key", "TEXT")
+    _ensure_column(conn, "tenders", "updated_date", "TEXT")
+    _ensure_column(conn, "tenders", "corrigendum_date", "TEXT")
+    _ensure_column(conn, "tender_matches", "tender_identity_key", "TEXT")
+
+    _migrate_tender_identity_keys(conn)
+    _migrate_match_identity_keys(conn)
+
+    cursor.execute("""
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_tender_identity
+        ON tenders (identity_key)
+    """)
+    cursor.execute("""
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_match_identity
+        ON tender_matches (tender_identity_key, manufacturer_id)
+        WHERE tender_identity_key IS NOT NULL
+    """)
+
+    # -------- LEGACY UNIQUE INDEX --------
     cursor.execute("""
     CREATE UNIQUE INDEX IF NOT EXISTS idx_unique_match
     ON tender_matches (tender_hash, manufacturer_id)
@@ -101,27 +127,126 @@ def init_db(conn):
     conn.commit()
 
 
+def _ensure_column(conn, table, column, definition):
+    columns = {row[1] for row in conn.execute(f"PRAGMA table_info({table})")}
+    if column not in columns:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
+
+
+def _migrate_tender_identity_keys(conn):
+    """Backfill stable keys without deleting or merging historical tender rows."""
+    rows = conn.execute("SELECT * FROM tenders ORDER BY id").fetchall()
+    columns = [description[0] for description in conn.execute(
+        "SELECT * FROM tenders LIMIT 0"
+    ).description]
+    used = set()
+    for row in rows:
+        tender = dict(zip(columns, row))
+        identity_key = tender.get("identity_key") or generate_hash(tender)
+        if identity_key in used:
+            # Retain duplicate historical rows as distinct records. Future
+            # writes resolve through the canonical key to the first row.
+            identity_key = hashlib.sha256(
+                f"{identity_key}:legacy-row:{tender['id']}".encode("utf-8")
+            ).hexdigest()
+        used.add(identity_key)
+        conn.execute(
+            "UPDATE tenders SET identity_key=? WHERE id=?",
+            (identity_key, tender["id"]),
+        )
+
+
+def _migrate_match_identity_keys(conn):
+    """Attach legacy matches to identities while retaining every old match row."""
+    matches = conn.execute(
+        "SELECT id, tender_hash, manufacturer_id, manufacturer_name, score, confidence, created_at "
+        "FROM tender_matches WHERE tender_identity_key IS NULL ORDER BY id"
+    ).fetchall()
+    for match in matches:
+        match_id, tender_hash, manufacturer_id, manufacturer_name, score, confidence, created_at = match
+        tenders = conn.execute(
+            "SELECT identity_key FROM tenders WHERE content_hash=? ORDER BY id",
+            (tender_hash,),
+        ).fetchall()
+        if len(tenders) == 1:
+            conn.execute(
+                "UPDATE tender_matches SET tender_identity_key=? WHERE id=?",
+                (tenders[0][0], match_id),
+            )
+        # An old title+organization digest may refer to several distinct
+        # notices. Keep the historical match intact but unlinked; assigning it
+        # to every candidate would invent match evidence the old schema lacked.
+
+
 # -------- HASH --------
 def generate_hash(tender):
     """
-    Generates a deterministic content hash for a tender.
+    Generates a SHA-256 key for a tender's stable source identity.
 
     Args:
         tender (dict): Dictionary containing 'title' and 'organization'.
 
     Returns:
-        str: MD5 hexadecimal hash representing the tender identity.
+        str: SHA-256 hexadecimal identity key.
 
     Notes:
-        - Logic: MD5(lowercase(title)_lowercase(org)). 
-        - This is the core of the project's cross-portal deduplication strategy.
+        - Prefer the official tender reference and organization, which survives
+          title edits and can identify the same official tender across portals.
+        - Fall back to the detail URL, then typed source/title/date fields.
     """
-    title = (tender.get("title") or "").strip().lower()
-    organization = (tender.get("organization") or "").strip().lower()
+    title = _normalize_identity_text(tender.get("title"))
+    organization = _normalize_identity_text(tender.get("organization"))
+    portal = _normalize_identity_text(tender.get("source_portal"))
+    tender_id = _normalize_identity_text(tender.get("tender_id"))
+    source_url = _normalize_url(tender.get("source_url"))
 
-    base = f"{title}_{organization}"
+    if tender_id and not (portal == "iisc" and tender_id.startswith("iisc_")):
+        identity = ["official_id", organization, tender_id]
+    elif source_url and not _is_listing_url(source_url):
+        identity = ["detail_url", source_url]
+    elif portal == "iisc":
+        # IISc has no exposed notice ID; its previous scraper-generated Python
+        # hash was process-random. Stable text identity preserves repeat runs.
+        identity = ["iisc_listing_text", organization, title]
+    else:
+        identity = [
+            "fallback", portal, title, organization,
+            _normalize_identity_date(tender.get("published_date")),
+            _normalize_identity_date(tender.get("closing_date")),
+        ]
+    payload = json.dumps(identity, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
-    return hashlib.md5(base.encode()).hexdigest()
+
+def _normalize_identity_text(value):
+    return " ".join(str(value or "").casefold().split())
+
+
+def _normalize_identity_date(value):
+    parsed = parse_date(value)
+    return parsed.isoformat() if parsed else _normalize_identity_text(value)
+
+
+def _normalize_url(value):
+    if not value:
+        return ""
+    parts = urlsplit(str(value).strip())
+    if not parts.scheme or not parts.netloc:
+        return str(value).strip().rstrip("/")
+    path = parts.path.rstrip("/") or "/"
+    return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), path, parts.query, ""))
+
+
+def _is_listing_url(url):
+    path = urlsplit(url).path.rstrip("/").casefold()
+    return path in {"", "/tenders", "/all-tenders", "/latestactivetendersnew"}
+
+
+def generate_legacy_content_hash(tender):
+    """Preserve the former title/organization digest for historical compatibility."""
+    title = _normalize_identity_text(tender.get("title"))
+    organization = _normalize_identity_text(tender.get("organization"))
+    return hashlib.md5(f"{title}_{organization}".encode("utf-8")).hexdigest()
 
 
 # -------- DUP CHECK --------
@@ -146,14 +271,14 @@ def tender_exists(conn, tender_id, content_hash):
 
 
 # -------- INSERT TENDER --------
-def insert_tender(conn, tender, content_hash):
+def insert_tender(conn, tender, identity_key):
     """
     Inserts a new tender record into the database.
 
     Args:
         conn (sqlite3.Connection): Active connection.
         tender (dict): Normalized tender data.
-        content_hash (str): Generated content hash.
+        identity_key (str): Generated stable source identity key.
 
     Notes:
         - Stores both the portal ID and the global content hash.
@@ -164,21 +289,27 @@ def insert_tender(conn, tender, content_hash):
     INSERT INTO tenders (
         tender_id,
         content_hash,
+        identity_key,
         title,
         organization,
         published_date,
+        updated_date,
+        corrigendum_date,
         closing_date,
         source_url,
         source_portal,
         raw_text,
         scraped_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         tender.get("tender_id"),
-        content_hash,
+        generate_legacy_content_hash(tender),
+        identity_key,
         tender.get("title"),
         tender.get("organization"),
         tender.get("published_date"),
+        tender.get("updated_date"),
+        tender.get("corrigendum_date"),
         tender.get("closing_date"),
         tender.get("source_url"),
         tender.get("source_portal"),
@@ -190,11 +321,11 @@ def insert_tender(conn, tender, content_hash):
 # -------- INSERT MATCH --------
 def insert_match(conn, tender_hash, match):
     """
-    Records a manufacturer match for a specific tender.
+    Records a manufacturer match for a specific tender identity.
 
     Args:
         conn (sqlite3.Connection): Active connection.
-        tender_hash (str): Content hash of the tender.
+        tender_hash (str): Stable SHA-256 identity key of the tender.
         match (dict): Metadata about the match (manufacturer_id, score, confidence).
     
     Notes:
@@ -207,25 +338,27 @@ def insert_match(conn, tender_hash, match):
             manufacturer_id,
             manufacturer_name,
             score,
-            confidence
-        ) VALUES (?, ?, ?, ?, ?)
+            confidence,
+            tender_identity_key
+        ) VALUES (?, ?, ?, ?, ?, ?)
     """, (
         tender_hash,
         match["manufacturer_id"],
         match["manufacturer_name"],
         match["score"],
-        match["confidence"]
+        match["confidence"],
+        tender_hash,
     ))
 
 
 # -------- UPDATE FLAGS --------
-def update_flags(conn, content_hash, is_blocked, has_signal):
+def update_flags(conn, identity_key, is_blocked, has_signal):
     """
     Updates classification flags for an existing tender record.
 
     Args:
         conn (sqlite3.Connection): Active connection.
-        content_hash (str): Content hash of the target tender.
+        identity_key (str): Stable identity key of the target tender.
         is_blocked (bool): Whether the tender was filtered by the blocklist.
         has_signal (bool): Whether the tender is high-value for matching.
     """
@@ -233,8 +366,8 @@ def update_flags(conn, content_hash, is_blocked, has_signal):
     cursor.execute("""
         UPDATE tenders
         SET is_blocked=?, has_signal=?
-        WHERE content_hash=?
-    """, (int(is_blocked), int(has_signal), content_hash))
+        WHERE identity_key=?
+    """, (int(is_blocked), int(has_signal), identity_key))
 
 
 # -------- MAIN PROCESS --------
@@ -265,6 +398,15 @@ def get_tender_by_hash(conn, content_hash):
     return None
 
 
+def get_tender_by_identity(conn, identity_key):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM tenders WHERE identity_key=? LIMIT 1", (identity_key,))
+    row = cursor.fetchone()
+    if row is None:
+        return None
+    return dict(zip((col[0] for col in cursor.description), row))
+
+
 def upsert_or_get_tender(conn, tender):
     """
     Handles insertion or retrieval of a tender, enabling reprocessing.
@@ -281,22 +423,48 @@ def upsert_or_get_tender(conn, tender):
     Notes:
         - Replaces the hard gate in process_tender.
     """
-    content_hash = generate_hash(tender)
-    existing = get_tender_by_hash(conn, content_hash)
-    
-    if existing:
-        # Merge the scraped fields with the existing DB row.
-        # This preserves DB flags while allowing scraped fields to refresh.
-        merged = {**existing, **tender}
-        merged["content_hash"] = content_hash
-        merged["emailed"] = existing.get("emailed", 0)
-        return merged, False
-    
-    # Insert new
-    insert_tender(conn, tender, content_hash)
-    tender["content_hash"] = content_hash
-    tender["emailed"] = 0
-    return tender, True
+    identity_key = generate_hash(tender)
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT OR IGNORE INTO tenders (
+            tender_id, content_hash, identity_key, title, organization,
+            published_date, updated_date, corrigendum_date, closing_date,
+            source_url, source_portal, raw_text, scraped_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (
+        tender.get("tender_id"), generate_legacy_content_hash(tender), identity_key,
+        tender.get("title"), tender.get("organization"), tender.get("published_date"),
+        tender.get("updated_date"), tender.get("corrigendum_date"),
+        tender.get("closing_date"), tender.get("source_url"),
+        tender.get("source_portal"), tender.get("raw_text"), tender.get("scraped_at"),
+    ))
+    is_new = cursor.rowcount == 1
+    cursor.execute("""
+        UPDATE tenders SET
+            tender_id=COALESCE(NULLIF(?, ''), tender_id),
+            title=COALESCE(NULLIF(?, ''), title),
+            organization=COALESCE(NULLIF(?, ''), organization),
+            published_date=COALESCE(NULLIF(?, ''), published_date),
+            updated_date=COALESCE(NULLIF(?, ''), updated_date),
+            corrigendum_date=COALESCE(NULLIF(?, ''), corrigendum_date),
+            closing_date=COALESCE(NULLIF(?, ''), closing_date),
+            source_url=COALESCE(NULLIF(?, ''), source_url),
+            source_portal=COALESCE(NULLIF(?, ''), source_portal),
+            raw_text=COALESCE(NULLIF(?, ''), raw_text),
+            scraped_at=COALESCE(NULLIF(?, ''), scraped_at)
+        WHERE identity_key=?
+    """, (
+        tender.get("tender_id"), tender.get("title"), tender.get("organization"),
+        tender.get("published_date"), tender.get("updated_date"),
+        tender.get("corrigendum_date"), tender.get("closing_date"),
+        tender.get("source_url"), tender.get("source_portal"), tender.get("raw_text"),
+        tender.get("scraped_at"), identity_key,
+    ))
+    existing = get_tender_by_identity(conn, identity_key)
+    merged = {**tender, **existing}
+    merged["identity_key"] = identity_key
+    merged["emailed"] = existing.get("emailed", 0)
+    return merged, is_new
 
 
 def process_tender(conn, tender):
@@ -313,14 +481,8 @@ def process_tender(conn, tender):
     Notes:
         - Orchestrates hashing, duplicate checking, and insertion.
     """
-    content_hash = generate_hash(tender)
-
-    if tender_exists(conn, tender.get("tender_id"), content_hash):
-        return None  # duplicate
-
-    insert_tender(conn, tender, content_hash)
-    tender["content_hash"] = content_hash
-    return tender
+    result, is_new = upsert_or_get_tender(conn, tender)
+    return result if is_new else None
 
 
 # -------- QUERY FOR EMAIL --------
@@ -348,7 +510,7 @@ def get_high_signal_matches(conn):
         m.confidence
     FROM tenders t
     JOIN tender_matches m
-        ON t.content_hash = m.tender_hash
+        ON t.identity_key = m.tender_identity_key
     WHERE t.has_signal = 1
     AND m.created_at >= datetime('now', '-30 minutes')
     ORDER BY m.score DESC
@@ -356,30 +518,30 @@ def get_high_signal_matches(conn):
 
     return cursor.fetchall()
 
-def mark_as_emailed(conn, content_hash):
+def mark_as_emailed(conn, identity_key):
     """
     Sets the 'emailed' flag for a tender to prevent inclusion in future digests.
 
     Args:
         conn (sqlite3.Connection): Active connection.
-        content_hash (str): Target tender hash.
+        identity_key (str): Stable target tender identity.
     """
     cursor = conn.cursor()
     cursor.execute("""
         UPDATE tenders
         SET emailed = 1
-        WHERE content_hash = ?
-    """, (content_hash,))
+        WHERE identity_key = ?
+    """, (identity_key,))
     conn.commit()
 
 
-def is_already_emailed(conn, content_hash):
+def is_already_emailed(conn, identity_key):
     """
     Checks if a tender has already been sent in an email digest.
 
     Args:
         conn (sqlite3.Connection): Active connection.
-        content_hash (str): Target tender hash.
+        identity_key (str): Stable target tender identity.
 
     Returns:
         bool: True if the emailed flag is set, False otherwise.
@@ -387,9 +549,9 @@ def is_already_emailed(conn, content_hash):
     cursor = conn.cursor()
     cursor.execute("""
         SELECT emailed FROM tenders
-        WHERE content_hash = ?
+        WHERE identity_key = ?
         LIMIT 1
-    """, (content_hash,))
+    """, (identity_key,))
     
     row = cursor.fetchone()
     return row and row[0] == 1
