@@ -58,13 +58,13 @@ class TenderMatcher:
                 "Use matching.embedder.build_matcher() or call embedder.load_manufacturers(...)."
             )
 
-    def match_topk(self, tender, top_k=None):
-        """
-        Return top-k manufacturer candidates regardless of absolute score.
-        """
-        if top_k is None:
-            top_k = self.k
+    def generate_candidates(self, tender):
+        """Return the high-recall candidate pool before compatibility ranking.
 
+        The current catalog is small, so every active profile is retained. This
+        avoids a semantic or lexical hard cutoff while making semantic and
+        manufacturer-specific evidence available to the later ranking stage.
+        """
         text = self._build_tender_text(tender)
         text_lower = self._normalize_text(text)
 
@@ -72,35 +72,46 @@ class TenderMatcher:
             return []
 
         query_embedding = self.embedder.embed_text(text)
-
         base_scores = np.dot(self.mfr_embeddings, query_embedding)
-        final_scores = base_scores.copy()
-
-        evidence_by_idx = {}
-
+        candidates = []
         for idx, manufacturer in enumerate(self.manufacturers):
+            if manufacturer.get("active", True) is False:
+                continue
             evidence = self._score_manufacturer_evidence(
                 text_lower=text_lower,
                 manufacturer=manufacturer,
             )
+            candidates.append({
+                "manufacturer": manufacturer,
+                "base_semantic_score": float(base_scores[idx]),
+                "evidence": evidence,
+            })
+        return candidates
 
-            final_scores[idx] += evidence["total_boost"]
-            final_scores[idx] -= evidence["negative_penalty"]
-            final_scores[idx] = max(0.0, min(float(final_scores[idx]), 1.0))
+    def rank_candidates(self, candidate_pool, top_k=None):
+        """Rank a generated candidate pool by technical evidence and fit."""
+        if top_k is None:
+            top_k = self.k
+        if not isinstance(top_k, int) or top_k < 0:
+            raise ValueError("top_k must be a non-negative integer")
+        if not candidate_pool or top_k == 0:
+            return []
 
-            evidence_by_idx[idx] = evidence
+        final_scores = []
+        for candidate in candidate_pool:
+            evidence = candidate["evidence"]
+            score = candidate["base_semantic_score"] + evidence["total_boost"] - evidence["negative_penalty"]
+            final_scores.append(max(0.0, min(float(score), 1.0)))
 
         sorted_indices = np.argsort(final_scores)[::-1]
         top_indices = sorted_indices[:top_k]
-
         results = []
-
         for rank, idx in enumerate(top_indices, start=1):
-            manufacturer = self.manufacturers[idx]
-            base_score = float(base_scores[idx])
+            candidate = candidate_pool[idx]
+            manufacturer = candidate["manufacturer"]
+            base_score = float(candidate["base_semantic_score"])
             final_score = float(final_scores[idx])
-            evidence = evidence_by_idx.get(idx, {})
-
+            evidence = candidate["evidence"]
             results.append({
                 "manufacturer_id": manufacturer.get("id"),
                 "manufacturer_name": manufacturer.get("name"),
@@ -135,6 +146,13 @@ class TenderMatcher:
             })
 
         return results
+
+    def match_topk(self, tender, top_k=None):
+        """Generate a high-recall pool, then return its top-ranked candidates."""
+        if top_k is None:
+            top_k = self.k
+        candidate_pool = self.generate_candidates(tender)
+        return self.rank_candidates(candidate_pool, top_k=top_k)
 
     def match(self, tender):
         """
