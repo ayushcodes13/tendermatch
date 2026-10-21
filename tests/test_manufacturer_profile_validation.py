@@ -207,9 +207,10 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
         "https://parteq.net/en/products/aerosolmesstechnik/",
         "https://parteq.net/en/products/aerosolmesstechnik/nanoparticle-measurement-systems/",
         "https://parteq.net/en/services-in-aerosol-technology/forschungsdienstleistungen.html",
+        "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/",
         "https://parteq.net/en/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.1"
+    assert profile["profile_version"] == "1.2"
 
 
 def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
