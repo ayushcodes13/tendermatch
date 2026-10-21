@@ -16,12 +16,13 @@ Inputs:
 
 Notes:
 - Uses Google SMTP by default (smtp.gmail.com).
-- Requires EMAIL_USER and EMAIL_PASS to be set in the environment.
+- Requires SENDER_EMAIL and SENDER_PASSWORD to be set in the environment.
 """
-import os
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+
+from config import SENDER_EMAIL, SENDER_PASSWORD
 
 
 def send_email(subject, body, recipient_email):
@@ -41,14 +42,13 @@ def send_email(subject, body, recipient_email):
         ValueError: If SMTP credentials are not found in the environment.
         Exception: If the SMTP transmission fails for any reason.
     """
-    sender_email = os.getenv("EMAIL_USER")
-    sender_password = os.getenv("EMAIL_PASS")
-
-    if not sender_email or not sender_password:
-        raise ValueError("EMAIL_USER or EMAIL_PASS is missing from environment variables")
+    if not SENDER_EMAIL or not SENDER_PASSWORD:
+        raise ValueError(
+            "SENDER_EMAIL or SENDER_PASSWORD is missing from environment variables"
+        )
 
     msg = MIMEMultipart()
-    msg["From"] = sender_email
+    msg["From"] = SENDER_EMAIL
     msg["To"] = recipient_email
     msg["Subject"] = subject
 
@@ -57,8 +57,8 @@ def send_email(subject, body, recipient_email):
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
-        server.login(sender_email, sender_password)
-        server.sendmail(sender_email, recipient_email, msg.as_string())
+        server.login(SENDER_EMAIL, SENDER_PASSWORD)
+        server.sendmail(SENDER_EMAIL, recipient_email, msg.as_string())
         server.quit()
 
         print("📩 Email sent successfully.")
