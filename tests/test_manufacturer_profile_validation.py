@@ -97,7 +97,9 @@ def test_teer_profile_does_not_claim_nordiko_products():
     assert "Mnem-iX Broad Ion Beam System" in nordiko["products"]
     assert "N300 Laboratory Scale Sputtering System" in nordiko["products"]
     assert not any("Mnem-iX" in product or "N300" in product for product in teer["products"])
-    assert teer["profile_version"] == "1.1"
+    assert "plasma assisted CVD systems" not in teer["product_categories"]
+    assert "https://www.teercoatings.co.uk/pvd" in teer["source_links"]
+    assert teer["profile_version"] == "1.2"
 
 
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
