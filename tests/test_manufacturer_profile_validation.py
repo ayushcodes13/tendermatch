@@ -77,9 +77,13 @@ def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
 
-    codes = {issue["code"] for issue in validate_profiles([profile])}
+    warnings = validate_profiles([profile])
 
-    assert "missing_source_links" in codes
+    warning = next(issue for issue in warnings if issue["code"] == "missing_source_links")
+    assert warning["severity"] == "warning"
+    assert warning["message"] == (
+        "No profile-level source links are recorded; capability claims remain unverified."
+    )
 
 
 def test_profile_cli_reports_warnings_but_only_fails_on_errors(capsys):

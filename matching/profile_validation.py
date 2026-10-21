@@ -131,7 +131,7 @@ def validate_profiles(profiles):
 
         source_links = profile.get("source_links")
         if source_links is None or source_links == []:
-            issues.append(_issue("warning", "missing_source_links", f"{base}.source_links", "No claim-level source links are recorded; profile claims remain unverified."))
+            issues.append(_issue("warning", "missing_source_links", f"{base}.source_links", "No profile-level source links are recorded; capability claims remain unverified."))
         elif isinstance(source_links, list):
             for source_index, source in enumerate(source_links):
                 if not isinstance(source, str) or not source.strip() or not _valid_http_url(source.strip()):
