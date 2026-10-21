@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `f01f243` after merged README reconciliation PR #33; this checkpoint follow-up starts directly from this commit.
+- Current base: `main` at `91a2382` after merged checkpoint PR #34; `codex/add-profile-source-provenance` starts directly from this commit.
 - Pre-existing draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”. Its runtime guidance is now incorporated in README; the draft remains open and redundant.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -33,7 +33,7 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P2.1 Manufacturer capability schema and validation | Complete | `feat/manufacturer-profile-validation`; [PR #13](https://github.com/ayushcodes13/tendermatch/pull/13) | 18 focused tests passed; full suite: 67 passed with one LibreSSL warning. GitHub Actions deterministic tests succeeded. Validator reports 0 errors and 42 provenance/version/date warnings across 14 profiles. Merged as `e53fe6b`. | Source-backed claims, profile versions, and update dates remain unrecorded; warnings are intentional until evidence is supplied. |
+| P2.1 Manufacturer capability schema and validation | Partially verified | Validator: `feat/manufacturer-profile-validation`; source review: `codex/add-profile-source-provenance` | Base validation PR #13 merged as `e53fe6b`. This branch adds selected official product pages and a repository provenance version/date for 12 profiles; it updates the validator regression to require only six remaining warnings (0 errors). | Profile-level links do not map every capability claim. P.G. Instruments and Spinflex sources remain unverified; remaining profile claims still need line-by-line review. |
 | P2.2 Separate high-recall candidate generation from ranking | Complete | `feat/separate-candidate-generation`; [PR #14](https://github.com/ayushcodes13/tendermatch/pull/14) | 12 focused tests; full suite 68 passed with one LibreSSL warning. Pre/post-refactor rankings and synthetic diagnostic metrics identical for all 15 evaluation tenders. GitHub Actions passed; merged as `90e891d`. | Small-catalog full-pool retrieval is intentional. |
 | P2.3 Domain compatibility and negative matching | Complete | `feat/contextual-domain-compatibility`; [PR #15](https://github.com/ayushcodes13/tendermatch/pull/15) | Focused suite: 21 passed; full suite: 77 passed with one LibreSSL warning. GitHub Actions passed. Merged as `25c6989`. | Rules are contextual string patterns and require human review; no manufacturer eligibility or technical compliance is established. |
 | P2.4 Explainable scoring and threshold calibration | Complete | [PR #16](https://github.com/ayushcodes13/tendermatch/pull/16), [PR #17](https://github.com/ayushcodes13/tendermatch/pull/17), [PR #18](https://github.com/ayushcodes13/tendermatch/pull/18) | PR #16 merged as `a632361`; PR #17 as `713d227`; PR #18 as `0f92d4e`. PR #18 passed 43 focused tests, 92 full-suite tests (one LibreSSL warning), `compileall`, JSON parsing, and diff checks; CI `deterministic-tests` succeeded. Synthetic results retain 7/7 explicitly judged positives in both scenarios; unjudged displayed candidates are counted separately (36 and 37). | Dataset has zero human-reviewed labels and incomplete judgments. Results do not establish production precision, recall, or calibration. |
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-Next: profile provenance requires claim-by-claim source verification; many current product claims remain unverified. Persistent deployment and real labeled examples also require external storage/runtime configuration and human review. P4.3 remains gated on measured evidence, cost, latency, and safety value.
+Next: verify the profile provenance change and CI. Claim-by-claim review is still needed for profile assertions; P.G. Instruments and Spinflex source pages remain unresolved. Persistent deployment and real labeled examples also require external storage/runtime configuration and human review. P4.3 remains gated on measured evidence, cost, latency, and safety value.
