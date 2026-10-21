@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `74547be` after merged secret-safe logging CI PR #31; `codex/test-deployment-smoke` starts directly from this commit.
+- Current base: `main` at `b6fa250` after merged synthetic smoke PR #32; `codex/docs-verify-readme-claims` starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -66,9 +66,9 @@ Update this file through the same focused PR as each implementation where practi
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
 | Security, reliability, observability, and recovery | In progress | Secret-safe logs: [PR #29](https://github.com/ayushcodes13/tendermatch/pull/29), merged `8a19860`; run ledger: [PR #30](https://github.com/ayushcodes13/tendermatch/pull/30), merged `c5f6fae`; CI follow-up: [PR #31](https://github.com/ayushcodes13/tendermatch/pull/31), merged `74547be` | PR #29: 4 focused tests, 159 full tests; PR #30: 9 focused tests, 163 full tests; PR #31 adds the safe-logging test module to CI. CI passed for all three. Run ledger records run status, duration, per-source outcomes, tender/match/review counts, and email outcome. | Actions/cache SQLite is not durable. Other recovery and security work remains. |
-| Deployment smoke verification | In progress | `codex/test-deployment-smoke` | Adds a synthetic two-run startup/persistence smoke and one scheduler-cycle test; local and CI results pending. | No actual deployment smoke was run. Actions remains temporary, and no persistent host or backup target is configured. |
-| README and operational documentation reconciliation | Not started | — | — | Update against final verified behavior and evaluation. |
+| Deployment smoke verification | Partially verified | Synthetic smoke: [PR #32](https://github.com/ayushcodes13/tendermatch/pull/32), merged `b6fa250` | Synthetic two-run SQLite startup/persistence and one scheduler-cycle tests: 6 focused and 165 full tests passed locally; CI passed. No live portal or SMTP calls occurred. | No actual deployment smoke was run. Actions remains temporary, and no persistent host or backup target is configured. |
+| README and operational documentation reconciliation | In progress | `codex/docs-verify-readme-claims` | Reconciles unsupported accuracy/manufacturer/schedule/dashboard claims in README and `about.md`; profile count verified at 14 and structural validator reports 0 errors/42 provenance warnings. Local Markdown links resolve. | Open draft PR #1 has overlapping runtime guidance; its recommendation is folded into this README update. Resolve the superseded draft after this change merges. |
 
 ## Next
 
-P7.3: add deterministic startup, repeated-run persistence, and scheduler-cycle smoke coverage. P4.3 remains gated on measured evidence, cost, latency, and safety value.
+P7.4: reconcile README and system overview with verified code and evidence. P4.3 remains gated on measured evidence, cost, latency, and safety value.
