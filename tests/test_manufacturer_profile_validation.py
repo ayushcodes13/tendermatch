@@ -209,7 +209,15 @@ def test_sald_profile_links_official_technology_and_market_sources():
         "https://spatialald.com/markets/green-hydrogen/",
         "https://spatialald.com/markets/barriers-and-packaging/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.1"
+    assert profile["profile_version"] == "1.2"
+
+
+def test_sald_industries_do_not_overclaim_textiles_or_medical_packaging():
+    profile = next(p for p in load_profiles() if p["id"] == "sald")
+
+    assert "textiles and medical packaging" not in profile["industries_served"]
+    assert "sustainable packaging and barrier films" in profile["industries_served"]
+    assert "membranes and porous materials" in profile["industries_served"]
 
 
 def test_on_nano_profile_links_official_products_and_subsystems():
