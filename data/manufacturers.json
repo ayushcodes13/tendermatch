@@ -758,8 +758,6 @@
             "ClusterGen Max-200 Cluster-beam System",
             "Plasmag II Magnetrons",
             "Teer Linear Ion Source",
-            "Mnem-iX MRAM Production Tool",
-            "N300 Laboratory Sputtering System",
             "UDP 850/1000/1200 Large Scale Systems"
         ],
         "industries_served": [
@@ -812,9 +810,10 @@
         ],
         "website": "https://www.teercoatings.co.uk",
         "source_links": [
-            "https://www.teercoatings.co.uk/standard-systems"
+            "https://www.teercoatings.co.uk/standard-systems",
+            "https://www.teercoatings.co.uk/clusterbeam"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {

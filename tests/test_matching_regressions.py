@@ -158,3 +158,17 @@ def test_nippon_profile_matches_mercury_analysis_but_not_generic_aas():
     assert other_aas_match["category_hits"] == []
     assert other_aas_match["keyword_hits"] == []
     assert other_aas_match["concept_hits"] == []
+
+
+def test_teer_profile_does_not_match_nordiko_only_product_names():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    teer = next(profile for profile in manufacturers if profile["id"] == "teer_coatings")
+    matcher = make_matcher([teer], [[1.0]], [1.0])
+
+    for title in (
+        "Supply of the Mnem-iX Broad Ion Beam System",
+        "Supply of the Nordiko N300 Laboratory Scale Sputtering System",
+    ):
+        match = matcher.match_topk({"title": title})[0]
+        assert match["product_hits"] == []
