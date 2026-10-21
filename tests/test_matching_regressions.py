@@ -141,3 +141,20 @@ def test_pg_instruments_profile_matches_documented_icp_oes_equipment():
     assert "ICP-OES spectrometers" in match["product_hits"]
     assert "ICP-OES spectrometers" in match["category_hits"]
     assert "ICP-OES" in match["keyword_hits"]
+
+
+def test_nippon_profile_matches_mercury_analysis_but_not_generic_aas():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    nippon = next(profile for profile in manufacturers if profile["id"] == "nippon_instruments")
+    matcher = make_matcher([nippon], [[1.0]], [1.0])
+
+    mercury_match = matcher.match_topk({"title": "MA Series direct mercury analyzers for solid samples"})[0]
+    other_aas_match = matcher.match_topk({"title": "Atomic absorption spectrometer for lead and cadmium analysis"})[0]
+
+    assert mercury_match["product_hits"]
+    assert mercury_match["category_hits"]
+    assert other_aas_match["product_hits"] == []
+    assert other_aas_match["category_hits"] == []
+    assert other_aas_match["keyword_hits"] == []
+    assert other_aas_match["concept_hits"] == []
