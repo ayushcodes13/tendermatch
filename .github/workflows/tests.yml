@@ -49,3 +49,4 @@ jobs:
           tests/test_feedback_adjudication.py
           tests/test_pipeline_run_ledger.py
           tests/test_safe_error_logging.py
+          tests/test_deployment_smoke.py
