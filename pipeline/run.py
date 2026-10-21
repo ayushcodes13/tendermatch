@@ -21,7 +21,7 @@ Outputs:
 - Multi-section HTML/Text digest emails for stakeholders.
 
 Notes:
-- Uses a title+organization normalization strategy to handle cross-portal duplicates.
+- Uses stable tender identities for duplicate suppression and SQLite-backed email retries.
 - Semantic matching is integrated into the classification phase to ensure strong manufacturer relevance can rescue borderline tenders.
 """
 
@@ -45,8 +45,6 @@ from data.db import (
     upsert_or_get_tender,
     update_flags,
     insert_match,
-    mark_as_emailed,
-    is_already_emailed,
 )
 
 from matching.filter import classify_tender
@@ -54,6 +52,12 @@ from matching.embedder import build_matcher
 
 from digest.formatter import format_email
 from digest.sender import send_email
+from digest.outbox import (
+    deliver_batch,
+    deliver_due_batches,
+    notification_exists,
+    queue_digest,
+)
 
 
 def collect_all_tenders():
@@ -109,6 +113,7 @@ def run_pipeline():
     """
     conn = get_connection()
     init_db(conn)
+    deliver_due_batches(conn, send_email)
 
     tenders = collect_all_tenders()
 
@@ -141,9 +146,17 @@ def run_pipeline():
         # -------------------------
         # EMAIL DEDUPE
         # -------------------------
-        if is_already_emailed(conn, identity_key):
+        # Legacy databases only stored a global emailed flag. With a configured
+        # recipient, trust the recipient-scoped outbox; this can resend once to
+        # the old recipient because the legacy record cannot identify it.
+        was_notified = (
+            notification_exists(conn, RECEIVER_EMAIL, new_t)
+            if RECEIVER_EMAIL
+            else bool(new_t.get("emailed"))
+        )
+        if was_notified:
             already_emailed += 1
-            print(f"[{status_str}] Skipping already emailed tender: {new_t.get('title')}")
+            print(f"[{status_str}] Skipping tender already notified to this recipient: {new_t.get('title')}")
             continue
 
         print(f"[{status_str}] Processing tender: {new_t.get('title')}")
@@ -289,28 +302,38 @@ def run_pipeline():
     # -------------------------
     # EMAIL
     # -------------------------
-    if high_tenders or explore_tenders:
-        subject, body = format_email(
-            high_tenders,
-            explore_tenders,
-            stats,
-        )
-
-        try:
-            if not RECEIVER_EMAIL:
-                raise ValueError("RECEIVER_EMAIL is missing")
-
-            send_email(subject, body, RECEIVER_EMAIL)
-
-            for t in high_tenders + explore_tenders:
-                mark_as_emailed(conn, t["identity_key"])
-
-            conn.commit()
-
-            print("\n📩 Email sent.")
-
-        except Exception as e:
-            print(f"\n❌ Email failed: {e}")
+    if (high_tenders or explore_tenders) and not RECEIVER_EMAIL:
+        print("\n[EMAIL OUTBOX] Cannot queue a new digest: RECEIVER_EMAIL is missing.")
+    elif high_tenders or explore_tenders:
+        eligible_high = [
+            tender for tender in high_tenders
+            if not notification_exists(conn, RECEIVER_EMAIL, tender)
+        ]
+        eligible_explore = [
+            tender for tender in explore_tenders
+            if not notification_exists(conn, RECEIVER_EMAIL, tender)
+        ]
+        digest_tenders = eligible_high + eligible_explore
+        if not digest_tenders:
+            print("\n[EMAIL OUTBOX] Matching opportunities already have a delivery record.")
+        else:
+            digest_stats = {**stats, "high": len(eligible_high), "explore": len(eligible_explore)}
+            subject, body = format_email(
+                eligible_high,
+                eligible_explore,
+                digest_stats,
+            )
+            batch_id = queue_digest(
+                conn,
+                RECEIVER_EMAIL,
+                subject,
+                body,
+                digest_tenders,
+            )
+            if batch_id is not None and deliver_batch(conn, batch_id, send_email):
+                print("\n📩 Email sent and recorded.")
+            elif batch_id is not None:
+                print("\n[EMAIL OUTBOX] Digest stored for a later retry.")
 
     else:
         print("\n📭 No relevant fresh tenders. Email skipped.")

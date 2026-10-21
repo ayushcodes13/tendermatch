@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `ae5d928` after merged P0.5 overlap-guard PR #7; this P0.5 branch starts directly from that commit.
+- Current base: `main` at `12e34cb` after merged P0.5 database-path PR #8; this P0.6 branch starts directly from that commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. The repository has no PR status checks configured; the existing workflow is schedule/manual only.
 - No live scraper, model download, or SMTP delivery has been run as verification.
@@ -18,8 +18,8 @@ Update this file through the same focused PR as each implementation where practi
 | P0.2 Configuration and email credentials | Partially verified | `fix/email-config-contract`; [PR #3](https://github.com/ayushcodes13/tendermatch/pull/3) | 5 targeted tests passed; merged as `c90d30c`. SMTP uses mocked transport. | Add `RECEIVER_EMAIL` secret before scheduled delivery can work. |
 | P0.3 Date parsing and freshness | Complete | `fix/tender-date-freshness`; [PR #5](https://github.com/ayushcodes13/tendermatch/pull/5) | 25 targeted tests passed; compile check passed; independently reviewed; merged as `cc4e236`. | No live portal drift check; date-unknown candidates remain reviewable. |
 | P0.4 Database identity, deduplication, transactions | Complete | `fix/tender-database-deduplication`; [PR #6](https://github.com/ayushcodes13/tendermatch/pull/6) | Focused suite: 37 passed; independent review found no confirmed defects; merged as `18728e3`. | No production SQLite file was available to validate migration on customer data. Cross-portal duplicates without shared official IDs or source URLs remain unresolved; IISc document-link stability needs monitoring. |
-| P0.5 Scheduled execution and persistence | In progress; durable-path configuration pending PR | PR #7 merged; `feat/configure-database-path` in progress | PR #7 prevents overlapping scheduled/manual runs. This change allows a SQLite path on mounted durable storage and fails clearly if the configured parent directory is absent. | GitHub keeps at most one pending run in a concurrency group, so a newer event can replace an older queued run. Actions cache is not durable storage. Host selection, costs, credentials, backup/recovery, and deployment authorization remain unresolved. |
-| P0.6 Recoverable email delivery | Not started | — | — | Design and test crash recovery and SMTP ambiguity. |
+| P0.5 Scheduled execution and persistence | Partially verified; Actions retained temporarily | [PR #7](https://github.com/ayushcodes13/tendermatch/pull/7), [PR #8](https://github.com/ayushcodes13/tendermatch/pull/8), merged as `ae5d928` and `12e34cb` | Workflow runs serialize across refs; `TENDERMATCH_DB_PATH` supports an existing mounted volume and fails when its directory is absent. | User selected Actions temporarily. Its cache is not durable storage; provider, costs, credentials, backup/recovery, and deployment remain unresolved. New queued runs can replace a pending run. |
+| P0.6 Recoverable email delivery | Implemented; independently reviewed; PR pending | `feat/recoverable-email-outbox`; PR pending | Focused suite: 49 passed; compileall and `git diff --check` passed. Full suite: 49 passed, 1 existing failure (`tests/test_specific_tender.py` expects a model but test stub supplies `SentenceTransformer=object`). Independent adversarial review found no remaining correctness issue; outbox/sender/pipeline subset: 12 passed. SQLite outbox stores exact payloads, serializes enqueue/claim transactions, retries with backoff, and recovers stale sends. Notifications dedupe by recipient, tender identity, version, and type. | Legacy global emailed flags cannot identify a recipient, so current recipient may get one duplicate while outbox history is established. Changed versions currently queue as new-opportunity digests; meaningful amendment comparison/type-specific messaging remains P3. Actions cache loss can still lose delivery state; SMTP's accepted-then-crashed window can cause a duplicate retry. |
 
 ## Phase 1 — Evaluation baseline
 
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P0.5: finish the configurable database-path PR, then investigate a durable scheduled runtime and record concrete hosting, storage, cost, credential, and recovery requirements before any deployment.
+P0.6: finish the outbox PR, then continue the reliability roadmap while preserving the documented temporary Actions persistence limitation.

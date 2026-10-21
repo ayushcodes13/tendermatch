@@ -33,7 +33,11 @@ def test_send_email_uses_shared_sender_settings_and_tls(monkeypatch):
 
     monkeypatch.setattr(sender, "SENDER_EMAIL", "sender@example.com")
     monkeypatch.setattr(sender, "SENDER_PASSWORD", "smtp-app-password")
-    monkeypatch.setattr(sender.smtplib, "SMTP", lambda host, port: FakeSMTP())
+    monkeypatch.setattr(
+        sender.smtplib,
+        "SMTP",
+        lambda host, port, timeout: FakeSMTP() if timeout == 30 else None,
+    )
 
     sender.send_email("Digest", "Tender report", "recipient@example.com")
 
