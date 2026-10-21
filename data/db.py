@@ -125,6 +125,20 @@ def init_db(conn):
     )
     """)
     cursor.execute("""
+    CREATE TABLE IF NOT EXISTS tender_documents (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tender_identity_key TEXT NOT NULL,
+        source_url TEXT NOT NULL,
+        content_fingerprint TEXT,
+        storage_path TEXT,
+        status TEXT NOT NULL,
+        content_type TEXT,
+        byte_size INTEGER,
+        fetched_at TEXT NOT NULL,
+        error_type TEXT
+    )
+    """)
+    cursor.execute("""
         CREATE INDEX IF NOT EXISTS idx_tender_amendment_version
         ON tender_amendments (tender_identity_key, to_fingerprint)
     """)

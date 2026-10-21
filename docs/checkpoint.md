@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `21b6523` after merged P3.2 amendment-comparison PR #21; `feat/amendment-notifications` starts directly from this commit.
+- Current base: `main` at `dab2172` after merged P3.3 amendment-notification PR #22; `codex/feat-selective-tender-document-retrieval` starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -44,13 +44,13 @@ Update this file through the same focused PR as each implementation where practi
 | --- | --- | --- | --- | --- |
 | P3.1 Stable identity and version fingerprints | Complete | [PR #19](https://github.com/ayushcodes13/tendermatch/pull/19), [PR #20](https://github.com/ayushcodes13/tendermatch/pull/20) | PR #19 merged as `9992849`; PR #20 as `e09d491`. Version history passed 22 focused/95 full-suite tests. Identity follow-up passed 15 focused/96 full-suite tests; CI succeeded. | Migration seeds currently persisted content; older overwritten versions are unavailable. Identity quality depends on source IDs/URLs; listings without either use the title/date fallback. |
 | P3.2 Meaningful amendment detection and history | Complete | `feat/meaningful-tender-amendments`; [PR #21](https://github.com/ayushcodes13/tendermatch/pull/21) | Merged as `21b6523`. Focused tests: 36 passed; full suite: 110 passed with one LibreSSL warning; exact CI selection: 72 passed and GitHub Actions succeeded. | Text categories are heuristic and require review; they do not establish legal or technical effect. |
-| P3.3 Amendment-specific notifications | In progress | `feat/amendment-notifications` | Connects meaningful/review-required version changes to recipient- and version-deduplicated outbox records. Formatting-only changes are skipped. Update digest includes change indicators and old/new deadline values. Focused tests: 30 passed; CI selection: 88 passed; full suite: 114 passed, each with one LibreSSL warning. Compile and diff checks passed. | SMTP delivery remains at-least-once; live configuration/delivery is unverified. |
+| P3.3 Amendment-specific notifications | Complete | `feat/amendment-notifications`; [PR #22](https://github.com/ayushcodes13/tendermatch/pull/22) | Focused tests: 30 passed; CI selection: 88 passed; full suite: 114 passed, each with one LibreSSL warning. Merged as `dab2172`; GitHub CI succeeded. | SMTP delivery remains at-least-once; live configuration/delivery is unverified. |
 
 ## Phase 4 — Document intelligence
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P4.1 Selective official-document retrieval | Not started | — | — | Access/terms review, bounded downloads and storage. |
+| P4.1 Selective official-document retrieval | In progress | `codex/feat-selective-tender-document-retrieval` | Adds opt-in exact-host allowlisting, pipeline selection of up to 10 high-signal/exploratory candidates and two explicit links each, bounded HTTPS PDF fetch, SHA-256 file versions, atomic owner-only storage, and append-only SQLite retrieval observations. Research notes in `docs/document-retrieval.md`. 10 focused tests and 124 full tests pass; compile and diff checks pass. | No portal host enabled by default; no blanket rights finding. Actions needs a durable protected mount before document storage can be enabled. |
 | P4.2 Technical extraction with provenance | Not started | — | — | Representative native/scanned document fixtures. |
 | P4.3 Selective LLM verification | Not started | — | — | Evidence-backed value, cost, latency, and safety evaluation. |
 
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P3.3: merge update-specific delivery through the existing outbox. Then begin P4.1 selective official tender-document retrieval, subject to source access and size limits.
+P4.1: review the bounded opt-in retrieval implementation and its portal access limits. P4.2 source-grounded requirement extraction follows only after P4.1 merges.
