@@ -1084,9 +1084,12 @@
             "https://adnano-tek.com/ion-beam-sputter-deposition/",
             "https://adnano-tek.com/plasma-system/",
             "https://adnano-tek.com/thermo-evaporator-system/",
+            "https://adnano-tek.com/molecular-beam-epitaxy-mbe/",
+            "https://adnano-tek.com/pulsed-laser-deposition-pld/",
+            "https://adnano-tek.com/magnetron-sputtering-systems/",
             "https://adnano-tek.com/"
         ],
-        "profile_version": "1.1",
+        "profile_version": "1.2",
         "profile_last_updated": "2026-10-22"
     },
     {
