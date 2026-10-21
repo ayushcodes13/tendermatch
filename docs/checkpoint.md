@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `dab2172` after merged P3.3 amendment-notification PR #22; `codex/feat-selective-tender-document-retrieval` starts directly from this commit.
+- Current base: `main` at `e29e1c6` after merged P4.1 retrieval PR #23; `codex/feat-source-grounded-document-extraction` starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -50,8 +50,8 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P4.1 Selective official-document retrieval | In progress | `codex/feat-selective-tender-document-retrieval` | Adds opt-in exact-host allowlisting, pipeline selection of up to 10 high-signal/exploratory candidates and two explicit links each, bounded HTTPS PDF fetch, SHA-256 file versions, atomic owner-only storage, and append-only SQLite retrieval observations. Research notes in `docs/document-retrieval.md`. 10 focused tests and 124 full tests pass; compile and diff checks pass. | No portal host enabled by default; no blanket rights finding. Actions needs a durable protected mount before document storage can be enabled. |
-| P4.2 Technical extraction with provenance | Not started | — | — | Representative native/scanned document fixtures. |
+| P4.1 Selective official-document retrieval | Complete | `codex/feat-selective-tender-document-retrieval`; [PR #23](https://github.com/ayushcodes13/tendermatch/pull/23) | 10 focused tests; 124 full tests; compile and diff checks passed. GitHub's then-current selected suite passed but did not include the new document tests; this is corrected in the P4.2 CI update. Merged as `e29e1c6`. | No portal host enabled by default; no blanket rights finding. Actions needs a durable protected mount before document storage can be enabled. |
+| P4.2 Technical extraction with provenance | In progress | `codex/feat-source-grounded-document-extraction` | Adds page-cited native PDF text extraction for explicitly labeled fields, explicit OCR/invalid/limit statuses, and append-only extraction history. Adversarial review also corrected pipeline candidate field adaptation so the bounded P4.1 selector receives actual classified tenders. 7 extraction tests, 10 retrieval tests, and 131 full tests pass; both document modules are selected by CI. Compile and diff checks pass. Synthetic PDF fixtures only. | No human-reviewed real tender PDFs; no OCR; labelled-line extraction does not interpret unlabeled prose. Parser memory isolation remains for hardening. |
 | P4.3 Selective LLM verification | Not started | — | — | Evidence-backed value, cost, latency, and safety evaluation. |
 
 ## Phase 5 — Usability and feedback
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P4.1: review the bounded opt-in retrieval implementation and its portal access limits. P4.2 source-grounded requirement extraction follows only after P4.1 merges.
+P4.2: finish and review page-cited native-text extraction. P4.3 remains gated on measured evidence, cost, latency, and safety value.

@@ -162,19 +162,22 @@ def retrieve_candidate_documents(
 ) -> list[DocumentResult]:
     """Retrieve explicit document links for a bounded shortlist only.
 
-    Candidate dictionaries need `category`, `tender_identity_key`, and
-    `document_links`. Uncertain `agent_review` candidates remain eligible for
-    evidence gathering, while all other categories are skipped.
+    Candidates may use the pipeline's nested `classification` and `identity_key`
+    fields, or explicit `category` and `tender_identity_key` fields. Review and
+    exploratory candidates remain eligible; all other categories are skipped.
     """
     if max_candidates < 0 or max_documents_per_candidate < 0:
         raise ValueError("candidate and per-candidate limits cannot be negative")
     shortlist = [
         candidate for candidate in candidates
-        if candidate.get("category") in {"high_signal", "agent_review"}
+        if (
+            candidate.get("category")
+            or (candidate.get("classification") or {}).get("category")
+        ) in {"high_signal", "explore", "agent_review"}
     ][:max_candidates]
     results = []
     for candidate in shortlist:
-        identity = candidate.get("tender_identity_key")
+        identity = candidate.get("tender_identity_key") or candidate.get("identity_key")
         links = candidate.get("document_links") or []
         if not identity or not isinstance(links, (list, tuple)):
             continue

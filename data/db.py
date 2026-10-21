@@ -139,6 +139,17 @@ def init_db(conn):
     )
     """)
     cursor.execute("""
+    CREATE TABLE IF NOT EXISTS document_extractions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        source_url TEXT NOT NULL,
+        content_fingerprint TEXT NOT NULL,
+        extraction_status TEXT NOT NULL,
+        result_json TEXT NOT NULL,
+        error_type TEXT,
+        extracted_at TEXT NOT NULL
+    )
+    """)
+    cursor.execute("""
         CREATE INDEX IF NOT EXISTS idx_tender_amendment_version
         ON tender_amendments (tender_identity_key, to_fingerprint)
     """)

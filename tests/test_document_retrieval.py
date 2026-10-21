@@ -142,8 +142,9 @@ def test_retrieval_only_visits_bounded_promising_candidates(tmp_path, monkeypatc
     monkeypatch.setattr("data.documents.fetch_official_pdf", fake_fetch)
     candidates = [
         {"category": "low_signal", "tender_identity_key": "skip", "document_links": ["https://x.test/a.pdf"]},
-        {"category": "high_signal", "tender_identity_key": "one", "document_links": ["https://x.test/1.pdf", "https://x.test/2.pdf", "https://x.test/3.pdf"]},
+        {"classification": {"category": "high_signal"}, "identity_key": "one", "document_links": ["https://x.test/1.pdf", "https://x.test/2.pdf", "https://x.test/3.pdf"]},
         {"category": "agent_review", "tender_identity_key": "two", "document_links": ["https://x.test/4.pdf"]},
+        {"classification": {"category": "explore"}, "identity_key": "three", "document_links": ["https://x.test/5.pdf"]},
         *[
             {"category": "high_signal", "tender_identity_key": str(index), "document_links": [f"https://x.test/{index}.pdf"]}
             for index in range(20)
@@ -151,10 +152,10 @@ def test_retrieval_only_visits_bounded_promising_candidates(tmp_path, monkeypatc
     ]
 
     results = retrieve_candidate_documents(
-        conn, candidates, storage_dir=tmp_path, max_candidates=2, max_documents_per_candidate=2
+        conn, candidates, storage_dir=tmp_path, max_candidates=3, max_documents_per_candidate=2
     )
 
-    assert calls == ["https://x.test/1.pdf", "https://x.test/2.pdf", "https://x.test/4.pdf"]
-    assert len(results) == 3
-    assert conn.execute("SELECT COUNT(*) FROM tender_documents").fetchone()[0] == 3
+    assert calls == ["https://x.test/1.pdf", "https://x.test/2.pdf", "https://x.test/4.pdf", "https://x.test/5.pdf"]
+    assert len(results) == 4
+    assert conn.execute("SELECT COUNT(*) FROM tender_documents").fetchone()[0] == 4
     conn.close()
