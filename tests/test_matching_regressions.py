@@ -183,3 +183,14 @@ def test_teer_profile_does_not_claim_plasma_enhanced_cvd_systems():
     match = matcher.match_topk({"title": "Procurement of plasma enhanced CVD systems"})[0]
 
     assert match["category_hits"] == []
+
+
+def test_staton_profile_does_not_match_tool_reconditioning_as_equipment():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    staton = next(profile for profile in manufacturers if profile["id"] == "staton")
+    matcher = make_matcher([staton], [[1.0]], [1.0])
+
+    match = matcher.match_topk({"title": "Procurement of tool sharpening and regrinding equipment"})[0]
+
+    assert match["category_hits"] == []
