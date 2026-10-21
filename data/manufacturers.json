@@ -70,9 +70,14 @@
         ],
         "website": "https://korvustech.com/",
         "source_links": [
-            "https://korvustech.com/pvd-systems/"
+            "https://korvustech.com/pvd-systems/",
+            "https://korvustech.com/highly-modular-pvd-system/",
+            "https://korvustech.com/magnetron-sputtering-system/",
+            "https://korvustech.com/organic-thermal-evaporation/",
+            "https://korvustech.com/thermal-deposition/",
+            "https://korvustech.com/wp-content/uploads/2025/01/Korvus-2pp-TAU.pdf"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {

@@ -119,6 +119,19 @@ def test_genicore_toll_sintering_is_a_service_not_a_product():
     assert profile["profile_version"] == "1.1"
 
 
+def test_korvus_profile_links_named_deposition_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "korvus_technology")
+
+    assert {
+        "https://korvustech.com/highly-modular-pvd-system/",
+        "https://korvustech.com/magnetron-sputtering-system/",
+        "https://korvustech.com/organic-thermal-evaporation/",
+        "https://korvustech.com/thermal-deposition/",
+        "https://korvustech.com/wp-content/uploads/2025/01/Korvus-2pp-TAU.pdf",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
