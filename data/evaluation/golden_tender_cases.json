@@ -1,0 +1,184 @@
+{
+  "dataset_id": "tendermatch-manufacturer-match-v1",
+  "description": "Synthetic adversarial tender/manufacturer examples for deterministic regression coverage. These are not ground truth or measured customer cases.",
+  "human_reviewed_case_count": 0,
+  "synthetic_case_count": 16,
+  "cases": [
+    {
+      "case_id": "syn-pvd-001",
+      "tender_id": "SYN-PVD-001",
+      "description": "Supply and installation of a research-scale magnetron sputtering PVD system for thin film materials research.",
+      "manufacturer_id": "korvus_technology",
+      "label": "relevant",
+      "reason": "The requested system and research use directly match the manufacturer's documented PVD and magnetron sputtering profile.",
+      "technical_evidence": ["magnetron sputtering", "PVD", "research-scale thin film deposition"],
+      "known_exclusions": [],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-pump-002",
+      "tender_id": "SYN-PUMP-002",
+      "description": "Procurement of medical infusion pumps with patient dose controls, alarms, and ward deployment requirements.",
+      "manufacturer_id": "thesix_solutions",
+      "label": "not_relevant",
+      "reason": "The request is for clinical infusion pumps; the manufacturer profile describes fuel-cell and electrochemical test equipment.",
+      "technical_evidence": ["medical infusion pumps", "patient dose controls"],
+      "known_exclusions": ["clinical equipment", "patient-care use", "no fuel-cell or electrochemical testing requirement"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-pump-003",
+      "tender_id": "SYN-PUMP-003",
+      "description": "Supply of an industrial water transfer pump for a cooling-water loop at a manufacturing plant.",
+      "manufacturer_id": "pg_instruments",
+      "label": "not_relevant",
+      "reason": "This is industrial fluid-handling equipment, not an analytical instrument in the manufacturer's profile.",
+      "technical_evidence": ["water transfer pump", "cooling-water loop"],
+      "known_exclusions": ["pumping equipment", "no laboratory analysis function"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-lab-generic-004",
+      "tender_id": "SYN-LAB-GENERIC-004",
+      "description": "Supply of general laboratory equipment and consumables; model, measurement range, and analytical method are not specified.",
+      "manufacturer_id": "pg_instruments",
+      "label": "insufficient_information",
+      "reason": "A laboratory setting alone does not establish that the tender requires the manufacturer's analytical instruments.",
+      "technical_evidence": ["general laboratory equipment"],
+      "known_exclusions": ["no instrument type", "no analytical method", "consumables included"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-amc-005",
+      "tender_id": "SYN-AMC-005",
+      "description": "Annual maintenance contract for an installed PVD coating system, including inspection and replacement of worn parts.",
+      "manufacturer_id": "korvus_technology",
+      "label": "potentially_relevant_needs_review",
+      "reason": "The equipment domain matches, and service terms appear in the profile, but the profile does not establish support for this specific installed system or service territory.",
+      "technical_evidence": ["PVD coating system", "annual maintenance", "replacement parts"],
+      "known_exclusions": ["service-only contract", "installed system manufacturer and model unspecified", "service eligibility unverified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-acronym-006",
+      "tender_id": "SYN-ACRONYM-006",
+      "description": "Procurement of a physical vapour deposition unit for university thin-film research, with magnetron sputtering capability.",
+      "manufacturer_id": "korvus_technology",
+      "label": "relevant",
+      "reason": "The expanded form of PVD and the stated sputtering research use align with the profile's product families and application areas.",
+      "technical_evidence": ["physical vapour deposition", "magnetron sputtering", "university thin-film research"],
+      "known_exclusions": [],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-alias-007",
+      "tender_id": "SYN-ALIAS-007",
+      "description": "Supply of a HEX-L modular coating platform for experimental thin-film deposition in a materials laboratory.",
+      "manufacturer_id": "korvus_technology",
+      "label": "relevant",
+      "reason": "The named product alias and thin-film research application match the manufacturer's profile.",
+      "technical_evidence": ["HEX-L", "modular coating platform", "thin-film deposition"],
+      "known_exclusions": ["final configuration still needs technical review"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-conflict-008",
+      "tender_id": "SYN-CONFLICT-008",
+      "description": "Tender title requests a high-vacuum magnetron sputtering deposition system, while a mandatory clause requires operation without vacuum and prohibits deposition sources.",
+      "manufacturer_id": "korvus_technology",
+      "label": "potentially_relevant_needs_review",
+      "reason": "The title contains a direct product-family match, but mandatory specifications conflict with the stated process and require human clarification.",
+      "technical_evidence": ["magnetron sputtering deposition system", "high vacuum"],
+      "known_exclusions": ["mandatory no-vacuum clause", "deposition sources prohibited", "specification conflict"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-negative-009",
+      "tender_id": "SYN-NEGATIVE-009",
+      "description": "Purchase of a new research PVD sputtering system. The same notice also requires an AMC for the institute's existing coating chamber.",
+      "manufacturer_id": "korvus_technology",
+      "label": "relevant",
+      "reason": "The new equipment purchase independently matches the product profile; the maintenance clause applies to a separate existing asset and should not erase the purchase signal.",
+      "technical_evidence": ["purchase of a new PVD sputtering system", "research coating system"],
+      "known_exclusions": ["AMC applies to a separate installed chamber", "compatibility with the existing chamber is unverified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-vacuum-cleaner-010",
+      "tender_id": "SYN-VACUUM-CLEANER-010",
+      "description": "Purchase of commercial vacuum cleaners for housekeeping and floor cleaning in an office building.",
+      "manufacturer_id": "korvus_technology",
+      "label": "not_relevant",
+      "reason": "The word vacuum is present, but the tender is for cleaning appliances rather than vacuum deposition or research systems.",
+      "technical_evidence": ["commercial vacuum cleaners", "floor cleaning"],
+      "known_exclusions": ["housekeeping equipment", "no deposition or laboratory process"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-overlap-korvus-011",
+      "tender_id": "SYN-OVERLAP-011",
+      "description": "Supply of a research magnetron sputtering PVD system for thin-film materials experiments.",
+      "manufacturer_id": "korvus_technology",
+      "label": "relevant",
+      "reason": "The requested PVD and sputtering system matches this manufacturer's stated product families.",
+      "technical_evidence": ["magnetron sputtering", "PVD system", "materials research"],
+      "known_exclusions": ["manufacturer eligibility and exact configuration remain unverified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-overlap-staton-012",
+      "tender_id": "SYN-OVERLAP-011",
+      "description": "Supply of a research magnetron sputtering PVD system for thin-film materials experiments.",
+      "manufacturer_id": "staton",
+      "label": "potentially_relevant_needs_review",
+      "reason": "The PVD and magnetron sputtering terms overlap the profile, but the profile does not establish suitability for this research-scale configuration.",
+      "technical_evidence": ["magnetron sputtering", "PVD system", "materials research"],
+      "known_exclusions": ["manufacturer eligibility and exact configuration remain unverified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-corrigendum-013",
+      "tender_id": "SYN-CORRIGENDUM-013",
+      "description": "Corrigendum extends the deadline for a nanoparticle synthesis and aerosol measurement system; the required flame-spray-pyrolysis process is unchanged.",
+      "manufacturer_id": "parteq",
+      "label": "relevant",
+      "reason": "The unchanged technical requirements match the profile; the deadline amendment is lifecycle context and does not alter product relevance.",
+      "technical_evidence": ["nanoparticle synthesis", "aerosol measurement", "flame spray pyrolysis"],
+      "known_exclusions": ["deadline extension only", "commercial eligibility remains unverified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-updated-014",
+      "tender_id": "SYN-UPDATED-014",
+      "description": "A previously seen procurement for a UV-Vis spectrophotometer adds a mandatory wavelength range in its latest amendment.",
+      "manufacturer_id": "pg_instruments",
+      "label": "potentially_relevant_needs_review",
+      "reason": "The instrument family matches, but the new mandatory range must be compared with verified product specifications.",
+      "technical_evidence": ["UV-Vis spectrophotometer", "new mandatory wavelength range"],
+      "known_exclusions": ["profile does not establish the required range", "amendment needs version comparison"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-overlap-concept-015",
+      "tender_id": "SYN-OVERLAP-CONCEPT-015",
+      "description": "Procurement of a spatial atomic layer deposition tool for roll-to-roll battery-electrode coating.",
+      "manufacturer_id": "sald",
+      "label": "relevant",
+      "reason": "The process and roll-to-roll equipment are directly represented in the manufacturer's listed categories.",
+      "technical_evidence": ["spatial atomic layer deposition", "roll-to-roll", "battery coating"],
+      "known_exclusions": ["production scale and substrate compatibility require confirmation"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-missing-capability-016",
+      "tender_id": "SYN-MISSING-016",
+      "description": "Tender requests a certified 500 kW hydrogen electrolyzer package with a named safety certification and delivery in 30 days.",
+      "manufacturer_id": "thesix_solutions",
+      "label": "insufficient_information",
+      "reason": "Hydrogen research equipment overlaps the manufacturer's profile, but the exact power rating, certification, and delivery capability are not documented there.",
+      "technical_evidence": ["hydrogen electrolyzer package", "500 kW", "mandatory certification", "30-day delivery"],
+      "known_exclusions": ["certification not verified", "rating not verified", "delivery capability not verified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    }
+  ]
+}
