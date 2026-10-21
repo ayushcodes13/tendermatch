@@ -20,7 +20,7 @@
       "matching/evaluation.py": "d33ae014dd3098e400586044825cc838a461b7dedfe5d007f2f7d40d50df90bf",
       "matching/matcher.py": "73c1697e78cbc5427aee768b5b0811f9ef9afe29e8387b2ce243876a97a5d234"
     },
-    "manufacturer_profiles": "c2b7f14ad2fcb5732855423c2dee7e9ecc8ec56dbe0fed7c305f37629d2b04e0"
+    "manufacturer_profiles": "f12682e2d34b75a246a1be41442cc53080415b0107fd4d755db8b64367b127c9"
   },
   "label_counts": {
     "insufficient_information": 2,

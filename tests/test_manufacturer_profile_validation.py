@@ -212,6 +212,17 @@ def test_sald_profile_links_official_technology_and_market_sources():
     assert profile["profile_version"] == "1.1"
 
 
+def test_on_nano_profile_links_official_products_and_subsystems():
+    profile = next(p for p in load_profiles() if p["id"] == "on_nano")
+
+    assert {
+        "https://on-nano.com/products/",
+        "https://on-nano.com/sub-systems/",
+        "https://on-nano.com/",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
