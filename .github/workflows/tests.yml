@@ -45,3 +45,4 @@ jobs:
           tests/test_document_retrieval.py
           tests/test_document_extraction.py
           tests/test_salesperson_feedback.py
+          tests/test_feedback_export.py

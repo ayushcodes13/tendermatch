@@ -59,7 +59,7 @@ Update this file through the same focused PR as each implementation where practi
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
 | P5 Actionable digest | Complete | `codex/feat-actionable-sales-digest`; [PR #25](https://github.com/ayushcodes13/tendermatch/pull/25) | Formatter tests: 6 passed; full local suite: 134 passed. CI included formatter tests (108 selected tests passed). Merged as `9f8a34c`; no live email sent. | Real tender/evidence examples still need human review. |
-| P6 Feedback collection and evaluation improvements | In progress | `codex/feat-salesperson-feedback-capture` | Adds allowlist-gated CLI capture into append-only SQLite with reviewer/timestamp/version, supported labels, 1,000-character reason cap, immutable update/delete triggers, and no automatic matcher changes. 8 focused tests and 142 full tests pass; compile and diff checks pass. | No hosted interface; Actions/cache DB is not durable; human feedback still needs a reviewed evaluation-import process. |
+| P6 Feedback collection and evaluation improvements | In progress | Capture: [PR #26](https://github.com/ayushcodes13/tendermatch/pull/26), merged `9f1217d`; export: `codex/feat-feedback-evaluation-review-queue` | Capture: 8 focused tests, 142 full; CI passed. Export adds exact-version joins, direct-label suggestions only, a `pending_adjudication` review queue, and a private non-overwriting JSON file. Export tests: 4 passed; full suite: 146 passed; compile and diff checks pass. | No hosted interface; Actions/cache DB is not durable; exported feedback is not eligible for metrics and requires human adjudication. |
 
 ## Phase 6 — Production readiness
 
