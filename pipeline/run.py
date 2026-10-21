@@ -26,6 +26,8 @@ Notes:
 """
 
 from config import RECEIVER_EMAIL
+from config import DOCUMENT_ALLOWED_HOSTS, DOCUMENT_STORAGE_DIR
+from data.documents import retrieve_candidate_documents
 from scrapers.cppp import scrape_all as scrape_cppp, PORTAL_LINKS
 from scrapers.iitm import scrape_iitm
 from scrapers.iit_palakkad import scrape_iit_palakkad
@@ -140,6 +142,7 @@ def run_pipeline():
     low_tenders = []
     explore_tenders = []
     updated_tenders = []
+    document_candidates = []
 
     matcher = build_matcher()
 
@@ -290,6 +293,9 @@ def run_pipeline():
 
         new_t["matches"] = matches
 
+        if new_t.get("document_links") and category in {"high_signal", "explore"}:
+            document_candidates.append(new_t)
+
         if category == "high_signal":
             if notification_type != AMENDMENT_UPDATE:
                 high_tenders.append(new_t)
@@ -297,6 +303,17 @@ def run_pipeline():
         elif category == "explore":
             if notification_type != AMENDMENT_UPDATE:
                 explore_tenders.append(new_t)
+
+    if DOCUMENT_ALLOWED_HOSTS and DOCUMENT_STORAGE_DIR and document_candidates:
+        retrievals = retrieve_candidate_documents(
+            conn,
+            document_candidates,
+            allowed_hosts=DOCUMENT_ALLOWED_HOSTS,
+            storage_dir=DOCUMENT_STORAGE_DIR,
+            max_candidates=10,
+            max_documents_per_candidate=2,
+        )
+        print(f"[DOCUMENT RETRIEVAL] {len(retrievals)} explicitly linked files attempted")
 
     conn.commit()
 

@@ -24,6 +24,15 @@ SENDER_EMAIL = os.getenv("SENDER_EMAIL")
 SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
 RECEIVER_EMAIL = os.getenv("RECEIVER_EMAIL")
 
+# Official-document enrichment is disabled unless both reviewed host names
+# and a protected persistent directory are explicitly configured.
+DOCUMENT_ALLOWED_HOSTS = frozenset(
+    host.strip().lower().rstrip(".")
+    for host in os.getenv("TENDERMATCH_DOCUMENT_HOSTS", "").split(",")
+    if host.strip()
+)
+DOCUMENT_STORAGE_DIR = os.getenv("TENDERMATCH_DOCUMENT_DIR")
+
 # Matching
 MATCH_THRESHOLD = 0.65
 
