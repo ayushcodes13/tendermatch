@@ -514,41 +514,60 @@
         "country": "Israel",
         "active": true,
         "product_categories": [
-            "NMR analyzers",
-            "time-domain NMR systems",
-            "material characterization instruments"
+            "electron paramagnetic resonance (EPR) spectrometers",
+            "electron spin resonance (ESR) systems",
+            "pulse EPR/ESR systems",
+            "continuous-wave ESR spectrometers",
+            "ESR/EPR probes and resonators",
+            "ESR/EPR magnets and magnetic-field mapping systems",
+            "microwave amplifiers for ESR/EPR systems",
+            "quantum education platforms"
         ],
         "products": [
-            "time-domain NMR analyzers",
-            "benchtop NMR systems",
-            "relaxation and diffusion measurement systems",
-            "solid and liquid sample analyzers"
+            "spinUP pulse EPR/ESR systems",
+            "spinPRO Q-band pulse ESR/EPR spectrometer",
+            "ESR 200 PLUS continuous-wave ESR spectrometer",
+            "ESR 200M desktop ESR spectrometer",
+            "ESR 100 X-band pulse EPR spectrometer",
+            "spinPROBE ESR/EPR probes and resonators",
+            "spinSIDE single-sided ESR/EPR probes and resonators",
+            "spinMAG ESR/EPR magnet",
+            "Bmapper 3D magnetic-field mapping system",
+            "spinEDU quantum education platform",
+            "X-band and Q-band microwave amplifiers for ESR/EPR systems"
         ],
         "industries_served": [
-            "materials science",
-            "petrochemicals",
-            "food science",
-            "pharmaceutical research",
-            "academic R&D"
+            "chemistry research",
+            "physics and quantum technology",
+            "medicine research",
+            "biology research"
         ],
-        "embedding_text": "Equipment used for analyzing material properties using time-domain nuclear magnetic resonance techniques, enabling measurement of parameters such as molecular mobility, porosity, relaxation times, and composition in solid and liquid samples. Commonly used in materials science, petrochemical analysis, food quality testing, and pharmaceutical research for non-destructive characterization of samples.\n\nIn government tenders, this may be described as NMR analyzer, time-domain NMR system, benchtop NMR instrument, or system for material characterization using magnetic resonance. It may also appear in less technical terms such as equipment for analyzing molecular structure or composition, system for studying material properties without destroying samples, or lab instrument for advanced material and fluid analysis.",
+        "embedding_text": "Spinflex Instruments offers electron paramagnetic resonance (EPR) and electron spin resonance (ESR) spectroscopy equipment, including pulse EPR/ESR systems and continuous-wave ESR spectrometers. The official product range includes modular spinUP systems, the spinPRO Q-band pulsed ESR/EPR spectrometer, ESR spectrometers, probes and resonators, magnets, microwave amplifiers, magnetic-field mapping equipment, and quantum education hardware. The manufacturer lists applications in chemistry, physics and quantum technology, medicine, and biology. Specific configuration, frequency band, compatibility, eligibility, and service support must be checked against the tender and product evidence.",
         "keywords": [
-            "NMR",
-            "time-domain NMR",
-            "material characterization",
-            "relaxation time",
-            "porosity analysis",
-            "non-destructive testing",
-            "benchtop NMR"
+            "EPR",
+            "ESR",
+            "electron paramagnetic resonance",
+            "electron spin resonance",
+            "pulse EPR",
+            "continuous-wave ESR",
+            "spinUP",
+            "spinPRO",
+            "ESR spectrometer",
+            "EPR resonator",
+            "ESR probe",
+            "microwave amplifier",
+            "magnetic-field mapping",
+            "quantum education"
         ],
         "concepts": [
-            "nmr",
-            "time_domain_nmr",
-            "material_characterization",
-            "relaxation_time",
-            "porosity_analysis",
-            "non_destructive_testing",
-            "benchtop_nmr"
+            "electron_paramagnetic_resonance",
+            "electron_spin_resonance",
+            "pulse_epr",
+            "continuous_wave_esr",
+            "esr_spectrometer",
+            "epr_resonator",
+            "magnetic_field_mapping",
+            "quantum_education"
         ],
         "negative_keywords": [],
         "service_keywords": [
@@ -562,7 +581,15 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://www.spinflex.com"
+        "website": "https://spin-flex.com/",
+        "source_links": [
+            "https://spin-flex.com/products/",
+            "https://spin-flex.com/pulse-epr-system/",
+            "https://spin-flex.com/pulse-epr-structural-biology/",
+            "https://spin-flex.com/applications/"
+        ],
+        "profile_version": "1.1",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "staton",
