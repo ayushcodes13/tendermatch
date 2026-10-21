@@ -7,12 +7,15 @@ Standardizes classification output for DB/email/debugging.
 
 from datetime import datetime
 
+from matching.thresholds import resolve_thresholds
 
-PIPELINE_VERSION = "matching_v2_1"
+
+PIPELINE_VERSION = "matching_v2_2"
 
 
-def build_trace(tender, signals, concepts, scoring, decision, manufacturer_candidates=None):
+def build_trace(tender, signals, concepts, scoring, decision, manufacturer_candidates=None, thresholds=None):
     manufacturer_candidates = manufacturer_candidates or []
+    thresholds = resolve_thresholds(thresholds)
     explanation = build_explanation(
         tender=tender,
         signals=signals,
@@ -20,6 +23,7 @@ def build_trace(tender, signals, concepts, scoring, decision, manufacturer_candi
         scoring=scoring,
         decision=decision,
         manufacturer_candidates=manufacturer_candidates,
+        thresholds=thresholds,
     )
 
     return {
@@ -35,6 +39,7 @@ def build_trace(tender, signals, concepts, scoring, decision, manufacturer_candi
         "score_breakdown": scoring["breakdown"],
         "reason_codes": decision["reason_codes"],
         "agent_review_required": decision.get("agent_review_required", False),
+        "decision_thresholds": thresholds,
 
         "signals": signals,
         "concepts": concepts,
@@ -43,7 +48,7 @@ def build_trace(tender, signals, concepts, scoring, decision, manufacturer_candi
     }
 
 
-def build_explanation(tender, signals, concepts, scoring, decision, manufacturer_candidates):
+def build_explanation(tender, signals, concepts, scoring, decision, manufacturer_candidates, thresholds):
     """Build a structured, explicitly uncalibrated account of the decision."""
     manufacturer_evidence = []
     for candidate in manufacturer_candidates[:5]:
@@ -77,6 +82,7 @@ def build_explanation(tender, signals, concepts, scoring, decision, manufacturer
     return {
         "decision": decision["decision"],
         "reason_codes": decision.get("reason_codes", []),
+        "decision_thresholds": thresholds,
         "overall_score": {
             "value": scoring.get("score"),
             "scale": "heuristic points on a 0-100 scale",

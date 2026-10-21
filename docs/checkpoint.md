@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `25c6989` after merged P2.3 domain compatibility PR #15; this P2.4 branch starts directly from that commit.
+- Current base: `main` at `a632361` after merged P2.4 explanation PR #16; this P2.4 threshold-configuration branch starts directly from that commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -36,7 +36,7 @@ Update this file through the same focused PR as each implementation where practi
 | P2.1 Manufacturer capability schema and validation | Complete | `feat/manufacturer-profile-validation`; [PR #13](https://github.com/ayushcodes13/tendermatch/pull/13) | 18 focused tests passed; full suite: 67 passed with one LibreSSL warning. GitHub Actions deterministic tests succeeded. Validator reports 0 errors and 42 provenance/version/date warnings across 14 profiles. Merged as `e53fe6b`. | Source-backed claims, profile versions, and update dates remain unrecorded; warnings are intentional until evidence is supplied. |
 | P2.2 Separate high-recall candidate generation from ranking | Complete | `feat/separate-candidate-generation`; [PR #14](https://github.com/ayushcodes13/tendermatch/pull/14) | 12 focused tests; full suite 68 passed with one LibreSSL warning. Pre/post-refactor rankings and synthetic diagnostic metrics identical for all 15 evaluation tenders. GitHub Actions passed; merged as `90e891d`. | Small-catalog full-pool retrieval is intentional. |
 | P2.3 Domain compatibility and negative matching | Complete | `feat/contextual-domain-compatibility`; [PR #15](https://github.com/ayushcodes13/tendermatch/pull/15) | Focused suite: 21 passed; full suite: 77 passed with one LibreSSL warning. GitHub Actions passed. Merged as `25c6989`. | Rules are contextual string patterns and require human review; no manufacturer eligibility or technical compliance is established. |
-| P2.4 Explainable scoring and threshold calibration | In progress: structured explanation contract | `feat/matching-explanation-contract`; PR pending | Focused evaluation/matching/profile/decision set: 30 passed; full suite: 79 passed with one LibreSSL warning. `compileall` and `git diff --check` passed. Structured explanation separates semantic, product-family, concept, service, negative evidence, source-quality status, unverified requirements, and heuristic score semantics. | Threshold changes require labels sufficient for meaningful before/after evaluation; current labels are synthetic and incomplete. |
+| P2.4 Explainable scoring and threshold calibration | In progress: thresholds configurable; sensitivity evaluation next | Explanation contract merged in [PR #16](https://github.com/ayushcodes13/tendermatch/pull/16); `feat/configurable-decision-thresholds` pending | PR #16 passed 30 focused tests and full suite 79 tests, then merged as `a632361`. Threshold config tests: 41 passed; full suite: 90 passed with one LibreSSL warning. `compileall`, JSON parse, and `git diff --check` passed. Effective settings are recorded in the trace, including manufacturer-evidence boundaries. | Accuracy/calibration claims require adequate labels. Current set is synthetic and incomplete; threshold sensitivity must distinguish judged pairs from unknowns. |
 
 ## Phase 3 — Tender lifecycle
 
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P2.4: complete the explanation-contract PR, then add configurable thresholds with measured before/after evaluation where the dataset supports it.
+P2.4: merge threshold configurability, then add a measured synthetic decision-sensitivity report that preserves unknown pairs; do not claim calibration from this dataset.
