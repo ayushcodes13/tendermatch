@@ -17,9 +17,9 @@ Notes:
 """
 
 import requests
-import re
 from datetime import datetime
 from bs4 import BeautifulSoup
+from scrapers.iisc_dates import extract_iisc_date_fields
 
 URL = "https://iisc.ac.in/all-tenders/"
 
@@ -38,15 +38,7 @@ def extract_date(text):
     Returns:
         datetime: Parsed object, or None if no match found.
     """
-    match = re.search(r"\((\d{2}/\d{2}/\d{4})\)", text)
-
-    if not match:
-        return None
-
-    try:
-        return datetime.strptime(match.group(1), "%d/%m/%Y")
-    except:
-        return None
+    return extract_iisc_date_fields(text)["published_date"]
 
 
 def looks_like_tender(text):
@@ -99,13 +91,16 @@ def scrape_iisc():
         if not looks_like_tender(text):
             continue
 
-        published_date = extract_date(text)
+        date_fields = extract_iisc_date_fields(text)
+        published_date = date_fields["published_date"]
+        corrigendum_date = date_fields["corrigendum_date"]
 
         tender = {
             "tender_id": f"iisc_{abs(hash(text))}",
             "title": text,
             "organization": "Indian Institute of Science Bangalore",
             "published_date": published_date.isoformat() if published_date else None,
+            "corrigendum_date": corrigendum_date.isoformat() if corrigendum_date else None,
             "closing_date": None,
             "source_url": URL,
             "source_portal": "iisc",

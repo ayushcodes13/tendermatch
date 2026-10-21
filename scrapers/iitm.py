@@ -18,12 +18,13 @@ Outputs:
 """
 
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime
+from pipeline.freshness import should_process_tender
 
 API_URL = "https://tenders.iitm.ac.in/tenderapi/listtender"
 
 
-def is_recent_tender(opening_date, cutoff_hours=24):
+def is_recent_tender(opening_date, cutoff_hours=24, closing_date=None):
     """
     Checks if an IITM tender is within the freshness cutoff.
 
@@ -34,20 +35,10 @@ def is_recent_tender(opening_date, cutoff_hours=24):
     Returns:
         bool: True if newer than the cutoff.
     """
-    if not opening_date:
-        return True
-
-    try:
-        published = datetime.strptime(
-            opening_date,
-            "%Y-%m-%dT%H:%M"
-        )
-    except Exception:
-        return True
-
-    cutoff = datetime.now() - timedelta(hours=cutoff_hours)
-
-    return published >= cutoff
+    return should_process_tender(
+        {"published_date": opening_date, "closing_date": closing_date},
+        max_age_hours=cutoff_hours,
+    )
 
 
 def scrape_iitm(cutoff_hours=24):
@@ -70,8 +61,9 @@ def scrape_iitm(cutoff_hours=24):
     for tender in data:
         opening_date = tender.get("openingdatevalue")
 
-        # freshness filter
-        if not is_recent_tender(opening_date, cutoff_hours):
+        # Keep unknown dates for downstream review; only definite old dates are filtered.
+        closing_date = tender.get("closingdatevalue")
+        if not is_recent_tender(opening_date, cutoff_hours, closing_date):
             continue
 
         tenders.append({
@@ -79,7 +71,7 @@ def scrape_iitm(cutoff_hours=24):
             "title": tender.get("tendertitle"),
             "organization": "Indian Institute of Technology Madras",
             "published_date": opening_date,
-            "closing_date": tender.get("closingdatevalue"),
+            "closing_date": closing_date,
             "source_url": (
                 "https://tenders.iitm.ac.in/viewnewtender.html"
                 f"?formid={tender.get('formid')}"

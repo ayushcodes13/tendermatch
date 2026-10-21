@@ -35,8 +35,12 @@ if project_root not in sys.path:
 import re
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
+from datetime import datetime
 import time
+from pipeline.freshness import (
+    assess_tender_freshness,
+    parse_date as parse_tender_datetime,
+)
 
 
 BASE_URLS = {
@@ -60,10 +64,7 @@ def parse_date(date_str):
     Returns:
         datetime: Parsed object, or None if the format is invalid.
     """
-    try:
-        return datetime.strptime(date_str, "%d-%b-%Y %I:%M %p")
-    except:
-        return None
+    return parse_tender_datetime(date_str)
 
 
 def is_new_tender(tender, cutoff_hours=24):
@@ -71,15 +72,14 @@ def is_new_tender(tender, cutoff_hours=24):
     Filter to determine if a tender was published within the target window.
     """
 
-    published = parse_date(tender.get("published_date", ""))
+    status = assess_freshness(tender, cutoff_hours)
+    if status == "unknown":
+        print(f"[WARN] Unrecognized CPPP date retained for review: {tender.get('published_date')}")
+    return status not in {"stale", "expired"}
 
-    if not published:
-        print(f"[WARN] Failed date parse: {tender.get('published_date')}")
-        return False
 
-    cutoff = datetime.now() - timedelta(hours=cutoff_hours)
-
-    return published >= cutoff
+def assess_freshness(tender, cutoff_hours=24):
+    return assess_tender_freshness(tender, cutoff_hours)
 
 
 HEADERS = {

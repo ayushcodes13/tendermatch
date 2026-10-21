@@ -32,7 +32,11 @@ from scrapers.iit_palakkad import scrape_iit_palakkad
 from scrapers.iit_goa import scrape_iit_goa
 from scrapers.iisc import scrape_iisc
 
-from pipeline.freshness import is_recent_tender
+from pipeline.freshness import (
+    assess_tender_freshness,
+    get_tender_date_status,
+    is_recent_tender,
+)
 
 from data.db import (
     get_connection,
@@ -112,6 +116,9 @@ def run_pipeline():
     processed = []
     duplicates = 0
     stale_skipped = 0
+    expired_skipped = 0
+    unknown_date_count = 0
+    still_open_count = 0
     already_emailed = 0
 
     blocked = 0
@@ -147,10 +154,20 @@ def run_pipeline():
         # -------------------------
         # This prevents old archive tenders from being emailed just because
         # they appeared in the latest scrape.
+        freshness_status = assess_tender_freshness(new_t, max_age_hours=24)
+        date_status = get_tender_date_status(new_t, max_age_hours=24)
+        if "unknown" in date_status.values():
+            unknown_date_count += 1
+        if date_status["lifecycle"] == "still_open":
+            still_open_count += 1
+
         if not is_recent_tender(new_t, max_age_hours=24):
-            stale_skipped += 1
+            if freshness_status == "expired":
+                expired_skipped += 1
+            else:
+                stale_skipped += 1
             print(
-                f"[{status_str}] Skipping stale tender: {new_t.get('title')} | "
+                f"[{status_str}] Skipping {freshness_status} tender: {new_t.get('title')} | "
                 f"published_date={new_t.get('published_date')} | "
                 f"updated_date={new_t.get('updated_date')} | "
                 f"corrigendum_date={new_t.get('corrigendum_date')}"
@@ -260,6 +277,9 @@ def run_pipeline():
         "fresh_processed": len(processed),
         "duplicates_skipped": duplicates,
         "stale_skipped": stale_skipped,
+        "expired_skipped": expired_skipped,
+        "unknown_date_count": unknown_date_count,
+        "still_open_count": still_open_count,
         "already_emailed_skipped": already_emailed,
         "high": high_signal,
         "explore": explore_count,
