@@ -31,4 +31,5 @@ jobs:
           tests/test_matching_evaluation.py
           tests/test_matching_regressions.py
           tests/test_manufacturer_profile_validation.py
+          tests/test_domain_compatibility.py
           tests/test_specific_tender.py

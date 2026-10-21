@@ -101,6 +101,40 @@ CONTEXTUAL_NEGATIVE_RULES = [
     },
 ]
 
+# These paired-domain conflicts are intentionally review-only. When two
+# incompatible contexts coexist, keyword presence alone cannot establish which
+# requirement is operative or whether a tender contains multiple lots.
+DOMAIN_REVIEW_RULES = [
+    {
+        "id": "PUMP_MEDICAL_INDUSTRIAL_COLLISION",
+        "groups": [
+            ["medical infusion pump", "patient dose control", "intravenous pump"],
+            ["industrial water pump", "water transfer pump", "cooling water loop", "centrifugal pump"],
+        ],
+    },
+    {
+        "id": "LAB_VACUUM_CLEANING_COLLISION",
+        "groups": [
+            ["vacuum cleaner", "floor cleaning", "housekeeping vacuum"],
+            ["laboratory vacuum", "vacuum chamber", "high-vacuum laboratory chamber", "vacuum deposition", "high-vacuum system"],
+        ],
+    },
+    {
+        "id": "PROCESS_EQUIPMENT_ELECTRICAL_INFRASTRUCTURE_COLLISION",
+        "groups": [
+            ["pvd", "wafer processing", "magnetron sputtering", "thin film deposition"],
+            ["substation", "33 kv", "11 kv", "line shifting", "ht line"],
+        ],
+    },
+    {
+        "id": "CONFLICTING_PROCESS_SPECIFICATIONS",
+        "groups": [
+            ["pvd", "magnetron sputtering", "deposition system", "plasma etching"],
+            ["without vacuum", "no vacuum", "prohibits deposition sources", "deposition is prohibited"],
+        ],
+    },
+]
+
 
 BUYER_PRIOR_NEGATIVE = [
     "gram panchayat",
@@ -173,6 +207,7 @@ def detect_signals(tender):
     hard_clusters = detect_hard_junk_clusters(text_lower)
     soft_risks = find_terms(text_lower, SOFT_RISK_TERMS)
     contextual_negatives = detect_contextual_negatives(text_lower)
+    domain_review_hits = detect_domain_review_hits(text_lower)
     buyer_priors = detect_buyer_priors(text_lower)
     rescue_terms = find_terms(text_lower, RESCUE_TERMS)
 
@@ -180,6 +215,7 @@ def detect_signals(tender):
         "hard_junk_clusters": hard_clusters,
         "soft_risk_terms": soft_risks,
         "contextual_negative_hits": contextual_negatives,
+        "domain_review_hits": domain_review_hits,
         "buyer_priors": buyer_priors,
         "rescue_terms": rescue_terms,
         "has_rescue": bool(rescue_terms),
@@ -261,6 +297,19 @@ def detect_contextual_negatives(text_lower):
                 "context_hits": context_hits,
             })
 
+    return hits
+
+
+def detect_domain_review_hits(text_lower):
+    """Find explicit conflicting domains that should be reviewed, not rejected."""
+    hits = []
+    for rule in DOMAIN_REVIEW_RULES:
+        group_hits = [find_terms(text_lower, group) for group in rule["groups"]]
+        if all(group_hits):
+            hits.append({
+                "rule_id": rule["id"],
+                "group_hits": group_hits,
+            })
     return hits
 
 
