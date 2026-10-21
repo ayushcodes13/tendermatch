@@ -10,7 +10,7 @@
     "syn-pump-002",
     "syn-pump-003"
   ],
-  "generated_at_utc": "2026-10-21T21:29:51+00:00",
+  "generated_at_utc": "2026-10-21T21:32:10+00:00",
   "human_reviewed_case_count": 0,
   "input_sha256": {
     "dataset": "a3e234e50cc0956fbd658bdd1c9d7440c99cf164cb2a8829858edf3417094ad5",
@@ -20,7 +20,7 @@
       "matching/evaluation.py": "d33ae014dd3098e400586044825cc838a461b7dedfe5d007f2f7d40d50df90bf",
       "matching/matcher.py": "73c1697e78cbc5427aee768b5b0811f9ef9afe29e8387b2ce243876a97a5d234"
     },
-    "manufacturer_profiles": "095f8225ae610cf10a59dcf6af7503555bf8079627736ba572a178895d1f6ba3"
+    "manufacturer_profiles": "9a304d5211f84e81485d8b84d0baaaa15f58279d2bb7443c64f4d944a1679572"
   },
   "label_counts": {
     "insufficient_information": 2,
@@ -32,8 +32,8 @@
   "labeled_candidate_precision_denominator": 9,
   "latency_ms_per_tender": {
     "count": 15,
-    "mean": 40.0118973988962,
-    "median": 38.494707994686905
+    "mean": 20.07675273392427,
+    "median": 20.332541003881488
   },
   "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
   "per_manufacturer": {
@@ -69,21 +69,21 @@
     }
   },
   "per_tender_latency_ms": {
-    "SYN-ACRONYM-006": 40.500083996448666,
-    "SYN-ALIAS-007": 40.103999999701045,
-    "SYN-AMC-005": 36.428375002287794,
-    "SYN-CONFLICT-008": 86.24587500526104,
-    "SYN-CORRIGENDUM-013": 29.667750000953674,
-    "SYN-LAB-GENERIC-004": 29.313833998457994,
-    "SYN-MISSING-016": 22.113290993729606,
-    "SYN-NEGATIVE-009": 63.210624997736886,
-    "SYN-OVERLAP-011": 41.34762499597855,
-    "SYN-OVERLAP-CONCEPT-015": 23.631834003026597,
-    "SYN-PUMP-002": 38.84195899445331,
-    "SYN-PUMP-003": 33.99604200239992,
-    "SYN-PVD-001": 49.65454199555097,
-    "SYN-UPDATED-014": 26.62791700277012,
-    "SYN-VACUUM-CLEANER-010": 38.494707994686905
+    "SYN-ACRONYM-006": 16.564833997108508,
+    "SYN-ALIAS-007": 16.323875002854038,
+    "SYN-AMC-005": 16.066208001575433,
+    "SYN-CONFLICT-008": 23.348082999291364,
+    "SYN-CORRIGENDUM-013": 22.679458001221064,
+    "SYN-LAB-GENERIC-004": 16.612125000392552,
+    "SYN-MISSING-016": 21.859917003894225,
+    "SYN-NEGATIVE-009": 20.332541003881488,
+    "SYN-OVERLAP-011": 18.653166000149213,
+    "SYN-OVERLAP-CONCEPT-015": 21.845750001375563,
+    "SYN-PUMP-002": 17.153250002593268,
+    "SYN-PUMP-003": 15.796041996509302,
+    "SYN-PVD-001": 24.06887499819277,
+    "SYN-UPDATED-014": 23.423250000632834,
+    "SYN-VACUUM-CLEANER-010": 26.423916999192443
   },
   "ranking_metrics": {
     "1": {

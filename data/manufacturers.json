@@ -942,8 +942,7 @@
             "Agilis Series MOCVD reactors",
             "GOX Series Gallium Oxide systems",
             "Imperium-MOCVD control software",
-            "AgniTemp multiwavelength pyrometer",
-            "Legacy MOCVD system upgrades"
+            "AgniTemp multiwavelength pyrometer"
         ],
         "industries_served": [
             "semiconductor R&D",
@@ -985,7 +984,8 @@
             "calibration",
             "replacement",
             "upgrade",
-            "legacy system upgrade"
+            "legacy system upgrade",
+            "legacy MOCVD system upgrades"
         ],
         "website": "https://agnitron.com/",
         "source_links": [
@@ -999,7 +999,7 @@
             "https://agnitron.com/products/mocvd/agilis-series-300/",
             "https://agnitron.com/products/mocvd/a-series/"
         ],
-        "profile_version": "1.1",
+        "profile_version": "1.2",
         "profile_last_updated": "2026-10-22"
     },
     {
