@@ -918,9 +918,14 @@
         "website": "https://spatialald.com/",
         "source_links": [
             "https://spatialald.com/solutions/rd-system/",
-            "https://spatialald.com/solutions/high-volume-production-systems/"
+            "https://spatialald.com/solutions/high-volume-production-systems/",
+            "https://spatialald.com/technology/atomic-layer-deposition/",
+            "https://spatialald.com/markets/battery-technology/",
+            "https://spatialald.com/markets/solar-energy/",
+            "https://spatialald.com/markets/green-hydrogen/",
+            "https://spatialald.com/markets/barriers-and-packaging/"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {
