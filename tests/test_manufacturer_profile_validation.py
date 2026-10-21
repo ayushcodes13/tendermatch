@@ -238,6 +238,16 @@ def test_sald_profile_links_official_technology_and_market_sources():
     assert profile["profile_version"] == "1.3"
 
 
+def test_spinflex_industries_limit_health_claim_to_biomedical_research():
+    profile = next(p for p in load_profiles() if p["id"] == "spinflex")
+
+    assert "biomedical research" in profile["industries_served"]
+    assert "structural biology research" in profile["industries_served"]
+    assert "medicine research" not in profile["industries_served"]
+    assert "https://spin-flex.com/pulse-epr-structural-biology/" in profile["source_links"]
+    assert profile["profile_version"] == "1.2"
+
+
 def test_sald_industries_do_not_overclaim_textiles_or_medical_packaging():
     profile = next(p for p in load_profiles() if p["id"] == "sald")
 
