@@ -4,8 +4,8 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `b6fa250` after merged synthetic smoke PR #32; `codex/docs-verify-readme-claims` starts directly from this commit.
-- Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
+- Current base: `main` at `f01f243` after merged README reconciliation PR #33; this checkpoint follow-up starts directly from this commit.
+- Pre-existing draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”. Its runtime guidance is now incorporated in README; the draft remains open and redundant.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
 - Required runtime setup still missing: GitHub Actions secret `RECEIVER_EMAIL`.
@@ -67,8 +67,8 @@ Update this file through the same focused PR as each implementation where practi
 | --- | --- | --- | --- | --- |
 | Security, reliability, observability, and recovery | In progress | Secret-safe logs: [PR #29](https://github.com/ayushcodes13/tendermatch/pull/29), merged `8a19860`; run ledger: [PR #30](https://github.com/ayushcodes13/tendermatch/pull/30), merged `c5f6fae`; CI follow-up: [PR #31](https://github.com/ayushcodes13/tendermatch/pull/31), merged `74547be` | PR #29: 4 focused tests, 159 full tests; PR #30: 9 focused tests, 163 full tests; PR #31 adds the safe-logging test module to CI. CI passed for all three. Run ledger records run status, duration, per-source outcomes, tender/match/review counts, and email outcome. | Actions/cache SQLite is not durable. Other recovery and security work remains. |
 | Deployment smoke verification | Partially verified | Synthetic smoke: [PR #32](https://github.com/ayushcodes13/tendermatch/pull/32), merged `b6fa250` | Synthetic two-run SQLite startup/persistence and one scheduler-cycle tests: 6 focused and 165 full tests passed locally; CI passed. No live portal or SMTP calls occurred. | No actual deployment smoke was run. Actions remains temporary, and no persistent host or backup target is configured. |
-| README and operational documentation reconciliation | In progress | `codex/docs-verify-readme-claims` | Reconciles unsupported accuracy/manufacturer/schedule/dashboard claims in README and `about.md`; profile count verified at 14 and structural validator reports 0 errors/42 provenance warnings. Local Markdown links resolve. | Open draft PR #1 has overlapping runtime guidance; its recommendation is folded into this README update. Resolve the superseded draft after this change merges. |
+| README and operational documentation reconciliation | Complete | [PR #33](https://github.com/ayushcodes13/tendermatch/pull/33), merged `f01f243` | Removed unsupported accuracy, manufacturer-count, score, schedule, and dashboard claims. Verified the catalog has 14 profiles (0 structural errors, 42 provenance/version/date warnings), local Markdown targets resolve, and PR CI passed. | Existing draft PR #1 remains open but its runtime guidance is incorporated in README. |
 
 ## Next
 
-P7.4: reconcile README and system overview with verified code and evidence. P4.3 remains gated on measured evidence, cost, latency, and safety value.
+Next: profile provenance requires claim-by-claim source verification; many current product claims remain unverified. Persistent deployment and real labeled examples also require external storage/runtime configuration and human review. P4.3 remains gated on measured evidence, cost, latency, and safety value.
