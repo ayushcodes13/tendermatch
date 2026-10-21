@@ -37,6 +37,11 @@ FEEDBACK_REVIEWERS = frozenset(
     for reviewer in os.getenv("TENDERMATCH_FEEDBACK_REVIEWERS", "").split(",")
     if reviewer.strip()
 )
+EVALUATION_ADJUDICATORS = frozenset(
+    reviewer.strip()
+    for reviewer in os.getenv("TENDERMATCH_EVALUATION_ADJUDICATORS", "").split(",")
+    if reviewer.strip()
+)
 
 # Matching
 MATCH_THRESHOLD = 0.65
