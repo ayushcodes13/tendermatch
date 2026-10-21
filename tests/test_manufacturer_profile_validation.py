@@ -199,6 +199,19 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
     assert profile["profile_version"] == "1.1"
 
 
+def test_sald_profile_links_official_technology_and_market_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "sald")
+
+    assert {
+        "https://spatialald.com/technology/atomic-layer-deposition/",
+        "https://spatialald.com/markets/battery-technology/",
+        "https://spatialald.com/markets/solar-energy/",
+        "https://spatialald.com/markets/green-hydrogen/",
+        "https://spatialald.com/markets/barriers-and-packaging/",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
