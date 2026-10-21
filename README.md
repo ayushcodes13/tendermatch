@@ -138,7 +138,7 @@ SEND_TIME_HOUR = 21     # 9 PM daily digest
 
 Access real-time statistics via:
 - **Console reports**: `python pipeline/run.py`
-- **SQLite browser**: `data/database/tenders.db`
+- **SQLite database**: `data/tenders.db` by default; set `TENDERMATCH_DB_PATH` to a path on durable storage when running on a persistent host. The configured parent directory must already exist so a missing storage mount fails clearly instead of creating an ephemeral local database.
 - **Email summaries**: Configured delivery schedule
 
 ---

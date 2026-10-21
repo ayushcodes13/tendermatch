@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `18728e3` after merged P0.4 PR #6; this P0.5 branch starts directly from that commit.
+- Current base: `main` at `ae5d928` after merged P0.5 overlap-guard PR #7; this P0.5 branch starts directly from that commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. The repository has no PR status checks configured; the existing workflow is schedule/manual only.
 - No live scraper, model download, or SMTP delivery has been run as verification.
@@ -18,7 +18,7 @@ Update this file through the same focused PR as each implementation where practi
 | P0.2 Configuration and email credentials | Partially verified | `fix/email-config-contract`; [PR #3](https://github.com/ayushcodes13/tendermatch/pull/3) | 5 targeted tests passed; merged as `c90d30c`. SMTP uses mocked transport. | Add `RECEIVER_EMAIL` secret before scheduled delivery can work. |
 | P0.3 Date parsing and freshness | Complete | `fix/tender-date-freshness`; [PR #5](https://github.com/ayushcodes13/tendermatch/pull/5) | 25 targeted tests passed; compile check passed; independently reviewed; merged as `cc4e236`. | No live portal drift check; date-unknown candidates remain reviewable. |
 | P0.4 Database identity, deduplication, transactions | Complete | `fix/tender-database-deduplication`; [PR #6](https://github.com/ayushcodes13/tendermatch/pull/6) | Focused suite: 37 passed; independent review found no confirmed defects; merged as `18728e3`. | No production SQLite file was available to validate migration on customer data. Cross-portal duplicates without shared official IDs or source URLs remain unresolved; IISc document-link stability needs monitoring. |
-| P0.5 Scheduled execution and persistence | In progress; overlap guard pending PR | `fix/prevent-overlapping-scheduled-runs`; PR pending | Workflow YAML parsed successfully; `git diff --check` passed; independent review confirmed the ref-independent guard. | GitHub keeps at most one pending run in a concurrency group, so a newer event can replace an older queued run. Actions cache is not durable storage. Runtime, storage, costs, credentials, backup/recovery, and deployment authorization remain unresolved. |
+| P0.5 Scheduled execution and persistence | In progress; durable-path configuration pending PR | PR #7 merged; `feat/configure-database-path` in progress | PR #7 prevents overlapping scheduled/manual runs. This change allows a SQLite path on mounted durable storage and fails clearly if the configured parent directory is absent. | GitHub keeps at most one pending run in a concurrency group, so a newer event can replace an older queued run. Actions cache is not durable storage. Host selection, costs, credentials, backup/recovery, and deployment authorization remain unresolved. |
 | P0.6 Recoverable email delivery | Not started | — | — | Design and test crash recovery and SMTP ambiguity. |
 
 ## Phase 1 — Evaluation baseline
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P0.5: verify and merge the overlap-guard PR, then investigate a durable scheduled runtime and record the concrete hosting, storage, cost, credential, and recovery requirements before any deployment.
+P0.5: finish the configurable database-path PR, then investigate a durable scheduled runtime and record concrete hosting, storage, cost, credential, and recovery requirements before any deployment.

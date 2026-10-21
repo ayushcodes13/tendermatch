@@ -27,7 +27,9 @@ Notes:
 import sqlite3
 import hashlib
 import json
+import os
 import re
+from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
 from pipeline.freshness import parse_date
@@ -42,7 +44,16 @@ def get_connection():
     Returns:
         sqlite3.Connection: An active database connection object.
     """
-    return sqlite3.connect(DB_PATH, timeout=30)
+    configured_path = os.environ.get("TENDERMATCH_DB_PATH")
+    database_path = configured_path or DB_PATH
+    if configured_path and configured_path != ":memory:":
+        parent = Path(database_path).parent
+        if not parent.is_dir():
+            raise FileNotFoundError(
+                "The directory configured by TENDERMATCH_DB_PATH does not exist; "
+                "mount or create the storage directory before starting TenderMatch."
+            )
+    return sqlite3.connect(database_path, timeout=30)
 
 
 def init_db(conn):
