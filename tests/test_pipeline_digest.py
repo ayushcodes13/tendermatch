@@ -147,3 +147,107 @@ def test_pipeline_sends_legacy_emailed_tender_to_new_recipient(monkeypatch):
     pipeline.run_pipeline()
 
     assert sent == ["new@example.com"]
+
+
+def test_pipeline_sends_meaningful_amendment_to_existing_recipient(monkeypatch, tmp_path):
+    database_path = tmp_path / "amendment.sqlite3"
+    sent = []
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(pipeline, "is_recent_tender", lambda tender, max_age_hours: True)
+    def classify(tender, manufacturer_candidates):
+        if "flow rate 3" in tender["raw_text"]:
+            return {
+                "is_blocked": True,
+                "has_signal": False,
+                "category": "blocked",
+                "decision": "blocked",
+                "score": 0,
+                "reason": "changed text no longer matched",
+            }
+        return {
+            "is_blocked": False,
+            "has_signal": True,
+            "category": "high_signal",
+            "decision": "high_signal",
+            "score": 80,
+            "reason": "test fixture",
+        }
+    monkeypatch.setattr(pipeline, "classify_tender", classify)
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(
+        pipeline, "send_email",
+        lambda subject, body, recipient: sent.append((subject, body, recipient)),
+    )
+
+    first = {
+        "tender_id": "REF-AMEND-1",
+        "title": "Pump procurement",
+        "organization": "Agency",
+        "published_date": "2026-10-21",
+        "closing_date": "2026-11-01",
+        "source_portal": "cppp",
+        "source_url": "https://agency.example/tenders/REF-AMEND-1",
+        "raw_text": "Technical specification: flow rate 2 L/min",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [first])
+    pipeline.run_pipeline()
+
+    revised = {
+        **first,
+        "closing_date": "2026-11-20",
+        "raw_text": "Technical specification: flow rate 3 L/min",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [revised])
+    pipeline.run_pipeline()
+
+    assert len(sent) == 2
+    subject, body, recipient = sent[1]
+    assert recipient == "sales@example.com"
+    assert subject == "Tender Intelligence Update | 1 Updated"
+    assert "UPDATED TENDERS" in body
+    assert "Closing date extended from 2026-11-01 to 2026-11-20." in body
+    assert "https://agency.example/tenders/REF-AMEND-1" in body
+    conn = sqlite3.connect(database_path)
+    assert conn.execute(
+        "SELECT notification_type FROM email_notifications ORDER BY id"
+    ).fetchall() == [("new_opportunity",), ("amendment_update",)]
+    conn.close()
+
+
+def test_pipeline_does_not_resend_formatting_only_content_change(monkeypatch, tmp_path):
+    database_path = tmp_path / "formatting.sqlite3"
+    sent = []
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(pipeline, "is_recent_tender", lambda tender, max_age_hours: True)
+    monkeypatch.setattr(pipeline, "classify_tender", lambda tender, manufacturer_candidates: {
+        "is_blocked": False,
+        "has_signal": True,
+        "category": "high_signal",
+        "decision": "high_signal",
+        "score": 80,
+        "reason": "test fixture",
+    })
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(pipeline, "send_email", lambda *args: sent.append(args))
+    first = {
+        "tender_id": "REF-FORMAT-1",
+        "title": "Lab equipment",
+        "organization": "Agency",
+        "published_date": "2026-10-21",
+        "source_portal": "cppp",
+        "raw_text": "Supply of equipment",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [first])
+    pipeline.run_pipeline()
+    monkeypatch.setattr(
+        pipeline, "collect_all_tenders",
+        lambda: [{**first, "raw_text": "supply   of\nequipment"}],
+    )
+    pipeline.run_pipeline()
+
+    assert len(sent) == 1
+    conn = sqlite3.connect(database_path)
+    assert conn.execute("SELECT COUNT(*) FROM email_notifications").fetchone()[0] == 1
+    conn.close()

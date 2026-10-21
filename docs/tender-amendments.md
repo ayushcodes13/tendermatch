@@ -10,4 +10,4 @@ When `upsert_or_get_tender()` observes a new content fingerprint for an existing
 
 Deadline comparisons use the shared date parser and record the old/new values. An unparseable changed deadline is called `deadline_changed`, not an extension. Text labels use only changed lines, which reduces false categorization from terms present in unchanged text. When a change includes both categorized and uncategorized lines, the combined event stays in `needs_review`. The rules can still miss or overstate meaning; they are triage signals and do not establish eligibility, legal effect, or technical compliance.
 
-This stage does not send notifications. P3.3 will use these stored comparisons to construct recipient- and version-deduplicated amendment notices.
+Amendment notifications use the existing SQLite outbox with a dedicated `amendment_update` type and the destination content fingerprint. Formatting-only changes are not sent. `needs_review` updates are sent with an explicit review instruction so uncertain substantive changes are not silently dropped. SMTP delivery remains at-least-once within the outbox's documented crash window.

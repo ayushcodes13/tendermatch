@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 
 
 NEW_OPPORTUNITY = "new_opportunity"
+AMENDMENT_UPDATE = "amendment_update"
 SENDING_RECOVERY_MINUTES = 15
 MAX_RETRY_MINUTES = 24 * 60
 
@@ -18,7 +19,9 @@ def _timestamp(value=None):
 
 
 def tender_version(tender):
-    """Return a deterministic fingerprint for the tender fields used in email."""
+    """Use the persisted content version, with a legacy standalone fallback."""
+    if tender.get("version_fingerprint"):
+        return tender["version_fingerprint"]
     version_fields = {
         key: tender.get(key)
         for key in (
@@ -58,14 +61,17 @@ def queue_digest(conn, recipient, subject, body, tenders, now=None):
     conn.execute("BEGIN IMMEDIATE")
     eligible = [
         tender for tender in tenders
-        if not notification_exists(conn, recipient, tender)
+        if not notification_exists(
+            conn, recipient, tender, tender.get("notification_type", NEW_OPPORTUNITY)
+        )
     ]
     if not eligible:
         conn.commit()
         return None
 
     notification_refs = sorted(
-        f"{tender['identity_key']}:{tender_version(tender)}" for tender in eligible
+        f"{tender['identity_key']}:{tender_version(tender)}:"
+        f"{tender.get('notification_type', NEW_OPPORTUNITY)}" for tender in eligible
     )
     digest_key = hashlib.sha256(
         f"{recipient}\0{subject}\0{body}\0{json.dumps(notification_refs)}".encode("utf-8")
@@ -90,7 +96,7 @@ def queue_digest(conn, recipient, subject, body, tenders, now=None):
                VALUES (?, ?, ?, ?, ?, 'pending', ?, ?)""",
             (
                 batch_id, recipient, tender["identity_key"], tender_version(tender),
-                NEW_OPPORTUNITY, timestamp, timestamp,
+                tender.get("notification_type", NEW_OPPORTUNITY), timestamp, timestamp,
             ),
         )
         inserted += cursor.rowcount

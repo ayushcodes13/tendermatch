@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 
 from data.db import init_db, is_already_emailed, upsert_or_get_tender
 from digest.outbox import (
+    AMENDMENT_UPDATE,
     deliver_batch,
     deliver_due_batches,
     due_batch_ids,
@@ -89,12 +90,37 @@ def test_same_tender_version_is_idempotent_but_new_version_can_be_notified():
     assert queue_digest(conn, "sales@example.com", "Subject", "Body", [tender]) is None
     assert notification_exists(conn, "sales@example.com", tender)
 
-    revised = {**tender, "raw_text": "Revised technical specification"}
+    revised = {
+        **tender,
+        "raw_text": "Revised technical specification",
+        "version_fingerprint": "b" * 64,
+    }
     second = queue_digest(conn, "sales@example.com", "Subject", "Body", [revised])
 
     assert second is not None and second != first
     assert conn.execute("SELECT COUNT(*) FROM email_batches").fetchone()[0] == 2
     assert conn.execute("SELECT COUNT(*) FROM email_notifications").fetchone()[0] == 2
+
+
+def test_amendment_update_uses_content_fingerprint_and_dedicated_type():
+    conn = make_db()
+    tender = make_tender(conn)
+    amendment = {
+        **tender,
+        "version_fingerprint": "a" * 64,
+        "notification_type": AMENDMENT_UPDATE,
+    }
+
+    first = queue_digest(conn, "sales@example.com", "Update", "changed", [amendment])
+    repeated = queue_digest(conn, "sales@example.com", "Update", "changed", [amendment])
+
+    assert first is not None
+    assert repeated is None
+    assert notification_exists(conn, "sales@example.com", amendment, AMENDMENT_UPDATE)
+    assert conn.execute(
+        "SELECT tender_version, notification_type FROM email_notifications WHERE batch_id=?",
+        (first,),
+    ).fetchone() == ("a" * 64, AMENDMENT_UPDATE)
 
 
 def test_stale_sending_attempt_is_retried_after_process_interruption():

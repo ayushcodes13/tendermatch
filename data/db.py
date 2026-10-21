@@ -124,6 +124,10 @@ def init_db(conn):
         UNIQUE(tender_identity_key, from_fingerprint, to_fingerprint)
     )
     """)
+    cursor.execute("""
+        CREATE INDEX IF NOT EXISTS idx_tender_amendment_version
+        ON tender_amendments (tender_identity_key, to_fingerprint)
+    """)
 
     # -------- MATCHES TABLE --------
     cursor.execute("""
@@ -428,6 +432,26 @@ def get_tender_amendments(conn, identity_key):
         }
         for row in rows
     ]
+
+
+def get_tender_amendment(conn, identity_key, version_fingerprint):
+    """Return the comparison that produced a given tender content version."""
+    row = conn.execute(
+        "SELECT from_fingerprint, to_fingerprint, change_status, change_types_json, "
+        "evidence_json, observed_at FROM tender_amendments "
+        "WHERE tender_identity_key=? AND to_fingerprint=? ORDER BY id DESC LIMIT 1",
+        (identity_key, version_fingerprint),
+    ).fetchone()
+    if row is None:
+        return None
+    return {
+        "from_fingerprint": row[0],
+        "to_fingerprint": row[1],
+        "status": row[2],
+        "change_types": json.loads(row[3]),
+        "evidence": json.loads(row[4]),
+        "observed_at": row[5],
+    }
 
 
 def _backfill_tender_versions(conn):
