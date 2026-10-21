@@ -1,3 +1,5 @@
+import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -168,3 +170,23 @@ def test_missing_and_invalid_datasets_return_concise_cli_errors(tmp_path, capsys
     invalid_error = capsys.readouterr()
     assert "Cannot load evaluation dataset: JSONDecodeError" in invalid_error.err
     assert "Traceback" not in invalid_error.err
+
+
+def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
+    report = json.loads(
+        (ROOT / "data/evaluation/baseline_synthetic_profiles_2026-10-22.json")
+        .read_text(encoding="utf-8")
+    )
+    dataset = json.loads(
+        (ROOT / "data/evaluation/golden_tender_cases.json").read_text(encoding="utf-8")
+    )
+    dataset_bytes = json.dumps(
+        dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+
+    assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(
+        (ROOT / "data/manufacturers.json").read_bytes()
+    ).hexdigest()
+    assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
+    assert report["candidate_recall_on_labeled_positives"] == 1.0
+    assert report["human_reviewed_case_count"] == 0
