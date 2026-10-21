@@ -18,6 +18,7 @@ import requests
 import urllib3
 from bs4 import BeautifulSoup
 from datetime import datetime
+from urllib.parse import urljoin
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -61,10 +62,12 @@ def scrape_iit_goa():
         closing_date = cells[3].get_text(strip=True)
 
         link_tag = cells[1].find("a", href=True)
-        doc_url = link_tag["href"] if link_tag else None
+        doc_url = urljoin(URL, link_tag["href"]) if link_tag else None
 
         tenders.append({
-            "tender_id": title[:50],
+            # Prefer the notice link as identity; the first 50 title characters
+            # are not a source-issued tender ID and can collide.
+            "tender_id": doc_url,
             "title": title,
             "organization": "IIT Goa",
             "published_date": published_date,

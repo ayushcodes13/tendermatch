@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `5dd74d4` after merged checkpoint PR #4; the P0.3 branch starts directly from this commit.
+- Current base: `main` at `cc4e236` after merged P0.3 PR #5; the P0.4 branch starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. The repository has no PR status checks configured; the existing workflow is schedule/manual only.
 - No live scraper, model download, or SMTP delivery has been run as verification.
@@ -16,8 +16,8 @@ Update this file through the same focused PR as each implementation where practi
 | --- | --- | --- | --- | --- |
 | P0.1 Digest stats and formatting | Complete | `fix/digest-stats-contract`; [PR #2](https://github.com/ayushcodes13/tendermatch/pull/2) | 3 targeted tests passed; merged as `609ff68`. | Live scraper and SMTP delivery are intentionally not part of the controlled test. |
 | P0.2 Configuration and email credentials | Partially verified | `fix/email-config-contract`; [PR #3](https://github.com/ayushcodes13/tendermatch/pull/3) | 5 targeted tests passed; merged as `c90d30c`. SMTP uses mocked transport. | Add `RECEIVER_EMAIL` secret before scheduled delivery can work. |
-| P0.3 Date parsing and freshness | Implemented; pending merge | `fix/tender-date-freshness`; [PR #5](https://github.com/ayushcodes13/tendermatch/pull/5) | 25 targeted tests passed; compile check passed; independent review findings fixed and re-reviewed. | No live portal drift check; date-unknown candidates remain reviewable. |
-| P0.4 Database identity, deduplication, transactions | Not started | — | — | Preserve existing SQLite records while changing identity/version behavior. |
+| P0.3 Date parsing and freshness | Complete | `fix/tender-date-freshness`; [PR #5](https://github.com/ayushcodes13/tendermatch/pull/5) | 25 targeted tests passed; compile check passed; independently reviewed; merged as `cc4e236`. | No live portal drift check; date-unknown candidates remain reviewable. |
+| P0.4 Database identity, deduplication, transactions | Implemented; pending PR | `fix/tender-database-deduplication`; PR pending | Focused suite: 37 passed; independent review found no confirmed defects; compile and diff checks passed. In an isolated environment, full suite: 39 passed, 1 failed because an existing test stubs SentenceTransformer as `object`; default runtime collection is also blocked by missing `bs4`. | No production SQLite file was available to validate migration on customer data. Cross-portal duplicates without shared official IDs or source URLs remain unresolved; IISc document-link stability needs monitoring. |
 | P0.5 Scheduled execution and persistence | Not started | — | — | Deployment/cost/credential choices need review before deployment. |
 | P0.6 Recoverable email delivery | Not started | — | — | Design and test crash recovery and SMTP ambiguity. |
 
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P0.3 PR #5: merge only after repository requirements are satisfied, then verify `main`; next implement P0.4 database identity, deduplication, and transactional correctness.
+P0.4: create and merge its focused PR when repository requirements are satisfied, then verify `main`; next implement P0.5 scheduled execution and persistence.
