@@ -19,7 +19,6 @@ Inputs:
 Outputs:
 - A formatted email subject line and plaintext body.
 """
-from collections import defaultdict
 import re
 
 def normalize(title):
@@ -46,7 +45,11 @@ def format_email(high_tenders, explore_tenders, stats):
     Returns:
         tuple: (subject_string, body_string)
     """
-    subject = f"Tender Intelligence Report | {len(high_tenders)} High-Value Opportunities"
+    high_signal_label = "Opportunity" if len(high_tenders) == 1 else "Opportunities"
+    subject = (
+        f"Tender Intelligence Report | {len(high_tenders)} "
+        f"High-Signal {high_signal_label}"
+    )
 
     lines = []
 
@@ -56,19 +59,24 @@ def format_email(high_tenders, explore_tenders, stats):
     lines.append("")
     lines.append("OVERVIEW")
     lines.append("-" * 50)
-    lines.append(f"Total scanned: {stats['total']}")
-    lines.append(f"High relevance: {stats['high']}")
-    lines.append(f"Exploration candidates: {stats['explore']}")
-    lines.append(f"Low relevance: {stats['low']}")
+    lines.append(f"Total scraped: {stats.get('total_scraped', stats.get('total', 0))}")
+    lines.append(f"Fresh tenders processed: {stats.get('fresh_processed', 0)}")
+    lines.append(f"High-signal opportunities: {stats.get('high', len(high_tenders))}")
+    lines.append(f"Exploration candidates: {stats.get('explore', len(explore_tenders))}")
+    lines.append(f"Low-signal tenders: {stats.get('low', 0)}")
+    lines.append(f"Blocked tenders: {stats.get('blocked', 0)}")
+    lines.append(f"Stale tenders skipped: {stats.get('stale_skipped', 0)}")
+    lines.append(f"Duplicates skipped: {stats.get('duplicates_skipped', 0)}")
+    lines.append(f"Previously emailed skipped: {stats.get('already_emailed_skipped', 0)}")
     lines.append("")
 
     lines.append("=" * 50)
-    lines.append("HIGH CONFIDENCE OPPORTUNITIES")
+    lines.append("HIGH-SIGNAL OPPORTUNITIES")
     lines.append("=" * 50)
     lines.append("")
 
     if not high_tenders:
-        lines.append("No high-confidence opportunities identified.")
+        lines.append("No high-signal opportunities identified.")
         lines.append("")
 
     for i, t in enumerate(high_tenders, 1):
