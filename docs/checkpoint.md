@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `5cfa61d` after merged P1.3 regression/CI PR #12; this P2.1 branch starts directly from that commit.
+- Current base: `main` at `e53fe6b` after merged P2.1 profile validation PR #13; this P2.2 branch starts directly from that commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -33,8 +33,8 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P2.1 Manufacturer capability schema and validation | Implemented; PR pending | `feat/manufacturer-profile-validation`; PR pending | 18 focused tests passed; full suite: 67 passed with one LibreSSL warning. Validator reports 0 errors and 42 provenance/version/date warnings across 14 profiles. JSON schema parsing, `compileall`, and `git diff --check` passed. It performs no network verification and adds no capability claims. | Source-backed claims, profile versions, and update dates remain unrecorded; warnings are intentional until evidence is supplied. |
-| P2.2 Separate high-recall candidate generation from ranking | Not started | — | — | P1 baseline to measure recall. |
+| P2.1 Manufacturer capability schema and validation | Complete | `feat/manufacturer-profile-validation`; [PR #13](https://github.com/ayushcodes13/tendermatch/pull/13) | 18 focused tests passed; full suite: 67 passed with one LibreSSL warning. GitHub Actions deterministic tests succeeded. Validator reports 0 errors and 42 provenance/version/date warnings across 14 profiles. Merged as `e53fe6b`. | Source-backed claims, profile versions, and update dates remain unrecorded; warnings are intentional until evidence is supplied. |
+| P2.2 Separate high-recall candidate generation from ranking | In progress | `feat/separate-candidate-generation`; PR pending | Candidate generation and ranking are distinct methods. The 14-profile pool retains every active manufacturer with semantic and lexical evidence before top-k ranking. Deterministic suite: 12 passed; full suite: 68 passed with one LibreSSL warning. Pre/post-refactor rankings and synthetic diagnostic metrics are identical for all 15 evaluation tenders; `compileall` and `git diff --check` passed. | Small-catalog all-profile retrieval is intentionally unfiltered; domain compatibility decisions remain P2.3. |
 | P2.3 Domain compatibility and negative matching | Not started | — | — | Adversarial labelled coverage. |
 | P2.4 Explainable scoring and threshold calibration | Not started | — | — | Evaluation dataset and baseline. |
 
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-After P2.1 merges, P2.2: separate high-recall candidate generation from technical ranking while preserving a needs-review lane.
+P2.2: verify the staged matcher against the pre-refactor output, merge the focused PR, then proceed to P2.3 domain compatibility.

@@ -1,6 +1,7 @@
 """Adversarial matcher cases that run without models, portals, or SMTP."""
 
 import numpy as np
+import pytest
 
 from matching.matcher import TenderMatcher
 
@@ -77,3 +78,33 @@ def test_semantic_only_candidate_is_still_returned_without_technical_evidence():
     assert candidates[0]["keyword_hits"] == []
     assert candidates[0]["product_hits"] == []
     assert candidates[0]["reason_codes"][-1] == "MANUFACTURER_SCORE_LOW_RELATIVE"
+
+
+def test_candidate_generation_keeps_semantic_and_lexical_candidates_before_top_k():
+    matcher = make_matcher(
+        [
+            {"id": "semantic", "name": "Semantic Neighbor"},
+            {"id": "alias", "name": "Alias Manufacturer", "aliases": ["PVD"]},
+            {"id": "other", "name": "Other Manufacturer"},
+            {"id": "inactive", "name": "Inactive Manufacturer", "active": False},
+        ],
+        [[0.95, 0.0], [0.1, 0.9], [0.0, 1.0], [1.0, 0.0]],
+        [1.0, 0.0],
+    )
+
+    pool = matcher.generate_candidates({"title": "PVD process equipment"})
+    ranked = matcher.rank_candidates(pool, top_k=1)
+
+    assert [candidate["manufacturer"]["id"] for candidate in pool] == [
+        "semantic",
+        "alias",
+        "other",
+    ]
+    alias_candidate = next(candidate for candidate in pool if candidate["manufacturer"]["id"] == "alias")
+    assert alias_candidate["evidence"]["alias_hits"] == ["PVD"]
+    assert len(ranked) == 1
+    assert ranked[0]["manufacturer_id"] == "semantic"
+    assert matcher.match_topk({"title": "PVD process equipment"}, top_k=1) == ranked
+    assert matcher.rank_candidates(pool, top_k=0) == []
+    with pytest.raises(ValueError, match="non-negative integer"):
+        matcher.rank_candidates(pool, top_k=-1)
