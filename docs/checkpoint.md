@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `713d227` after merged P2.4 threshold-configuration PR #17; `feat/threshold-sensitivity-evaluation` starts directly from that commit.
+- Current base: `main` at `0f92d4e` after merged P2.4 sensitivity-evaluation PR #18; `feat/stable-tender-version-fingerprints` starts directly from that commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -36,13 +36,13 @@ Update this file through the same focused PR as each implementation where practi
 | P2.1 Manufacturer capability schema and validation | Complete | `feat/manufacturer-profile-validation`; [PR #13](https://github.com/ayushcodes13/tendermatch/pull/13) | 18 focused tests passed; full suite: 67 passed with one LibreSSL warning. GitHub Actions deterministic tests succeeded. Validator reports 0 errors and 42 provenance/version/date warnings across 14 profiles. Merged as `e53fe6b`. | Source-backed claims, profile versions, and update dates remain unrecorded; warnings are intentional until evidence is supplied. |
 | P2.2 Separate high-recall candidate generation from ranking | Complete | `feat/separate-candidate-generation`; [PR #14](https://github.com/ayushcodes13/tendermatch/pull/14) | 12 focused tests; full suite 68 passed with one LibreSSL warning. Pre/post-refactor rankings and synthetic diagnostic metrics identical for all 15 evaluation tenders. GitHub Actions passed; merged as `90e891d`. | Small-catalog full-pool retrieval is intentional. |
 | P2.3 Domain compatibility and negative matching | Complete | `feat/contextual-domain-compatibility`; [PR #15](https://github.com/ayushcodes13/tendermatch/pull/15) | Focused suite: 21 passed; full suite: 77 passed with one LibreSSL warning. GitHub Actions passed. Merged as `25c6989`. | Rules are contextual string patterns and require human review; no manufacturer eligibility or technical compliance is established. |
-| P2.4 Explainable scoring and threshold calibration | In progress: explanation and configurable thresholds merged; sensitivity report ready for PR | [PR #16](https://github.com/ayushcodes13/tendermatch/pull/16), [PR #17](https://github.com/ayushcodes13/tendermatch/pull/17); current branch `feat/threshold-sensitivity-evaluation` | PR #16 merged as `a632361`; PR #17 merged as `713d227`. Sensitivity evaluator: 43 focused tests passed; full suite: 92 passed with one LibreSSL warning. `compileall`, both JSON parses, and `git diff --check` passed. Report shows 7/7 explicitly judged positive pairs retained under both scenarios; unjudged displayed candidates are reported separately (36 and 37). | Dataset has zero human-reviewed labels and incomplete judgments. These results do not establish production precision, recall, or calibration. |
+| P2.4 Explainable scoring and threshold calibration | Complete | [PR #16](https://github.com/ayushcodes13/tendermatch/pull/16), [PR #17](https://github.com/ayushcodes13/tendermatch/pull/17), [PR #18](https://github.com/ayushcodes13/tendermatch/pull/18) | PR #16 merged as `a632361`; PR #17 as `713d227`; PR #18 as `0f92d4e`. PR #18 passed 43 focused tests, 92 full-suite tests (one LibreSSL warning), `compileall`, JSON parsing, and diff checks; CI `deterministic-tests` succeeded. Synthetic results retain 7/7 explicitly judged positives in both scenarios; unjudged displayed candidates are counted separately (36 and 37). | Dataset has zero human-reviewed labels and incomplete judgments. Results do not establish production precision, recall, or calibration. |
 
 ## Phase 3 — Tender lifecycle
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P3.1 Stable identity and version fingerprints | Not started | — | — | Coordinate with P0.4 database identity work. |
+| P3.1 Stable identity and version fingerprints | In progress | `feat/stable-tender-version-fingerprints` | Adds a SHA-256 fingerprint over canonical tender content, a `tender_versions` history keyed independently by the existing stable identity key, and a current-version pointer. Repeat observations update `last_seen_at`; changed content adds a preserved snapshot. Focused database/outbox/pipeline tests: 22 passed. | Migration seeds the current persisted contents as the earliest version available; no earlier snapshots can be reconstructed. Fingerprints detect content changes but do not assess whether changes are meaningful. |
 | P3.2 Meaningful amendment detection and history | Not started | — | — | Source-specific change fixtures. |
 | P3.3 Amendment-specific notifications | Not started | — | — | P0.6 recoverable delivery and P3.2 version history. |
 
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P2.4: threshold configurability is merged; merge the synthetic sensitivity report with unknown pairs preserved. Then start P3.1 stable tender identity and content fingerprints from the updated `main`.
+P3.1: add deterministic content fingerprints and persisted version snapshots on stable tender identities. Preserve the existing record and match keys; do not yet infer amendment meaning. Then P3.2 can classify meaningful changes against the version history.

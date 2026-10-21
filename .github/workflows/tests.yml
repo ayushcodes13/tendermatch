@@ -35,4 +35,5 @@ jobs:
           tests/test_matching_explanation.py
           tests/test_matching_thresholds.py
           tests/test_threshold_evaluation.py
+          tests/test_db_identity.py
           tests/test_specific_tender.py
