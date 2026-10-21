@@ -18,7 +18,7 @@ def load_profiles():
     return json.loads((ROOT / "data" / "manufacturers.json").read_text(encoding="utf-8"))
 
 
-def test_current_profiles_match_contract_and_only_unverified_profiles_warn():
+def test_current_profiles_match_contract_without_missing_provenance_warnings():
     profiles = load_profiles()
 
     issues = validate_profiles(profiles)
@@ -27,13 +27,7 @@ def test_current_profiles_match_contract_and_only_unverified_profiles_warn():
     warnings = [issue for issue in issues if issue["severity"] == "warning"]
     assert len(profiles) == 14
     assert errors == []
-    assert len(warnings) == 3
-    assert {issue["code"] for issue in warnings} == {
-        "missing_source_links",
-        "missing_profile_version",
-        "missing_profile_last_updated",
-    }
-    assert {issue["path"].split(".")[0] for issue in warnings} == {"$[2]"}
+    assert warnings == []
 
 
 def test_json_schema_documents_the_same_required_and_optional_fields():
@@ -73,6 +67,16 @@ def test_metadata_and_urls_are_validated_without_being_fabricated():
     assert "missing_profile_last_updated" not in codes
 
 
+def test_pg_instruments_profile_has_official_product_and_application_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "pg_instruments")
+
+    assert "https://www.pginstruments.com/products/" in profile["source_links"]
+    assert "https://www.pginstruments.com/industries/" in profile["source_links"]
+    assert "ICP-OES spectrometers" in profile["product_categories"]
+    assert "atomic fluorescence spectrometers" in profile["products"]
+    assert "food and beverage quality control and monitoring" in profile["industries_served"]
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
@@ -91,4 +95,4 @@ def test_profile_cli_reports_warnings_but_only_fails_on_errors(capsys):
 
     output = capsys.readouterr().out
     assert result == 0
-    assert "Validated 14 profiles: 0 errors, 3 warnings" in output
+    assert "Validated 14 profiles: 0 errors, 0 warnings" in output

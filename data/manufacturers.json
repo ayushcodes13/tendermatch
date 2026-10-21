@@ -147,44 +147,56 @@
         "country": "UK",
         "active": true,
         "product_categories": [
-            "analytical instruments",
-            "atomic absorption spectrometers",
+            "laboratory analytical instrumentation",
+            "ICP-OES spectrometers",
             "UV-Vis spectrophotometers",
-            "flame photometers"
+            "atomic absorption spectrometers",
+            "atomic fluorescence spectrometers",
+            "gas chromatography systems",
+            "flame photometers",
+            "laboratory water purification systems"
         ],
         "products": [
+            "ICP-OES spectrometers",
             "atomic absorption spectrometers (AAS)",
             "UV-Vis spectrophotometers",
+            "atomic fluorescence spectrometers",
+            "gas chromatography systems",
             "flame photometers",
-            "atomic fluorescence spectrometers"
+            "water purification systems"
         ],
         "industries_served": [
-            "environmental testing",
-            "food and agriculture",
-            "pharmaceutical analysis",
-            "academic laboratories",
-            "industrial quality control"
+            "environmental monitoring and control",
+            "pharmaceutical production and quality control",
+            "food and beverage quality control and monitoring",
+            "oil and gas production and monitoring",
+            "iron and steel quality control",
+            "geology studies and metallurgy",
+            "water purity testing",
+            "biotechnology and life sciences"
         ],
-        "embedding_text": "P.G. Instruments Ltd. manufactures analytical instruments including atomic absorption spectrometers, UV-Vis spectrophotometers, and flame photometers for elemental and chemical analysis. Their systems are used in environmental testing labs, food safety analysis, pharmaceutical quality control, and academic research for detecting trace metals and chemical compounds. These instruments are relevant for routine laboratory analysis, regulatory testing, and quality assurance applications.",
+        "embedding_text": "P.G. Instruments Limited supplies laboratory analytical instrumentation with a focus on spectroscopy. Its published range includes ICP-OES, UV-Vis spectroscopy, atomic absorption spectroscopy, atomic fluorescence spectroscopy, gas chromatography, flame photometry, and water purification. The manufacturer lists applications in environmental monitoring and control, pharmaceutical production and quality control, food and beverage quality control, oil and gas production and monitoring, iron and steel quality control, geology and metallurgy, water purity, and biotechnology and life sciences. Confirm the required analytical method, model specifications, certifications, and support against the tender and official product evidence.",
         "keywords": [
-            "AAS",
+            "ICP-OES",
+            "UV-Vis spectroscopy",
             "atomic absorption",
-            "UV-Vis",
-            "spectrophotometer",
+            "atomic fluorescence",
+            "gas chromatography",
+            "flame photometry",
             "flame photometer",
-            "elemental analysis",
-            "chemical analysis",
-            "lab instruments"
+            "spectrophotometer",
+            "water purification",
+            "analytical instrumentation"
         ],
         "concepts": [
-            "aas",
-            "atomic_absorption",
-            "uv_vis",
-            "spectrophotometer",
-            "flame_photometer",
-            "elemental_analysis",
-            "chemical_analysis",
-            "analytical_instrument"
+            "icp_oes",
+            "uv_vis_spectroscopy",
+            "atomic_absorption_spectroscopy",
+            "atomic_fluorescence_spectroscopy",
+            "gas_chromatography",
+            "flame_photometry",
+            "water_purification",
+            "analytical_instrumentation"
         ],
         "negative_keywords": [],
         "service_keywords": [
@@ -198,7 +210,17 @@
             "calibration",
             "replacement"
         ],
-        "website": "https://www.pginstruments.com"
+        "website": "https://www.pginstruments.com/",
+        "source_links": [
+            "https://www.pginstruments.com/products/",
+            "https://www.pginstruments.com/industries/",
+            "https://www.pginstruments.com/product/aa500f/",
+            "https://www.pginstruments.com/product/fp910-flame-photometer/",
+            "https://www.pginstruments.com/product/t65-uv-visible-spectrophotometer/",
+            "https://www.pginstruments.com/product-category/atomic_fluorescence/"
+        ],
+        "profile_version": "1.0",
+        "profile_last_updated": "2026-10-22"
     },
     {
         "id": "thesix_solutions",
