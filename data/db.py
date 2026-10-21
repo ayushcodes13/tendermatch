@@ -150,6 +150,32 @@ def init_db(conn):
     )
     """)
     cursor.execute("""
+    CREATE TABLE IF NOT EXISTS salesperson_feedback (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tender_identity_key TEXT NOT NULL,
+        tender_version TEXT,
+        manufacturer_id TEXT NOT NULL,
+        label TEXT NOT NULL,
+        reason TEXT,
+        reviewer TEXT NOT NULL,
+        reviewed_at TEXT NOT NULL
+    )
+    """)
+    cursor.execute("""
+        CREATE TRIGGER IF NOT EXISTS salesperson_feedback_no_update
+        BEFORE UPDATE ON salesperson_feedback
+        BEGIN
+            SELECT RAISE(ABORT, 'salesperson feedback records are immutable');
+        END
+    """)
+    cursor.execute("""
+        CREATE TRIGGER IF NOT EXISTS salesperson_feedback_no_delete
+        BEFORE DELETE ON salesperson_feedback
+        BEGIN
+            SELECT RAISE(ABORT, 'salesperson feedback records are immutable');
+        END
+    """)
+    cursor.execute("""
         CREATE INDEX IF NOT EXISTS idx_tender_amendment_version
         ON tender_amendments (tender_identity_key, to_fingerprint)
     """)
