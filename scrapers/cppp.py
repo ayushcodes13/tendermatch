@@ -112,7 +112,8 @@ def scrape_page(url, page, retries=3):
             return soup
 
         except requests.exceptions.RequestException as e:
-            print(f"[Retry {attempt+1}] Error on {full_url}: {e}")
+            # Do not log raw URLs or exception text; requests errors can contain both.
+            print(f"[Retry {attempt+1}] CPPP page {page} request failed ({type(e).__name__}).")
             time.sleep(1.5)
 
     print(f"[FAILED] Skipping page {page} after retries.")

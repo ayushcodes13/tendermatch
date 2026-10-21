@@ -62,7 +62,8 @@ def scrape_institution_page(url):
         response.raise_for_status()
         return BeautifulSoup(response.text, "html.parser")
     except Exception as e:
-        print(f"[ERROR] {url}: {e}")
+        # A URL or exception message may contain signed query parameters.
+        print(f"[INSTITUTION SCRAPER FAILED] {type(e).__name__}")
         return None
 
 

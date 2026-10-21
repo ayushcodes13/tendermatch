@@ -94,7 +94,8 @@ def collect_all_tenders():
             print(f"[SCRAPER OK] {name}: {len(results)} tenders")
             tenders.extend(results)
         except Exception as e:
-            print(f"[SCRAPER FAILED] {name}: {type(e).__name__}: {e}")
+            # Exception strings can include credential-bearing URLs or response data.
+            print(f"[SCRAPER FAILED] {name}: {type(e).__name__}")
             continue
 
     return tenders

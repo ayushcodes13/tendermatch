@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `9f8a34c` after merged P5 digest PR #25; `codex/feat-salesperson-feedback-capture` starts directly from this commit.
+- Current base: `main` at `2f249b8` after merged P6 adjudication PR #28; `codex/fix-secret-safe-failure-logging` starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -59,16 +59,16 @@ Update this file through the same focused PR as each implementation where practi
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
 | P5 Actionable digest | Complete | `codex/feat-actionable-sales-digest`; [PR #25](https://github.com/ayushcodes13/tendermatch/pull/25) | Formatter tests: 6 passed; full local suite: 134 passed. CI included formatter tests (108 selected tests passed). Merged as `9f8a34c`; no live email sent. | Real tender/evidence examples still need human review. |
-| P6 Feedback collection and evaluation improvements | In progress | Capture: [PR #26](https://github.com/ayushcodes13/tendermatch/pull/26), merged `9f1217d`; export: [PR #27](https://github.com/ayushcodes13/tendermatch/pull/27), merged `6b1a9b8`; importer: `codex/feat-adjudicated-feedback-dataset` | Capture: 8 focused tests, 142 full; CI passed. Export: 4 focused tests, 146 full; CI passed. Importer: 9 focused tests and 155 full tests pass; compile and diff checks pass. It creates a separate human-reviewed dataset only from allowlisted, explicitly adjudicated records. | No hosted interface; Actions/cache DB is not durable. Real feedback still needs human adjudication and a protected persistent database. |
+| P6 Feedback collection and evaluation improvements | Complete | Capture: [PR #26](https://github.com/ayushcodes13/tendermatch/pull/26), merged `9f1217d`; export: [PR #27](https://github.com/ayushcodes13/tendermatch/pull/27), merged `6b1a9b8`; importer: [PR #28](https://github.com/ayushcodes13/tendermatch/pull/28), merged `2f249b8` | Capture: 8 focused tests, 142 full; CI passed. Export: 4 focused tests, 146 full; CI passed. Importer: 9 focused tests and 155 full tests; CI passed 129 selected tests. Real data not yet adjudicated. | No hosted interface; Actions/cache DB is not durable, so real feedback collection remains deployment-dependent. |
 
 ## Phase 6 — Production readiness
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| Security, reliability, observability, and recovery | Not started | — | — | Build on P0.5/P0.6 persistence and delivery contracts. |
+| Security, reliability, observability, and recovery | In progress | `codex/fix-secret-safe-failure-logging` | This PR redacts raw exception payloads and tracebacks from scraper, pipeline, and scheduler logs; 4 focused tests and 159 full tests pass locally. | Additional security and operational work remains; Actions/cache SQLite is not durable. |
 | Deployment smoke verification | Not started | — | — | Authorized deployment target and credentials. |
 | README and operational documentation reconciliation | Not started | — | — | Update against final verified behavior and evaluation. |
 
 ## Next
 
-P4.2: finish and review page-cited native-text extraction. P4.3 remains gated on measured evidence, cost, latency, and safety value.
+P7.1: remove secret-bearing exception details from logs. P4.3 remains gated on measured evidence, cost, latency, and safety value.
