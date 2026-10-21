@@ -174,6 +174,19 @@ def test_agnitron_profile_links_official_products_software_and_service_sources()
     assert profile["profile_version"] == "1.1"
 
 
+def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "parteq")
+
+    assert {
+        "https://parteq.net/en/products/nanopowder-synthesis/",
+        "https://parteq.net/en/products/aerosolmesstechnik/",
+        "https://parteq.net/en/products/aerosolmesstechnik/nanoparticle-measurement-systems/",
+        "https://parteq.net/en/services-in-aerosol-technology/forschungsdienstleistungen.html",
+        "https://parteq.net/en/",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
