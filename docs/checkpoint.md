@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `c90d30c` before this checkpoint PR; repository clean and equal to `origin/main` at task start.
+- Current base: `main` at `5dd74d4` after merged checkpoint PR #4; the P0.3 branch starts directly from this commit.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. The repository has no PR status checks configured; the existing workflow is schedule/manual only.
 - No live scraper, model download, or SMTP delivery has been run as verification.
@@ -16,7 +16,7 @@ Update this file through the same focused PR as each implementation where practi
 | --- | --- | --- | --- | --- |
 | P0.1 Digest stats and formatting | Complete | `fix/digest-stats-contract`; [PR #2](https://github.com/ayushcodes13/tendermatch/pull/2) | 3 targeted tests passed; merged as `609ff68`. | Live scraper and SMTP delivery are intentionally not part of the controlled test. |
 | P0.2 Configuration and email credentials | Partially verified | `fix/email-config-contract`; [PR #3](https://github.com/ayushcodes13/tendermatch/pull/3) | 5 targeted tests passed; merged as `c90d30c`. SMTP uses mocked transport. | Add `RECEIVER_EMAIL` secret before scheduled delivery can work. |
-| P0.3 Date parsing and freshness | Not started | — | — | Source-specific date fixtures and date meaning distinctions are required. |
+| P0.3 Date parsing and freshness | Implemented; pending merge | `fix/tender-date-freshness`; [PR #5](https://github.com/ayushcodes13/tendermatch/pull/5) | 25 targeted tests passed; compile check passed; independent review findings fixed and re-reviewed. | No live portal drift check; date-unknown candidates remain reviewable. |
 | P0.4 Database identity, deduplication, transactions | Not started | — | — | Preserve existing SQLite records while changing identity/version behavior. |
 | P0.5 Scheduled execution and persistence | Not started | — | — | Deployment/cost/credential choices need review before deployment. |
 | P0.6 Recoverable email delivery | Not started | — | — | Design and test crash recovery and SMTP ambiguity. |
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P0.3: audit and test source-specific date parsing, distinguish publication/update/corrigendum/deadline/status, and preserve unknown status without silently dropping potentially relevant tenders.
+P0.3 PR #5: merge only after repository requirements are satisfied, then verify `main`; next implement P0.4 database identity, deduplication, and transactional correctness.
