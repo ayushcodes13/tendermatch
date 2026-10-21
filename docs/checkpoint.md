@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `9992849` after merged P3.1 tender-version PR #19; `fix/institution-source-identity` addresses an unstable generic scraper ID before P3.2.
+- Current base: `main` at `e09d491` after P3.1 identity follow-up PR #20; `feat/meaningful-tender-amendments` starts from this updated base.
 - Open unrelated draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -42,8 +42,8 @@ Update this file through the same focused PR as each implementation where practi
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P3.1 Stable identity and version fingerprints | In progress | [PR #19](https://github.com/ayushcodes13/tendermatch/pull/19) merged as `9992849`; follow-up `fix/institution-source-identity` | Version history passed 22 focused and 95 full-suite tests. Follow-up removes the generic institution scraper's process-randomized Python hash identity; focused suite: 15 passed, full suite: 96 passed with one LibreSSL warning. | Migration seeds current persisted content; older overwritten versions are unavailable. Identity stability still depends on IDs/URLs supplied by individual sources. |
-| P3.2 Meaningful amendment detection and history | Deferred pending P3.1 identity follow-up | — | Initial implementation and its 33 focused/106 full-suite test results are preserved in the local stash `wip meaningful tender amendment comparison`; it is not yet based on the corrected identity state. | Resume on a fresh branch from updated `main` after the identity follow-up merges. |
+| P3.1 Stable identity and version fingerprints | Complete | [PR #19](https://github.com/ayushcodes13/tendermatch/pull/19), [PR #20](https://github.com/ayushcodes13/tendermatch/pull/20) | PR #19 merged as `9992849`; PR #20 as `e09d491`. Version history passed 22 focused/95 full-suite tests. Identity follow-up passed 15 focused/96 full-suite tests; CI succeeded. | Migration seeds currently persisted content; older overwritten versions are unavailable. Identity quality depends on source IDs/URLs; listings without either use the title/date fallback. |
+| P3.2 Meaningful amendment detection and history | In progress | `feat/meaningful-tender-amendments` | Compares adjacent snapshots for deadlines, corrigenda, technical specifications, certifications, eligibility, quantities, and cancellation/withdrawal. Formatting-only changes and unclassified/mixed substantive changes receive separate statuses. Focused tests: 36 passed; full suite: 110 passed with one LibreSSL warning. Compile and diff checks passed. | Text categories are heuristic and require review; they do not establish legal or technical effect. |
 | P3.3 Amendment-specific notifications | Not started | — | — | P0.6 recoverable delivery and P3.2 version history. |
 
 ## Phase 4 — Document intelligence
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-P3.1: merge the generic institution source-identity correction. Then restore P3.2 on a new branch from updated `main` and rerun its validation.
+P3.2: merge conservative amendment comparison and evidence storage while leaving notifications unchanged. Then implement P3.3 amendment-specific delivery through the existing outbox.

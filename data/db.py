@@ -33,6 +33,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlsplit, urlunsplit
 
+from data.amendments import compare_tender_versions
 from pipeline.freshness import parse_date
 
 DB_PATH = "data/tenders.db"
@@ -108,6 +109,19 @@ def init_db(conn):
         first_seen_at TEXT NOT NULL,
         last_seen_at TEXT NOT NULL,
         UNIQUE(tender_identity_key, content_fingerprint)
+    )
+    """)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS tender_amendments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tender_identity_key TEXT NOT NULL,
+        from_fingerprint TEXT NOT NULL,
+        to_fingerprint TEXT NOT NULL,
+        change_status TEXT NOT NULL,
+        change_types_json TEXT NOT NULL,
+        evidence_json TEXT NOT NULL,
+        observed_at TEXT NOT NULL,
+        UNIQUE(tender_identity_key, from_fingerprint, to_fingerprint)
     )
     """)
 
@@ -356,7 +370,12 @@ def _record_tender_version(conn, tender):
     snapshot_json = json.dumps(
         snapshot, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     )
-    observed_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    observed_at = datetime.now(timezone.utc).isoformat(timespec="microseconds")
+    previous = conn.execute(
+        "SELECT content_fingerprint, snapshot_json FROM tender_versions "
+        "WHERE tender_identity_key=? ORDER BY last_seen_at DESC, id DESC LIMIT 1",
+        (identity_key,),
+    ).fetchone()
     conn.execute(
         """
         INSERT INTO tender_versions (
@@ -367,11 +386,48 @@ def _record_tender_version(conn, tender):
         """,
         (identity_key, fingerprint, snapshot_json, observed_at, observed_at),
     )
+    if previous and previous[0] != fingerprint:
+        comparison = compare_tender_versions(previous[1], snapshot_json)
+        conn.execute(
+            """
+            INSERT OR IGNORE INTO tender_amendments (
+                tender_identity_key, from_fingerprint, to_fingerprint, change_status,
+                change_types_json, evidence_json, observed_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                identity_key, previous[0], fingerprint, comparison["status"],
+                json.dumps(comparison["change_types"], sort_keys=True),
+                json.dumps(comparison["evidence"], ensure_ascii=False, sort_keys=True),
+                observed_at,
+            ),
+        )
     conn.execute(
         "UPDATE tenders SET version_fingerprint=? WHERE identity_key=?",
         (fingerprint, identity_key),
     )
     return fingerprint
+
+
+def get_tender_amendments(conn, identity_key):
+    """Return stored version comparisons in observation order."""
+    rows = conn.execute(
+        "SELECT from_fingerprint, to_fingerprint, change_status, change_types_json, "
+        "evidence_json, observed_at FROM tender_amendments "
+        "WHERE tender_identity_key=? ORDER BY id",
+        (identity_key,),
+    ).fetchall()
+    return [
+        {
+            "from_fingerprint": row[0],
+            "to_fingerprint": row[1],
+            "status": row[2],
+            "change_types": json.loads(row[3]),
+            "evidence": json.loads(row[4]),
+            "observed_at": row[5],
+        }
+        for row in rows
+    ]
 
 
 def _backfill_tender_versions(conn):
