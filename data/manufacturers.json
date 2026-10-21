@@ -468,9 +468,18 @@
         ],
         "website": "https://nordiko-tech.co.uk",
         "source_links": [
-            "https://nordiko-tech.co.uk/products"
+            "https://nordiko-tech.co.uk/products",
+            "https://nordiko-tech.co.uk/nordiko-mnem-ix-broad-ion-beam-system",
+            "https://nordiko-tech.co.uk/nordiko-3000",
+            "https://nordiko-tech.co.uk/nordiko-i-octave",
+            "https://nordiko-tech.co.uk/nordiko-3400-broad-ion-beam-deposition-system",
+            "https://nordiko-tech.co.uk/nordiko-5000-configurable-module",
+            "https://nordiko-tech.co.uk/nordiko-9000-9550-series",
+            "https://nordiko-tech.co.uk/nordiko-n1500",
+            "https://nordiko-tech.co.uk/ion-beam-technology",
+            "https://nordiko-tech.co.uk/sputtering-technology"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {
