@@ -20,6 +20,7 @@ Outputs:
 - A formatted email subject line and plaintext body.
 """
 import re
+from urllib.parse import urlsplit
 
 def normalize(title):
     """
@@ -32,6 +33,120 @@ def normalize(title):
         str: Lowercase alphanumeric string with stripped whitespace.
     """
     return re.sub(r'[^a-z0-9 ]', '', title.lower()).strip()
+
+
+def _items(value):
+    if value is None:
+        return []
+    if isinstance(value, str):
+        value = [value]
+    if not isinstance(value, (list, tuple, set)):
+        value = [value]
+    result = []
+    for item in value:
+        if isinstance(item, dict):
+            text = next(
+                (item.get(key) for key in ("term", "matched_term", "text", "phrase", "rule_id", "description") if item.get(key)),
+                None,
+            )
+            if text is None:
+                for nested in item.values():
+                    for nested_text in _items(nested):
+                        if nested_text not in result:
+                            result.append(nested_text)
+                continue
+            if not isinstance(text, str):
+                text = str(text)
+        else:
+            text = str(item).strip()
+        if text and text not in result:
+            result.append(text)
+    return result
+
+
+def _explanation(tender):
+    classification = tender.get("classification") or {}
+    return (
+        tender.get("explanation")
+        or classification.get("explanation")
+        or (classification.get("trace") or {}).get("explanation")
+        or {}
+    )
+
+
+def _valid_source_url(value):
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = urlsplit(value.strip())
+        if parsed.scheme.lower() not in {"http", "https"} or not parsed.hostname:
+            return None
+        if parsed.username or parsed.password:
+            return None
+        return value.strip()
+    except ValueError:
+        return None
+
+
+def _render_opportunity(lines, tender, *, kind, heading):
+    explanation = _explanation(tender)
+    matches = tender.get("matches") or []
+    title = tender.get("title") or "Untitled tender"
+    organization = tender.get("organization") or "Unknown organization"
+    tender_id = tender.get("tender_id")
+    reference = str(tender_id) if tender_id is not None and not str(tender_id).startswith(("http://", "https://")) else None
+    closing_date = tender.get("closing_date") or "Not listed"
+    source_url = _valid_source_url(tender.get("source_url")) or _valid_source_url(tender.get("portal_link"))
+
+    lines.append(f"{heading} {title}")
+    lines.append(f"   Organization: {organization}")
+    lines.append(f"   Tender reference: {reference or 'Not provided by source'}")
+    lines.append(f"   Status: {kind}")
+    lines.append(f"   Closing date: {closing_date}")
+
+    if matches:
+        lines.append("   Manufacturer matches to review:")
+        for match in matches[:3]:
+            name = match.get("manufacturer_name") or "Unknown manufacturer"
+            lines.append(f"   - {name}")
+            families = _items(match.get("product_hits")) + _items(match.get("category_hits")) + _items(match.get("alias_hits"))
+            families = list(dict.fromkeys(families))
+            lines.append(f"     Product family: {', '.join(families[:4]) or 'Not identified'}")
+            reasons = _items(match.get("concept_hits")) + _items(match.get("keyword_hits")) + _items(match.get("service_hits"))
+            reasons = list(dict.fromkeys(reasons))
+            lines.append(f"     Why it matched: {', '.join(reasons[:4]) or 'No specific profile evidence recorded'}")
+            negatives = _items(match.get("negative_hits"))
+            if not negatives:
+                negative_evidence = explanation.get("negative_evidence") or {}
+                negatives = list(dict.fromkeys(
+                    item
+                    for key in ("hard_junk_clusters", "soft_risk_terms", "contextual_negative_hits", "domain_review_hits")
+                    for item in _items(negative_evidence.get(key))
+                ))
+            if negatives:
+                lines.append(f"     Known concerns: {', '.join(negatives[:4])}")
+            else:
+                lines.append("     Known concerns: No manufacturer-specific negative evidence recorded")
+    else:
+        lines.append("   Manufacturer/product fit: No manufacturer match details attached; review the source manually.")
+
+    unverified = _items(explanation.get("unverified_requirements"))
+    if unverified:
+        lines.append("   Unverified requirements:")
+        for item in unverified[:3]:
+            lines.append(f"   - {item}")
+    if source_url:
+        lines.append(f"   Official tender: {source_url}")
+    else:
+        lines.append("   Official tender: No valid HTTP(S) source link recorded")
+    if kind == "Updated opportunity":
+        action = "Review the amendment, then recheck the official requirements and deadline."
+    elif kind == "Potential opportunity; needs review":
+        action = "Check the official requirements and confirm product fit and eligibility before pursuing."
+    else:
+        action = "Check the official requirements and confirm eligibility, technical fit, and delivery before pursuing."
+    lines.append(f"   Suggested next action: {action}")
+    lines.append("")
 
 def format_email(high_tenders, explore_tenders, stats, updated_tenders=None):
     """
@@ -85,27 +200,23 @@ def format_email(high_tenders, explore_tenders, stats, updated_tenders=None):
         lines.append("No high-signal opportunities identified.")
         lines.append("")
 
-    for i, t in enumerate(high_tenders, 1):
-        lines.append(f"{i}. {t['title']}")
-        lines.append(f"   Organization: {t['organization']}")
-
-        if t.get("matches"):
-            lines.append("   Recommended Manufacturers:")
-            for m in t["matches"][:3]:
-                lines.append(f"   - {m['manufacturer_name']} ({m['score']})")
-
-        lines.append(f"   Portal: {t.get('portal_link', 'N/A')}")
-        lines.append("")
+    for i, tender in enumerate(high_tenders, 1):
+        _render_opportunity(
+            lines, tender, kind="New to this recipient's digest", heading=f"{i}.",
+        )
 
     lines.append("=" * 50)
     lines.append("EXPLORATION (REQUIRES REVIEW)")
     lines.append("=" * 50)
     lines.append("")
 
-    for t in explore_tenders[:5]:
-        lines.append(f"- {t['title']} ({t['organization']})")
-        lines.append(f"  Portal: {t.get('portal_link', 'N/A')}")
+    if not explore_tenders:
+        lines.append("No exploration candidates require review.")
         lines.append("")
+    for tender in explore_tenders[:5]:
+        _render_opportunity(
+            lines, tender, kind="Potential opportunity; needs review", heading="-",
+        )
 
     if updated_tenders:
         lines.append("=" * 50)
@@ -114,7 +225,6 @@ def format_email(high_tenders, explore_tenders, stats, updated_tenders=None):
         lines.append("")
         for tender in updated_tenders:
             amendment = tender.get("amendment", {})
-            lines.append(f"- {tender.get('title', 'Untitled tender')} ({tender.get('organization', 'Unknown organization')})")
             if amendment.get("status") == "needs_review":
                 lines.append("  Update detected; review the official tender source.")
             labels = [item.replace("_", " ").capitalize() for item in amendment.get("change_types", [])]
@@ -130,8 +240,12 @@ def format_email(high_tenders, explore_tenders, stats, updated_tenders=None):
                 else:
                     message = "Closing date changed"
                 lines.append(f"  {message} from {closing.get('from') or 'unknown'} to {closing.get('to') or 'unknown'}.")
-            lines.append(f"  Official tender: {tender.get('source_url') or tender.get('portal_link', 'N/A')}")
-            lines.append("")
+            _render_opportunity(
+                lines,
+                tender,
+                kind="Updated opportunity",
+                heading="-",
+            )
 
     body = "\n".join(lines)
 

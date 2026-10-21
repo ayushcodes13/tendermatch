@@ -51,14 +51,14 @@ Update this file through the same focused PR as each implementation where practi
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
 | P4.1 Selective official-document retrieval | Complete | `codex/feat-selective-tender-document-retrieval`; [PR #23](https://github.com/ayushcodes13/tendermatch/pull/23) | 10 focused tests; 124 full tests; compile and diff checks passed. GitHub's then-current selected suite passed but did not include the new document tests; this is corrected in the P4.2 CI update. Merged as `e29e1c6`. | No portal host enabled by default; no blanket rights finding. Actions needs a durable protected mount before document storage can be enabled. |
-| P4.2 Technical extraction with provenance | In progress | `codex/feat-source-grounded-document-extraction` | Adds page-cited native PDF text extraction for explicitly labeled fields, explicit OCR/invalid/limit statuses, and append-only extraction history. Adversarial review also corrected pipeline candidate field adaptation so the bounded P4.1 selector receives actual classified tenders. 7 extraction tests, 10 retrieval tests, and 131 full tests pass; both document modules are selected by CI. Compile and diff checks pass. Synthetic PDF fixtures only. | No human-reviewed real tender PDFs; no OCR; labelled-line extraction does not interpret unlabeled prose. Parser memory isolation remains for hardening. |
-| P4.3 Selective LLM verification | Not started | — | — | Evidence-backed value, cost, latency, and safety evaluation. |
+| P4.2 Technical extraction with provenance | Complete | `codex/feat-source-grounded-document-extraction`; [PR #24](https://github.com/ayushcodes13/tendermatch/pull/24) | 7 extraction tests, 10 retrieval tests, and 131 full tests passed; GitHub CI ran the new document modules (105 selected tests passed). Compile and diff checks passed. Merged as `3d99dae`. Synthetic PDF fixtures only. | No human-reviewed real tender PDFs; no OCR; labelled-line extraction does not interpret unlabeled prose. Parser memory isolation remains for hardening. |
+| P4.3 Selective LLM verification | Deferred pending evidence | — | — | Current golden set has no human-reviewed labels or permitted real-document evaluation set; establish value, cost, latency, and safety evidence first. No LLM stage is implemented. |
 
 ## Phase 5 — Usability and feedback
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
-| P5 Actionable digest | Not started | — | — | Stable tender versions and evidence fields. |
+| P5 Actionable digest | In progress | `codex/feat-actionable-sales-digest` | Renders references, deadline, source link, manufacturer/product evidence, concerns, unverified requirements, update status, and suggested review action; validates links and avoids heuristic score claims. | Review digest behavior against realistic evidence payloads and amendment cases. |
 | P6 Feedback collection and evaluation improvements | Not started | — | — | Smallest practical interaction and integrity requirements. |
 
 ## Phase 6 — Production readiness
