@@ -1,168 +1,82 @@
-# 🎯 TenderMatch
+# TenderMatch
 
-<div align="center">
+TenderMatch is a Python workflow that helps equipment manufacturers and sales teams find potentially relevant government tenders. It collects listings from selected procurement portals and research institutions, stores tender history in SQLite, classifies and ranks manufacturer matches, and can send an evidence-oriented email digest.
 
-[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://sqlite.org/)
-[![License](https://img.shields.io/badge/License-MIT-4db6ac?style=for-the-badge&logo=github)](https://opensource.org/licenses/MIT)
+Matches are screening suggestions. Similarity and decision scores are heuristic, are not calibrated probabilities, and do not establish technical compliance, eligibility, or likelihood of winning. The workflow favors surfacing candidates for review over silently excluding uncertain opportunities.
 
-</div>
+## Current capabilities
 
-### 📖 The Tender Hunter's Dream
+- Scrapes selected CPPP listings and tender pages from IIT Madras, IIT Palakkad, IIT Goa, and IISc.
+- Stores tender identity, content versions, amendments, manufacturer matches, notification state, feedback, and pipeline run summaries in SQLite.
+- Uses the `BAAI/bge-small-en-v1.5` SentenceTransformer with lexical and manufacturer-profile evidence. The current catalog contains 14 profiles in `data/manufacturers.json`.
+- Profile validation checks structure; capability claims do not yet have claim-level source links, versions, or review dates, so treat them as unverified inputs.
+- Classifies results into blocked, low-signal, high-signal, exploratory, and review-required outcomes. Thresholds are configurable in `data/matching_thresholds.json`; they are not calibrated confidence levels.
+- Produces a plaintext digest with source links, product-family evidence, concerns, unverified requirements, and suggested next actions.
+- Supports bounded official PDF retrieval and labelled-field text extraction only when an operator explicitly configures an approved host list and protected storage directory. Both are disabled by default.
+- Captures salesperson feedback in SQLite and provides a separate, adjudicator-controlled path for adding reviewed cases to evaluation data.
 
-Imagine this: You're a specialized equipment manufacturer in the UK, and every 30 minutes, your phone buzzes with a perfectly scored lead. "Tender #2024/XYZ-123: Fuel cell testing system for national renewable energy lab - **97.2%** match with Thesix Solutions. Closing in 6 days."
+There is no web dashboard or hosted API in this repository. Feedback capture is a command-line/database workflow rather than a review interface.
 
-*No more drowning in irrelevant construction tenders. No more missed opportunities buried under "road repair" and "catering" contracts. Just pure, distilled opportunity - the exact projects your equipment was built for, delivered with surgical precision.*
+## Data flow
 
-*That's TenderMatch.*
+```text
+Selected tender portals
+        ↓
+Scrapers and date/freshness checks
+        ↓
+SQLite identity, content versions, and run ledger
+        ↓
+High-recall candidate generation and explainable ranking
+        ↓
+Human-review categories and optional document evidence
+        ↓
+Notification outbox → plaintext email digest
+```
 
----
+The matching implementation and its limitations are described in [`docs/matching.md`](docs/matching.md). Tender amendment behavior is heuristic and requires human review. See [`docs/document-retrieval.md`](docs/document-retrieval.md) and [`docs/document-extraction.md`](docs/document-extraction.md) before enabling document processing.
 
-## 🗺️ System Architecture
+## Repository setup and tests
 
-<div align="center">
-  <img src="assets/images/architecture_1.png" alt="Architecture P1" width="800"/>
-  <img src="assets/images/architecture_2.png" alt="Architecture P2" width="800"/>
-  <img src="assets/images/architecture_3.png" alt="Architecture P3" width="800"/>
-</div>
+Use Python 3.12 to match the pull-request CI environment. Install dependencies and run deterministic tests:
 
----
-
-## ⚡ Key Features
-
-### 🤖 AI-Powered Matching
-- **Semantic intelligence** using BAAI/bge-small-en-v1.5 model
-- **97.2% accuracy** in manufacturer-tender matching
-- **Cosine similarity scoring** with customizable thresholds
-
-### 🎯 Multi-Stage Filtering
-- **Blocklist elimination** (road, construction, catering)
-- **Keyword classification** (110+ specialized terms)
-- **Domain-specific scoring** across 21 equipment categories
-
-### ⏰ Automated Operations
-- **30-minute cron cycles** for fresh tender discovery
-- **Deduplication** with content-hash-based filtering
-- **Smart email digests** at configurable intervals
-
----
-
-## 📊 Classification Engine
-
-| Category | Score Threshold | Action |
-|----------|----------------|---------|
-| 🔴 Blocked | 0-0.45 | Auto-filter irrelevant tenders |
-| 🟡 Explore | 0.45-0.70 | Flag for manual review |
-| 🟢 Low Signal | 0.50-0.65 | Basic equipment keywords |
-| 🏆 High Signal | 0.70+ | **Perfect manufacturer match** |
-
----
-
-## 🏭 Supported Manufacturers
-
-20+ specialized suppliers across **UK, Italy, Germany, Japan, Canada, Poland**:
-
-| Manufacturer | Specialization | Similarity Examples |
-|--------------|----------------|---------------------|
-| **Korvus Technology** | PVD Systems | "thin film deposition" → 94% |
-| **GNR Italy** | Spectrometry | "X-ray diffraction" → 96% |
-| **Thesix Solutions** | Fuel Cell Testing | "battery testing system" → 97% |
-| **ParteQ** | Nanoparticle Synthesis | "flame spray pyrolysis" → 98% |
-
----
-
-## 🚀 Quick Start
-
-### 1️⃣ Clone & Setup
 ```bash
-git clone https://github.com/devayushrout/tendermatch.git
-cd tendermatch
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pip install pytest numpy
+python -m pytest -q
+python -m matching.profile_validation
 ```
 
-### 2️⃣ Configuration
-```bash
-# Copy and configure
-cp .env.example .env
+The regression and evaluation fixtures are synthetic; they do not establish real-world matching accuracy. The PR workflow runs the deterministic subset in `.github/workflows/tests.yml` without contacting tender portals or sending email.
 
-# Edit .env with your SMTP sender, app password, and digest recipient.
-```
+Running `python -m pipeline.run` performs real portal requests and may send email when all sender and recipient settings are configured. Do not use it as a dry run. The environment variables are `SENDER_EMAIL`, `SENDER_PASSWORD`, and `RECEIVER_EMAIL`. Supply them through a protected secret store; never commit them. Email delivery is not part of normal tests.
 
-### 3️⃣ Initialize Database
-```bash
-python pipeline/run.py
-```
+## Scheduled execution and storage
 
-Watch the magic happen! 🎯
+`.github/workflows/tender_pipeline.yml` schedules the pipeline every 30 minutes and also supports manual dispatch. The workflow serializes executions. It currently restores and saves the SQLite database through GitHub Actions cache. **That cache is not durable storage** and can lose tender history, feedback, run records, notification state, and document metadata. This repository has no configured persistent deployment host, backup, or recovery target.
 
----
+For a persistent host, set `TENDERMATCH_DB_PATH` to a SQLite file on a mounted durable volume. Its parent directory must already exist. Keep document storage on protected persistent storage too before enabling `TENDERMATCH_DOCUMENT_HOSTS` and `TENDERMATCH_DOCUMENT_DIR`. Review source access terms before allowlisting a host.
 
-## ⚙️ Advanced Configuration
+The local `scheduler.py` process runs serially every 30 minutes but is not supervised by a service manager. The Actions workflow is the configured scheduled runner; neither configuration makes its cache durable. See [`docs/checkpoint.md`](docs/checkpoint.md) for verified status and remaining operational blockers.
 
-### 🎚️ Matching Thresholds
-```python
-# config.py
-MATCH_THRESHOLD = 0.65  # Adjust sensitivity
-SEND_TIME_HOUR = 21     # 9 PM daily digest
-```
+For persistent recurring operation, use a supervised Python VM or container with a durable mounted SQLite volume, protected secret configuration, and backup/recovery procedures. No such host or Vercel web application is configured in this repository.
 
-### 🔄 Cron Automation
-```bash
-# Runs every 30 minutes via APScheduler
-*/30 * * * * /usr/local/bin/python3 /path/tendermatch/pipeline/run.py
-```
+## Evaluation and evidence limits
 
----
+`data/evaluation/golden_tender_cases.json` contains 16 synthetic adversarial examples. Human-reviewed examples are maintained separately when explicitly adjudicated. The recorded baseline and threshold sensitivity report are synthetic diagnostics, not accuracy claims. No live end-to-end portal-to-email run has been performed as part of the deterministic test suite.
 
-## 📈 Sample Output
+Manufacturer profiles currently lack claim-level source links, profile versions, and last-updated dates. Profile validation checks structure, not the truth of product or capability claims. A profile website alone is not proof of every listed capability.
 
-```
-📊 TenderMatch Report - 2024-03-29
+## Feedback and documents
 
-🏆 HIGH SIGNAL (3 tenders)
-├── "XRD system for materials lab" → 94.2% match: GNR S1 MiniLab
-├── "SPS sintering setup" → 96.7% match: Sint Technology LABOX
-└── "Fuel cell test station" → 97.4% match: Thesix Solutions FC-500
+- Profile format and validation: [`docs/manufacturer-profiles.md`](docs/manufacturer-profiles.md)
+- Matching and score interpretation: [`docs/matching.md`](docs/matching.md)
+- Email behavior and feedback workflow: [`docs/salesperson-feedback.md`](docs/salesperson-feedback.md)
+- Official document access and limits: [`docs/document-retrieval.md`](docs/document-retrieval.md)
+- Text extraction and evidence provenance: [`docs/document-extraction.md`](docs/document-extraction.md)
+- Current implementation checkpoint: [`docs/checkpoint.md`](docs/checkpoint.md)
 
-🔍 EXPLORE (2 tenders)
-├── "Analytical instrument procurement" - needs review
-└── "Laboratory testing equipment" - potential match
+## License
 
-📧 Email delivered to: target@email.com
-```
-
-
----
-
-## 📊 Dashboard
-
-Access real-time statistics via:
-- **Console reports**: `python pipeline/run.py`
-- **SQLite database**: `data/tenders.db` by default; set `TENDERMATCH_DB_PATH` to a path on durable storage when running on a persistent host. The configured parent directory must already exist so a missing storage mount fails clearly instead of creating an ephemeral local database.
-- **Email summaries**: Configured delivery schedule
-
----
-
-## 🔗 Integration Ready
-
-Perfect for:
-- **Manufacturer SEM teams** seeking qualified leads
-- **Procurement consultants** with specialized clients
-- **Government contractors** tracking equipment opportunities
-- **Market intelligence platforms** adding tender data
-
----
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) for details.
-
----
-
-<div align="center">
-
-**Built with ❤️ for the advanced equipment industry**
-
-[📊 View Analytics](https://analytics.tendermatch.io) • [🐛 Report Bug](https://github.com/devayushrout/tendermatch/issues) • [💡 Feature Request](https://github.com/devayushrout/tendermatch/issues/new)
-
-</div>
+MIT License. See [`LICENSE`](LICENSE).

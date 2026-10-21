@@ -1,135 +1,31 @@
-# TenderMatch System Overview
+# TenderMatch system overview
 
-## Architecture Overview
+TenderMatch is a scheduled Python pipeline for finding and reviewing government tenders that may fit a small catalog of equipment manufacturers. It is a procurement-intelligence aid; it does not decide compliance, eligibility, or bid suitability.
 
-The TenderMatch system is a tender matching pipeline that scrapes government procurement data, filters relevant tenders, and matches them with manufacturers who can supply the needed equipment.
+## Architecture
 
-The architecture follows a clear pipeline:
-```
-run.py (orchestrator)
-├── scrapers/cppp.py (data collection)
-├── data/db.py (storage)
-├── matching/filter.py (classification)
-└── matching/matcher.py (semantic matching)
-```
-
-## System Components
-
-### 1. Pipeline Orchestrator (`pipeline/run.py`)
-
-The main orchestrator script coordinates the entire process:
-
-1. **Data Collection**: Scrapes tenders from government portals (central, state, GEM)
-2. **Deduplication**: Prevents processing the same tender multiple times using content hashing
-3. **Classification**: Filters tenders into blocked/low_signal/high_signal categories
-4. **Matching**: For high-signal tenders, finds relevant manufacturers using semantic matching
-5. **Storage**: Updates database with processing flags
-
-### 2. Web Scraping (`scrapers/cppp.py`)
-
-This module scrapes government procurement portals:
-
-**Data Sources**:
-- Central portal: `https://eprocure.gov.in/cppp/latestactivetendersnew/cpppdata`
-- State portal: `https://eprocure.gov.in/cppp/latestactivetendersnew/mmpdata`
-- GEM portal: `https://eprocure.gov.in/cppp/latestactivetendersnew/gemdata`
-
-**Scraping Logic**:
-- Fetches pages with retry logic and rate limiting
-- Parses tender rows with source-specific parsers
-- Handles both GEM-specific and general tender formats
-- Stops scraping when reaching old tenders (24-hour cutoff)
-
-**Data Model**:
-```python
-{
-    "tender_id": "Unique identifier",
-    "title": "Tender title",
-    "organization": "Issuing organization",
-    "published_date": "Publication date",
-    "closing_date": "Closing date",
-    "source_url": "Direct link to tender",
-    "raw_text": "Combined searchable text",
-    "source_portal": "central/state/gem",
-    "scraped_at": "Timestamp"
-}
+```text
+scrapers/ → pipeline/run.py → data/db.py (SQLite)
+                  ↓                 ↓
+       matching/ + profiles     versions, amendments,
+                  ↓             feedback, outbox, run ledger
+           digest/ → email
 ```
 
-### 3. Database Management (`data/db.py`)
+The current scraper set collects selected CPPP listings and specific tender pages from IIT Madras, IIT Palakkad, IIT Goa, and IISc. `pipeline/run.py` checks freshness, updates tender versions, classifies tenders, ranks manufacturer candidates, and queues eligible notifications. SQLite stores tender state, amendments, document observations, salesperson feedback, email delivery state, and run summaries.
 
-SQLite-based storage with automatic deduplication:
+## Matching
 
-**Schema**:
-- `tenders` table with fields for all tender data
-- `content_hash` for deduplication (title+organization+date)
-- Unique constraint on tender_id + content_hash
+Manufacturer profiles live in `data/manufacturers.json`; there are currently 14. Candidate generation combines BAAI/bge-small-en-v1.5 embeddings with lexical terms, aliases, concepts, categories, products, services, and negative evidence. Candidates are ranked with heuristic evidence and placed in high-signal, exploratory, low-signal, blocked, or review-required outcomes.
 
-### 4. Tender Classification (`matching/filter.py`)
+Scores and thresholds are not calibrated probabilities. They do not prove a manufacturer can meet a tender's technical or eligibility requirements. `docs/matching.md` documents the scoring evidence and limitations. The current synthetic evaluation cases are regression examples, not ground truth, and no matching-accuracy percentage is established.
 
-Two-stage filtering system:
+## Documents and notifications
 
-**Blocklist Filtering** (substring-based):
-- Words like "road", "construction", "civil", "repair", etc.
-- Immediately blocks irrelevant tenders
+Document retrieval is bounded and disabled by default. It requires an explicit HTTPS host allowlist and configured storage path. Native PDF text extraction returns only supported labelled fields with page/source evidence; it does not perform OCR or infer unlabelled requirements.
 
-**Positive Signal Detection** (hybrid matching):
-- Phrase matching for "testing equipment", "analytical instrument", etc.
-- Categorizes as blocked/low_signal/high_signal
+Email digests distinguish high-signal, potential, and updated opportunities and include source links and match explanations. SQLite outbox retries are designed for recovery, but SMTP cannot provide exactly-once delivery. The configured GitHub Actions runner currently persists its database through a cache, which is not guaranteed durable.
 
-### 5. Semantic Matching (`matching/embedder.py` & `matching/matcher.py`)
+## Runtime boundaries
 
-Advanced manufacturer matching using sentence transformers:
-
-**Embedder**:
-- Uses `BAAI/bge-small-en-v1.5` model for text embeddings
-- Pre-processes manufacturer profiles into searchable vectors
-- Handles manufacturer aliases and product categories
-
-**Matcher**:
-- Converts tender text to embeddings
-- Computes cosine similarity with manufacturer profiles
-- Returns top 3 most relevant manufacturers with confidence scores
-
-### 6. Manufacturer Profiles (`data/manufacturers.json`)
-
-Comprehensive database of 20+ specialized equipment manufacturers:
-
-**Profile Structure**:
-```json
-{
-  "id": "Unique identifier",
-  "name": "Company name",
-  "aliases": "Alternative names",
-  "country": "Location",
-  "product_categories": "Specialized products",
-  "embedding_text": "Detailed description for semantic matching",
-  "keywords": "Search terms",
-  "website": "Company website"
-}
-```
-
-### 7. Data Flow Process
-
-1. **Scraping**: Collect latest tenders from government portals
-2. **Deduplication**: Skip already-processed tenders using content hashing
-3. **Classification**: Filter tenders using keyword-based rules
-4. **Semantic Matching**: For high-signal tenders, find relevant manufacturers
-5. **Storage**: Update database with results and flags
-6. **Reporting**: Output classification statistics
-
-### 8. Key Features
-
-**Intelligent Filtering**:
-- Blocklist prevents processing irrelevant tenders
-- Positive keyword detection identifies opportunities
-- Hybrid matching for precision (phrases vs. words)
-
-**Semantic Intelligence**:
-- Embedding-based manufacturer matching
-- Confidence scoring for match quality
-- Specialized equipment domain knowledge
-
-**Efficiency**:
-- Automatic deduplication prevents redundant processing
-- Content-based cutoff stops at old tenders
-- Database storage for historical tracking
+`.github/workflows/tender_pipeline.yml` runs on a 30-minute schedule and supports manual dispatch. `scheduler.py` is a separate local serial loop. There is no web dashboard, hosted API, persistent production host, configured backup, or verified live portal-to-email deployment in this repository. A persistent SQLite volume is required for reliable history; see `README.md` and `docs/checkpoint.md` for setup and current limitations.
