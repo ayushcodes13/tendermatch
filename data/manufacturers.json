@@ -664,7 +664,6 @@
             "PECVD systems",
             "magnetron sputtering equipment",
             "arc evaporation systems",
-            "tool sharpening and regrinding equipment",
             "plasma source technology"
         ],
         "products": [
@@ -729,9 +728,10 @@
         "source_links": [
             "https://statoncoating.com/products/",
             "https://statoncoating.com/products/octoarc-series/",
-            "https://statoncoating.com/products/octomag-series/"
+            "https://statoncoating.com/products/octomag-series/",
+            "https://statoncoating.com/research/"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {

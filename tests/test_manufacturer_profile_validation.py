@@ -102,6 +102,14 @@ def test_teer_profile_does_not_claim_nordiko_products():
     assert teer["profile_version"] == "1.2"
 
 
+def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
+    profile = next(p for p in load_profiles() if p["id"] == "staton")
+
+    assert "tool sharpening and regrinding equipment" not in profile["product_categories"]
+    assert "https://statoncoating.com/research/" in profile["source_links"]
+    assert profile["profile_version"] == "1.1"
+
+
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
     profile = load_profiles()[0]
     profile["source_links"] = []
