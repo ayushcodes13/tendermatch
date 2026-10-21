@@ -172,3 +172,14 @@ def test_teer_profile_does_not_match_nordiko_only_product_names():
     ):
         match = matcher.match_topk({"title": title})[0]
         assert match["product_hits"] == []
+
+
+def test_teer_profile_does_not_claim_plasma_enhanced_cvd_systems():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    teer = next(profile for profile in manufacturers if profile["id"] == "teer_coatings")
+    matcher = make_matcher([teer], [[1.0]], [1.0])
+
+    match = matcher.match_topk({"title": "Procurement of plasma enhanced CVD systems"})[0]
+
+    assert match["category_hits"] == []
