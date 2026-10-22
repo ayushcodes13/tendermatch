@@ -67,6 +67,14 @@ def test_metadata_and_urls_are_validated_without_being_fabricated():
     assert "missing_profile_last_updated" not in codes
 
 
+def test_korvus_profile_has_dedicated_tes_thermal_evaporation_source():
+    profile = next(p for p in load_profiles() if p["id"] == "korvus_technology")
+
+    assert "TES Thermal Boat Evaporation" in profile["products"]
+    assert "https://korvustech.com/pvd-thermal-evaporation/" in profile["source_links"]
+    assert profile["profile_version"] == "1.2"
+
+
 def test_pg_instruments_profile_has_official_product_and_application_sources():
     profile = next(p for p in load_profiles() if p["id"] == "pg_instruments")
 
@@ -185,9 +193,10 @@ def test_korvus_profile_links_named_deposition_sources():
         "https://korvustech.com/magnetron-sputtering-system/",
         "https://korvustech.com/organic-thermal-evaporation/",
         "https://korvustech.com/thermal-deposition/",
+        "https://korvustech.com/pvd-thermal-evaporation/",
         "https://korvustech.com/wp-content/uploads/2025/01/Korvus-2pp-TAU.pdf",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.1"
+    assert profile["profile_version"] == "1.2"
 
 
 def test_nordiko_profile_links_official_model_and_process_sources():
