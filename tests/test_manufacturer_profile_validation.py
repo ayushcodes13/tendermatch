@@ -480,7 +480,7 @@ def test_parteq_service_terms_are_specific_to_published_research_services():
     assert "customer specifications" not in " ".join(profile["service_keywords"]).lower()
     assert "low competition" not in profile["embedding_text"].lower()
     assert "Confirm the required process, material, scale, and system configuration" in profile["embedding_text"]
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
 
 
 def test_korvus_service_signals_match_documented_support_and_training():
@@ -540,7 +540,7 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
     assert "spark-discharge" in profile["embedding_text"]
     assert "spark synthesis" in profile["keywords"]
     assert "graphitic nanoparticles" in profile["keywords"]
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
 
 
 def test_pg_instruments_service_terms_are_limited_to_documented_support():

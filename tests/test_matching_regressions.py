@@ -115,6 +115,23 @@ def test_candidate_generation_keeps_semantic_and_lexical_candidates_before_top_k
         matcher.rank_candidates(pool, top_k=-1)
 
 
+def test_parteq_spark_synthesis_profile_emits_lexical_match_evidence():
+    profiles = json.loads((ROOT / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    parteq = next(profile for profile in profiles if profile["id"] == "parteq")
+    matcher = make_matcher([parteq], [[0.0]], [1.0])
+
+    pool = matcher.generate_candidates({
+        "title": "Spark-discharge synthesis system for graphitic nanoparticles and metallic nanoparticles",
+        "description": "Precursor-free laboratory production of functional particles.",
+    })
+
+    assert len(pool) == 1
+    candidate = pool[0]
+    assert candidate["manufacturer"]["id"] == "parteq"
+    assert "spark-discharge synthesis" in candidate["evidence"]["keyword_hits"]
+    assert "graphitic nanoparticles" in candidate["evidence"]["keyword_hits"]
+
+
 def test_match_exposes_profile_warnings_without_treating_them_as_ranking_evidence():
     manufacturers = [
         {

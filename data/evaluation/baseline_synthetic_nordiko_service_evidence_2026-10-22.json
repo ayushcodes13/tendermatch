@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 14.221124991308898
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "ebc89780f2ffd5a44a576e9fc471778ed2190bc076e3ab0dfebdf15f02c3fa98",
-    "current_ranking_profile_inputs_sha256": "e00cbde9ffb88761022d1f057abf69e92404c78e7cba1f63c6742534b211f702",
+    "current_manufacturer_profiles_sha256": "cac336848ea1bd2967ad3a6b02d351edab269f8b4d1008aaee53a5b816f19538",
+    "current_ranking_profile_inputs_sha256": "4b6205b3c1a48462fc0bee5cd00a276588230ba8166be208354d56d8a78b0961",
     "metadata_updates": [
       "Spinflex: generic service keywords cleared because service scope could not be verified in the reviewed official pages; official product and application pages returned HTTP 403 during this audit.",
       "Spinflex: cleared service keywords because no service scope could be verified in the reviewed official sources; the listed official pages returned HTTP 403 during this audit.",
@@ -129,7 +129,8 @@
       "ParteQ: narrowed the service keyword to particle and powder functionalization by CVD; the official source does not document custom-to-specification service. Historical rankings were preserved because a paired rerun was unavailable.",
       "Agnitron: removed unsupported GOX300 large-production scale claim; profile now records the documented 305 mm wafer carrier and requires confirmation of wafer count, throughput, and production scale. Historical rankings were not rerun.",
       "SALD industry scope narrowed from flexible electronics and OLED displays to printed electronics and flexible substrates; ranking run was not repeated.",
-      "ParteQ profile now includes the officially documented spark-discharge synthesis pathway for graphitic and metallic nanoparticles; no paired ranking run was performed."
+      "ParteQ profile now includes the officially documented spark-discharge synthesis pathway for graphitic and metallic nanoparticles; no paired ranking run was performed.",
+      "ParteQ includes both spaced and hyphenated spark-discharge synthesis terms so tender wording with either form produces lexical evidence; no paired ranking run was performed."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
