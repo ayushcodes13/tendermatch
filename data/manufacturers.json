@@ -1020,9 +1020,10 @@
             "https://agnitron.com/products/mocvd/agilis-700/",
             "https://agnitron.com/products/mocvd/agilis-series-300/",
             "https://agnitron.com/products/mocvd/a-series/",
-            "https://agnitron.com/services-and-support/refurbished-mocvd/"
+            "https://agnitron.com/services-and-support/refurbished-mocvd/",
+            "https://agnitron.com/products/mocvd/custom-systems/"
         ],
-        "profile_version": "1.5",
+        "profile_version": "1.6",
         "profile_last_updated": "2026-10-22"
     },
     {

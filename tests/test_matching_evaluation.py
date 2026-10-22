@@ -241,6 +241,10 @@ def test_synthetic_baseline_preserves_run_catalog_hash_and_tracks_ranking_inputs
         for update in report["profile_metadata_refresh"]["metadata_updates"]
     )
     assert any(
+        "Agnitron" in update and "GOX300" in update and "Custom Systems" in update
+        for update in report["profile_metadata_refresh"]["metadata_updates"]
+    )
+    assert any(
         "P.G. Instruments" in update
         for update in report["profile_metadata_refresh"]["metadata_updates"]
     )

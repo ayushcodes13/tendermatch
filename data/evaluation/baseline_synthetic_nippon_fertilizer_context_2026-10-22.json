@@ -96,7 +96,7 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "5b97e8968beacd3e59ce15bc0122696b149b06cf9fafc76b4d1ef4b836ad50b5",
+    "current_manufacturer_profiles_sha256": "6353cf9ef42784901a09d56e0e0c10a696cd637cfa37aa46e31ab93de2a8d956",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -115,7 +115,8 @@
       "Nippon Instruments: added the dedicated SGM-9 stack-gas mercury monitor product page as direct source provenance.",
       "Nippon Instruments: added the dedicated AM-6F continuous ambient-air mercury monitor product page as direct source provenance.",
       "P.G. Instruments: removed the unsupported gas chromatography systems product claim after the official GC 650 category reported no products.",
-      "Spinflex: narrowed the spinAMP product description to its directly documented solid-state pulsed X/Q-band amplifier capabilities and applications, removing an unsupported ESR/EPR-only qualifier."
+      "Spinflex: narrowed the spinAMP product description to its directly documented solid-state pulsed X/Q-band amplifier capabilities and applications, removing an unsupported ESR/EPR-only qualifier.",
+      "Agnitron: added the official Custom Systems page as direct provenance for the Agilis GOX300 large-production Gallium Oxide MOCVD system."
     ],
     "rankings_reused": false,
     "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results.",
