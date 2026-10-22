@@ -32,3 +32,13 @@ def test_github_actions_dependencies_use_full_commit_shas():
             re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+@[0-9a-f]{40}", reference)
             for reference in action_references
         ), f"Workflow actions must use immutable 40-character commit SHAs: {workflow_path.name}"
+
+
+def test_checkout_does_not_persist_the_github_token_in_git_config():
+    for workflow_path in (ROOT / ".github/workflows").glob("*.yml"):
+        workflow = workflow_path.read_text(encoding="utf-8")
+        assert workflow.count("uses: actions/checkout@") == 1 and workflow.count(
+            "persist-credentials: false"
+        ) == 1, (
+            f"Expected one checkout step with persist-credentials disabled in {workflow_path.name}"
+        )
