@@ -464,13 +464,13 @@ def test_sald_head_scope_evaluation_pair_preserves_before_after_comparison():
     )
 
 
-def test_thesix_gas_humidification_evaluation_matches_profile_and_ranking_inputs():
+def test_thesix_production_evaluation_matches_profile_and_ranking_inputs():
     report = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_thesix_gas_humidification_scope_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_thesix_production_scope_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     before = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_thesix_gas_humidification_scope_before_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_thesix_production_scope_before_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     dataset = json.loads(
