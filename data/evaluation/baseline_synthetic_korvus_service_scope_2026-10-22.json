@@ -94,6 +94,18 @@
     "SYN-UPDATED-014": 15.408416991704144,
     "SYN-VACUUM-CLEANER-010": 14.620582995121367
   },
+  "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "204f05a16ffc008ee993b6bdadb05bc12ca56921334947853d4b12f254a6e810",
+    "current_ranking_profile_inputs_sha256": "f902a97b5fe1d7aa5f845fbb9341c7f9f7b76681efd38800ce070752b7008104",
+    "metadata_updates": [
+      "ON NANO substrate format labels were removed from industries_served; ranking-profile inputs are unchanged."
+    ],
+    "rankings_current_for_profile_inputs": true,
+    "rankings_reused": true,
+    "reason": "This later profile taxonomy edit only removes substrate-format labels from industries_served, which is outside the ranking profile input projection. The original run hashes and rankings remain valid for the current ranking inputs.",
+    "run_generated_at_utc": "2026-10-22T07:29:58+00:00",
+    "run_manufacturer_profiles_sha256": "d5023adeed45e38ccf0a3ca34f789a623b48fb3ff09b4e85a7e2a42f67676807"
+  },
   "ranking_metrics": {
     "1": {
       "eligible_tender_count": 0,

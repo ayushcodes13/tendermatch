@@ -1184,8 +1184,6 @@
             "semiconductor manufacturing",
             "AI and microchip production",
             "advanced packaging",
-            "GPS (Glass Panel Substrates)",
-            "organic panels",
             "OLED and micro OLED manufacturing",
             "sensor production",
             "defense and security manufacturing",
@@ -1235,7 +1233,7 @@
             "https://on-nano.com/",
             "https://on-nano.com/terms-and-conditions/"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     }
 ]
