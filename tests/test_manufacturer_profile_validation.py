@@ -89,7 +89,7 @@ def test_korvus_profile_has_dedicated_tes_thermal_evaporation_source():
 
     assert "TES Thermal Boat Evaporation" in profile["products"]
     assert "https://korvustech.com/pvd-thermal-evaporation/" in profile["source_links"]
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
 
 
 def test_pg_instruments_profile_has_official_product_and_application_sources():
@@ -254,7 +254,7 @@ def test_korvus_profile_links_named_deposition_sources():
         "https://korvustech.com/pvd-thermal-evaporation/",
         "https://korvustech.com/wp-content/uploads/2025/01/Korvus-2pp-TAU.pdf",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
 
 
 def test_nordiko_profile_links_official_model_and_process_sources():
@@ -323,6 +323,34 @@ def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
 
     assert "Legacy MOCVD system upgrades" not in profile["products"]
     assert "legacy MOCVD system upgrades" in profile["service_keywords"]
+
+
+def test_korvus_service_signals_match_documented_support_and_training():
+    profile = next(p for p in load_profiles() if p["id"] == "korvus_technology")
+
+    assert {
+        "installation",
+        "maintenance",
+        "servicing",
+        "customer support",
+        "operator training",
+        "system upgrades",
+    } == set(profile["service_keywords"])
+    assert not {
+        "AMC",
+        "annual maintenance",
+        "repair",
+        "spares",
+        "commissioning",
+        "calibration",
+        "replacement",
+    } & set(profile["service_keywords"])
+    assert {
+        "https://korvustech.com/pvd-teaching-and-training/",
+        "https://korvustech.com/latest-developments-of-the-hex-series/",
+        "https://korvustech.com/hex-online-user-meeting/",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.3"
 
 
 def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sources():

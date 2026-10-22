@@ -58,15 +58,12 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
             "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
+            "maintenance",
+            "servicing",
+            "customer support",
+            "operator training",
+            "system upgrades"
         ],
         "website": "https://korvustech.com/",
         "source_links": [
@@ -76,9 +73,12 @@
             "https://korvustech.com/organic-thermal-evaporation/",
             "https://korvustech.com/pvd-thermal-evaporation/",
             "https://korvustech.com/thermal-deposition/",
-            "https://korvustech.com/wp-content/uploads/2025/01/Korvus-2pp-TAU.pdf"
+            "https://korvustech.com/wp-content/uploads/2025/01/Korvus-2pp-TAU.pdf",
+            "https://korvustech.com/pvd-teaching-and-training/",
+            "https://korvustech.com/latest-developments-of-the-hex-series/",
+            "https://korvustech.com/hex-online-user-meeting/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {
