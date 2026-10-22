@@ -352,6 +352,9 @@ def test_sald_profile_links_patented_deposition_head_claim_to_official_sources()
     profile = next(p for p in load_profiles() if p["id"] == "sald")
 
     assert "Patented Spatial ALD Deposition Head" not in profile["products"]
+    assert "Atmospheric Pressure ALD Reactor" not in profile["products"]
+    assert "atmospheric pressure thin film equipment" in profile["product_categories"]
+    assert "atmospheric pressure" in profile["keywords"]
     assert "patented spatial ALD deposition head technology" in profile["keywords"]
     assert {
         "https://spatialald.com/solutions/rd-system/",
@@ -363,7 +366,7 @@ def test_sald_profile_links_patented_deposition_head_claim_to_official_sources()
         "https://spatialald.com/markets/barriers-and-packaging/",
         "https://www2.avs.org/symposium2019/Papers/Paper_TF-TuA3.html",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.4"
+    assert profile["profile_version"] == "1.5"
 
 
 def test_spinflex_industries_limit_health_claim_to_biomedical_research():

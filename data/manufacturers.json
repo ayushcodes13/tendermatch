@@ -886,8 +886,7 @@
             "SALD R&D Glovebox Tool",
             "High-Volume Production (HVM) Systems",
             "Roll-to-roll (R2R) Spatial ALD System",
-            "Sheet-to-sheet (S2S) Spatial ALD System",
-            "Atmospheric Pressure ALD Reactor"
+            "Sheet-to-sheet (S2S) Spatial ALD System"
         ],
         "industries_served": [
             "lithium-ion and solid-state batteries",
@@ -949,7 +948,7 @@
             "https://spatialald.com/markets/barriers-and-packaging/",
             "https://www2.avs.org/symposium2019/Papers/Paper_TF-TuA3.html"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {
