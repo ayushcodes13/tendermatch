@@ -96,7 +96,7 @@
     "SYN-VACUUM-CLEANER-010": 13.200083005358465
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "a48ae5b2f0570c8f03b9fb8a2808d0d689d127c98f91854f1a37a8bd5fcfe000",
+    "current_manufacturer_profiles_sha256": "db256dec612cd24cd745efe536d0b4c39e2864177b5c6429bdc79dde970d1ef4",
     "current_ranking_profile_inputs_sha256": "c9b7919a3aa97cd821adfaf2d219bdbd4f28897ec7e3131be67123260f65de8f",
     "metadata_updates": [
       "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities.",
@@ -114,7 +114,8 @@
       "AdNaNoTek: narrowed service terms, while explicit source-backed embedding context keeps unverified service tenders visible for manual checking.",
       "ON NANO: service signals are tied to its 2025 general terms and are conditional on the customer order; no generic AMC, maintenance, repair, spare, calibration, or upgrade service is asserted.",
       "ON NANO: service matching now reflects contracted installation, commissioning, instruction, defect remediation, replacement, and service-parts terms; the 2025 order condition is explicit.",
-      "Nippon Instruments: replaced generic service keywords with official servicing, product support, mercury measurement, training, demonstration, and application-development evidence; noted model- and region-dependent availability and discontinued-product parts limitations."
+      "Nippon Instruments: replaced generic service keywords with official servicing, product support, mercury measurement, training, demonstration, and application-development evidence; noted model- and region-dependent availability and discontinued-product parts limitations.",
+      "Teer Coatings: removed the semiconductor coating systems industry claim because the reviewed official pages described PVD generally and did not substantiate Teer-specific semiconductor systems or deployments."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,

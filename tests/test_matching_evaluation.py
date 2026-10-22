@@ -752,3 +752,21 @@ def test_nippon_service_evidence_evaluation_matches_profile_and_ranking_inputs()
     assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"] == 8 / 11
     changed = [tender_id for tender_id in before["rankings"] if [x["manufacturer_id"] for x in before["rankings"][tender_id]] != [x["manufacturer_id"] for x in report["rankings"][tender_id]]]
     assert changed == ["SYN-CORRIGENDUM-013", "SYN-FERTILIZER-COMMODITY-018", "SYN-LAB-GENERIC-004", "SYN-MISSING-016", "SYN-VACUUM-CLEANER-010"]
+
+
+def test_teer_semiconductor_industry_evidence_pair_preserves_rankings():
+    report = json.loads((ROOT / "data/evaluation/baseline_synthetic_teer_semiconductor_industry_2026-10-22.json").read_text(encoding="utf-8"))
+    before = json.loads((ROOT / "data/evaluation/baseline_synthetic_teer_semiconductor_industry_before_2026-10-22.json").read_text(encoding="utf-8"))
+    profiles_path = ROOT / "data/manufacturers.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+
+    assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(profiles)
+    assert before["input_sha256"]["manufacturer_profiles"] != report["input_sha256"]["manufacturer_profiles"]
+    assert before["input_sha256"]["ranking_profile_inputs"] == report["input_sha256"]["ranking_profile_inputs"]
+    assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
+    assert before["input_sha256"]["evaluation_and_matching_code"] == report["input_sha256"]["evaluation_and_matching_code"]
+    assert before["model_revision"] == report["model_revision"]
+    assert report["candidate_recall_on_labeled_positives"] == before["candidate_recall_on_labeled_positives"] == 1.0
+    assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"] == 8 / 11
+    assert report["rankings"] == before["rankings"]
