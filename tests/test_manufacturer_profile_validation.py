@@ -352,7 +352,7 @@ def test_agnitron_profile_links_official_products_software_and_service_sources()
     assert "GOX Series Gallium Oxide systems" not in profile["products"]
     assert "Agilis GOX300 large-production reactor" in profile["embedding_text"]
     assert "AgniTemp multiwavelength pyrometer" in profile["products"]
-    assert profile["profile_version"] == "1.6"
+    assert profile["profile_version"] == "1.7"
 
 
 def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
@@ -360,6 +360,36 @@ def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
 
     assert "Legacy MOCVD system upgrades" not in profile["products"]
     assert "legacy MOCVD system upgrades" in profile["service_keywords"]
+
+
+def test_agnitron_service_terms_match_parts_and_refurbishment_sources():
+    profile = next(p for p in load_profiles() if p["id"] == "agnitron")
+
+    assert {
+        "spare parts",
+        "replacement parts",
+        "system customization",
+        "software upgrades",
+        "hardware upgrades",
+        "service plans",
+        "preventive maintenance",
+        "equipment startup",
+        "refurbishment",
+        "process development services",
+        "legacy MOCVD system upgrades",
+    } == set(profile["service_keywords"])
+    assert not {
+        "AMC",
+        "annual maintenance",
+        "maintenance",
+        "repair",
+        "installation",
+        "commissioning",
+        "calibration",
+        "replacement",
+    } & set(profile["service_keywords"])
+    assert "https://agnitron.com/services-and-support/parts-and-services/" in profile["source_links"]
+    assert profile["profile_version"] == "1.7"
 
 
 def test_korvus_service_signals_match_documented_support_and_training():

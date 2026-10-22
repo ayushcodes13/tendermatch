@@ -464,13 +464,13 @@ def test_sald_head_scope_evaluation_pair_preserves_before_after_comparison():
     )
 
 
-def test_teer_service_evidence_evaluation_matches_profile_and_ranking_inputs():
+def test_agnitron_service_evidence_evaluation_matches_profile_and_ranking_inputs():
     report = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_teer_service_evidence_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_agnitron_service_evidence_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     before = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_teer_service_evidence_before_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_agnitron_service_evidence_before_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     dataset = json.loads(
@@ -506,18 +506,10 @@ def test_teer_service_evidence_evaluation_matches_profile_and_ranking_inputs():
         before["candidate_recall_on_labeled_positives"]
     )
     assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"]
-    changed_order_ids = [
-        tender_id
+    assert all(
+        [item["manufacturer_id"] for item in before["rankings"][tender_id]]
+        == [item["manufacturer_id"] for item in report["rankings"][tender_id]]
         for tender_id in before["rankings"]
-        if [item["manufacturer_id"] for item in before["rankings"][tender_id]]
-        != [item["manufacturer_id"] for item in report["rankings"][tender_id]]
-    ]
-    assert changed_order_ids == ["SYN-AMC-005"]
-    assert [item["manufacturer_id"] for item in before["rankings"]["SYN-AMC-005"]][0] == (
-        "teer_coatings"
-    )
-    assert [item["manufacturer_id"] for item in report["rankings"]["SYN-AMC-005"]][1] == (
-        "teer_coatings"
     )
     assert before["candidate_recall_on_labeled_positives"] == report[
         "candidate_recall_on_labeled_positives"

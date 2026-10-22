@@ -1021,17 +1021,16 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement",
-            "upgrade",
-            "legacy system upgrade",
+            "spare parts",
+            "replacement parts",
+            "system customization",
+            "software upgrades",
+            "hardware upgrades",
+            "service plans",
+            "preventive maintenance",
+            "equipment startup",
+            "refurbishment",
+            "process development services",
             "legacy MOCVD system upgrades"
         ],
         "website": "https://agnitron.com/",
@@ -1047,9 +1046,10 @@
             "https://agnitron.com/products/mocvd/agilis-series-300/",
             "https://agnitron.com/products/mocvd/a-series/",
             "https://agnitron.com/services-and-support/refurbished-mocvd/",
-            "https://agnitron.com/products/mocvd/custom-systems/"
+            "https://agnitron.com/products/mocvd/custom-systems/",
+            "https://agnitron.com/services-and-support/parts-and-services/"
         ],
-        "profile_version": "1.6",
+        "profile_version": "1.7",
         "profile_last_updated": "2026-10-22"
     },
     {
