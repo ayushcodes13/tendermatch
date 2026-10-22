@@ -22,6 +22,7 @@ import re
 import numpy as np
 
 from matching.domain_keywords import company_keywords
+from matching.candidate_compatibility import detect_candidate_contextual_negatives
 
 
 class TenderMatcher:
@@ -129,6 +130,7 @@ class TenderMatcher:
                 "concept_hits": evidence.get("concept_hits", []),
                 "service_hits": evidence.get("service_hits", []),
                 "negative_hits": evidence.get("negative_hits", []),
+                "contextual_negative_hits": evidence.get("contextual_negative_hits", []),
 
                 "keyword_boost": evidence.get("keyword_boost", 0.0),
                 "product_boost": evidence.get("product_boost", 0.0),
@@ -190,6 +192,10 @@ class TenderMatcher:
         concept_hits = self._find_concept_hits(text_lower, concept_pool)
         service_hits = self._find_phrase_hits(text_lower, service_pool)
         negative_hits = self._find_phrase_hits(text_lower, negative_pool)
+        contextual_negative_hits = detect_candidate_contextual_negatives(
+            text_lower,
+            manufacturer,
+        )
 
         keyword_boost = min(0.025 * len(keyword_hits), 0.15)
         product_boost = min(0.04 * len(product_hits), 0.16)
@@ -209,7 +215,10 @@ class TenderMatcher:
         else:
             service_boost = 0.0
 
-        negative_penalty = min(0.08 * len(negative_hits), 0.24)
+        negative_penalty = min(
+            0.08 * len(negative_hits) + 0.12 * len(contextual_negative_hits),
+            0.24,
+        )
 
         total_boost = (
             keyword_boost
@@ -228,6 +237,7 @@ class TenderMatcher:
             "concept_hits": concept_hits,
             "service_hits": service_hits,
             "negative_hits": negative_hits,
+            "contextual_negative_hits": contextual_negative_hits,
 
             "keyword_boost": round(float(keyword_boost), 4),
             "product_boost": round(float(product_boost), 4),
@@ -381,6 +391,9 @@ class TenderMatcher:
 
         if evidence.get("negative_hits"):
             reason_codes.append("MANUFACTURER_NEGATIVE_KEYWORD_CONFLICT")
+
+        if evidence.get("contextual_negative_hits"):
+            reason_codes.append("MANUFACTURER_CONTEXTUAL_DOMAIN_CONFLICT")
 
         return reason_codes
 
