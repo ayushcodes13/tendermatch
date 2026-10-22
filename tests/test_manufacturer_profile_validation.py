@@ -346,12 +346,20 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
         "https://thesixtech.com/products/gas-humidifier-cabinet",
         "https://thesixtech.com/products/anode-cathode-gas-humidifier",
         "https://thesixtech.com/products/heated-ss316-flexible-gas-transfer-hose",
+        "https://thesixtech.com/products/heated-vacuum-plate-s",
+        "https://thesixtech.com/products/ultrasonic-spray-coating-system-copy",
+        "https://thesixtech.com/products/temperature-controlled-fuel-cell-membrane-electrode-mea-press",
+        "https://thesixtech.com/products/heated-vacuum-plate",
     } <= set(profile["source_links"])
     assert "flow battery test cells" in profile["products"]
     assert "Gas Humidifier for Fuel Cells" in profile["products"]
     assert "Anode & Cathode Gas Humidifier for Fuel Cells" in profile["products"]
     assert "Heated SS316 Gas Transfer Hose for Fuel Cells" in profile["products"]
-    assert profile["profile_version"] == "1.3"
+    assert "HVT-200 Heated Vacuum Table" in profile["products"]
+    assert "Ultrasonic Spray Coating System CoatSys" in profile["products"]
+    assert "Temperature Controlled Fuel Cell MEA Press" in profile["products"]
+    assert "Large Heated Vacuum Table HVT-300" in profile["products"]
+    assert profile["profile_version"] == "1.4"
 
 
 def test_sald_profile_links_patented_deposition_head_claim_to_official_sources():
