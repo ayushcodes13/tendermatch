@@ -247,11 +247,17 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
         "https://parteq.net/en/products/nanopowder-synthesis/",
         "https://parteq.net/en/products/aerosolmesstechnik/",
         "https://parteq.net/en/products/aerosolmesstechnik/nanoparticle-measurement-systems/",
+        "https://parteq.net/en/products/aerosolmesstechnik/fine-dust-monitoring/",
+        "https://parteq.net/en/products/aerosolmesstechnik/fine-dust-monitoring/aq-guard.html",
         "https://parteq.net/en/services-in-aerosol-technology/forschungsdienstleistungen.html",
         "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/",
         "https://parteq.net/en/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.2"
+    assert "air quality and fine-dust monitoring" in profile["industries_served"]
+    assert "environmental monitoring" not in profile["industries_served"]
+    assert "aerosol measurement instruments" in profile["embedding_text"]
+    assert "AQ Guard air-quality aerosol measurement" not in profile["embedding_text"]
+    assert profile["profile_version"] == "1.3"
 
 
 def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
