@@ -299,11 +299,12 @@
             "https://thesixtech.com/",
             "https://thesixtech.com/collections/fuel-cell-test-systems",
             "https://thesixtech.com/products/electrolyzer-test-cell",
+            "https://thesixtech.com/products/flow-battery-test-cell",
             "https://thesixtech.com/collections/fuel-cell-testing-hardware",
             "https://thesixtech.com/products/ionic-conductivity-cell",
             "https://thesixtech.com/collections/fuel-cell-production-units"
         ],
-        "profile_version": "1.1",
+        "profile_version": "1.2",
         "profile_last_updated": "2026-10-22"
     },
     {

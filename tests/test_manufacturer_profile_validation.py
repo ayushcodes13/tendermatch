@@ -225,8 +225,10 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
         "https://thesixtech.com/products/ionic-conductivity-cell",
         "https://thesixtech.com/collections/fuel-cell-production-units",
         "https://thesixtech.com/products/electrolyzer-test-cell",
+        "https://thesixtech.com/products/flow-battery-test-cell",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.1"
+    assert "flow battery test cells" in profile["products"]
+    assert profile["profile_version"] == "1.2"
 
 
 def test_sald_profile_links_official_technology_and_market_sources():

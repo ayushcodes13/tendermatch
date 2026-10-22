@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `241bbf8` after ON NANO profile PR #66; this branch starts directly from that commit.
+- Current base: `main` at `b146a99` after checkpoint PR #67; this branch starts directly from that commit.
 - Pre-existing draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”. Its runtime guidance is now incorporated in README; the draft remains open and redundant.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
