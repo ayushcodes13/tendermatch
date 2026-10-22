@@ -7,4 +7,4 @@ pandas
 openpyxl
 apscheduler
 python-dotenv
-pypdf>=6.21,<7
+pypdf>=6.21.1,<7
