@@ -599,6 +599,8 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
         "https://thesixtech.com/products/temperature-controlled-fuel-cell-membrane-electrode-mea-press",
         "https://thesixtech.com/products/heated-vacuum-plate",
     } <= set(profile["source_links"])
+    assert "TIC-95 Ionic Conductivity Cell for Membrane Conductivity Testing" in profile["products"]
+    assert "conductivity measurement systems" not in profile["products"]
     assert "Flow Battery Test Cell" in profile["products"]
     assert "PEM Electrolyzer Test Cell" in profile["products"]
     assert "Gas Humidifier for Fuel Cells" in profile["products"]
@@ -611,7 +613,7 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
     assert "Supply and installation of fuel cell testing systems" not in profile["embedding_text"]
     assert "Supply of fuel cell testing systems" in profile["embedding_text"]
     assert profile["service_keywords"] == []
-    assert profile["profile_version"] == "1.8"
+    assert profile["profile_version"] == "1.9"
 
 
 def test_thesix_battery_claims_are_scoped_to_documented_flow_battery_product():
@@ -628,7 +630,7 @@ def test_thesix_battery_claims_are_scoped_to_documented_flow_battery_product():
     assert "battery testing system" not in profile["embedding_text"]
     assert "flow_battery_testing" in profile["concepts"]
     assert "battery_testing" not in profile["concepts"]
-    assert profile["profile_version"] == "1.8"
+    assert profile["profile_version"] == "1.9"
 
 
 def test_adnanotek_services_are_limited_to_officially_described_support():
@@ -819,4 +821,4 @@ def test_thesix_profile_excludes_clinical_infusion_equipment():
         "patient dose control",
         "intravenous pump",
     ]
-    assert profile["profile_version"] == "1.8"
+    assert profile["profile_version"] == "1.9"
