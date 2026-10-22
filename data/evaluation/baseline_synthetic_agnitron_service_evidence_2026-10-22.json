@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 13.068791988189332
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "f0f76b9e011c1fb7fc7700a3e33b704bce414f661945beebc02da70c7a01f636",
-    "current_ranking_profile_inputs_sha256": "a3d84f4bdcc5c207ace487346bf4e8d33b6c5e48b18cbea97bd6f5deec0a6fc1",
+    "current_manufacturer_profiles_sha256": "ebdc0bf7a01b11ebff09b002f49b8713c33708d65a359a518853c8f3ef4b2c48",
+    "current_ranking_profile_inputs_sha256": "0caf63a857cf111097a996636dd450161267242f8ddaafd30a21a09d8a19d6ea",
     "metadata_updates": [
       "ParteQ GmbH: service keywords are now restricted to documented aerosol measurements, characterization, contract synthesis, process development, scale-up, technical/economic analysis, prototype design, turnkey systems, nanopowder production, and customer-specific functionalized-particle synthesis.",
       "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities.",
@@ -121,7 +121,8 @@
       "ON NANO substrate format labels were removed from industries_served; ranking-profile inputs are unchanged.",
       "TheSix soft medical-infusion negative signals added; original historical run hashes and rankings preserved.",
       "SALD: service keywords narrowed to installation, acceptance testing, original-warranty services, preventive maintenance monitoring, documented machine maintenance/repair, troubleshooting, field upgrades, and related training; generic spare-parts and software/hardware-upgrade service claims removed.",
-      "STATON: service terms now distinguish equipment maintenance, support, training, remote diagnostics, system upgrades, and coating-part replacement from a repair-cost reduction statement; separate tool production and sharpening/regrinding are linked to their official pages."
+      "STATON: service terms now distinguish equipment maintenance, support, training, remote diagnostics, system upgrades, and coating-part replacement from a repair-cost reduction statement; separate tool production and sharpening/regrinding are linked to their official pages.",
+      "Agnitron: qualified parts, customization, hardware/software upgrades, service plans, preventive maintenance, startup, refurbishment, and process-development service signals to documented legacy/refurbished MOCVD systems and advanced support."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
