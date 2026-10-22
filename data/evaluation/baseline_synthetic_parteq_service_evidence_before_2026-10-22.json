@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 13.56662499892991
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "40910347af2cf137c75007d298b584347e1f810cf3a3ecf1791aedfe699c1af1",
-    "current_ranking_profile_inputs_sha256": "e449846f6e37316d9c51a3abbd786a56a82d95815eddeaad10a8426267e2966a",
+    "current_manufacturer_profiles_sha256": "ebc89780f2ffd5a44a576e9fc471778ed2190bc076e3ab0dfebdf15f02c3fa98",
+    "current_ranking_profile_inputs_sha256": "e00cbde9ffb88761022d1f057abf69e92404c78e7cba1f63c6742534b211f702",
     "metadata_updates": [
       "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged.",
       "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed.",
@@ -106,7 +106,8 @@
       "TheSix: the generic conductivity measurement systems product label is replaced by the vendor-named TIC-95 Ionic Conductivity Cell for Membrane Conductivity Testing; no paired ranking rerun was available.",
       "ParteQ: narrowed the service keyword to particle and powder functionalization by CVD; the official source does not document custom-to-specification service. Historical rankings were preserved because a paired rerun was unavailable.",
       "Agnitron: removed unsupported GOX300 large-production scale claim; profile now records the documented 305 mm wafer carrier and requires confirmation of wafer count, throughput, and production scale. Historical rankings were not rerun.",
-      "SALD industry scope narrowed from flexible electronics and OLED displays to printed electronics and flexible substrates; ranking run was not repeated."
+      "SALD industry scope narrowed from flexible electronics and OLED displays to printed electronics and flexible substrates; ranking run was not repeated.",
+      "ParteQ profile now includes the officially documented spark-discharge synthesis pathway for graphitic and metallic nanoparticles; no paired ranking run was performed."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,

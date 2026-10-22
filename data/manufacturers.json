@@ -85,12 +85,14 @@
         "active": true,
         "product_categories": [
             "nanoparticle synthesis systems",
+            "spark-discharge synthesis systems",
             "aerosol measurement instruments",
             "particle engineering systems",
             "CVD-based powder functionalization systems"
         ],
         "products": [
             "flame spray pyrolysis nanoparticle synthesis systems",
+            "spark synthesis systems for graphitic and metallic nanoparticles",
             "bench-top nanoparticle synthesis units",
             "aerosol and particle measurement instruments",
             "nanopowder collection and filtration systems",
@@ -104,10 +106,14 @@
             "air quality and fine-dust monitoring",
             "advanced academic R&D"
         ],
-        "embedding_text": "ParteQ GmbH develops advanced particle engineering systems including nanoparticle synthesis units, aerosol measurement instruments, and powder functionalization technologies using processes like flame spray pyrolysis and chemical vapor deposition. Their systems enable precise control over nano- and micro-scale particle structures and are used in advanced materials research, energy storage, catalysis, and nanotechnology labs. These solutions are relevant to tenders involving nanomaterial synthesis, aerosol science, and pilot-scale material development infrastructure.",
+        "embedding_text": "ParteQ GmbH develops particle engineering systems including nanoparticle synthesis units, aerosol measurement instruments, and powder functionalization technologies. Its particle synthesis technologies include flame spray pyrolysis, hot-wall, and spark-discharge methods; spark synthesis is a precursor-free laboratory process for producing graphitic and metallic nanoparticles. ParteQ also offers chemical vapor deposition for powder functionalization. Its published applications include battery materials, catalysts, gas sensors, and other functional materials. Confirm the required process, material, scale, and system configuration against official documentation.",
         "keywords": [
             "nanoparticle synthesis",
             "flame spray pyrolysis",
+            "spark synthesis",
+            "spark discharge synthesis",
+            "metal nanoparticle synthesis",
+            "graphitic nanoparticles",
             "aerosol measurement",
             "particle engineering",
             "nanopowder",
@@ -142,6 +148,7 @@
             "https://parteq.net/en/products/",
             "https://parteq.net/en/products/nanopowder-synthesis/flammensynthese/",
             "https://parteq.net/en/products/nanopowder-synthesis/",
+            "https://parteq.net/en/products/nanopowder-synthesis/spark-synthesis/",
             "https://parteq.net/en/products/aerosolmesstechnik/",
             "https://parteq.net/en/products/aerosolmesstechnik/nanoparticle-measurement-systems/",
             "https://parteq.net/en/products/aerosolmesstechnik/fine-dust-monitoring/",
@@ -150,7 +157,7 @@
             "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/",
             "https://parteq.net/en/"
         ],
-        "profile_version": "1.6",
+        "profile_version": "1.7",
         "profile_last_updated": "2026-10-22"
     },
     {
