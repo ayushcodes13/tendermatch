@@ -179,6 +179,7 @@ def _execute_pipeline(conn, run_id, started_clock, source_results):
 
     for t in tenders:
         new_t, is_new = upsert_or_get_tender(conn, t)
+        new_t["is_new"] = is_new
         identity_key = new_t["identity_key"]
         status_str = "NEW" if is_new else "EXISTING_NOT_EMAILED"
         new_t["portal_link"] = PORTAL_LINKS.get(
