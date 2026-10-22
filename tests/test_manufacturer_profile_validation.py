@@ -395,7 +395,7 @@ def test_agnitron_profile_links_official_products_software_and_service_sources()
     assert "GOX Series Gallium Oxide systems" not in profile["products"]
     assert "Agilis GOX300 large-production reactor" in profile["embedding_text"]
     assert "AgniTemp multiwavelength pyrometer" in profile["products"]
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
 
 
 def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
@@ -408,19 +408,19 @@ def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
 def test_agnitron_service_terms_match_parts_and_refurbishment_sources():
     profile = next(p for p in load_profiles() if p["id"] == "agnitron")
 
-    assert {
-        "spare parts",
-        "replacement parts",
-        "system customization",
-        "software upgrades",
-        "hardware upgrades",
-        "service plans",
-        "preventive maintenance",
-        "equipment startup",
-        "refurbishment",
-        "process development services",
+    assert set(profile["service_keywords"]) == {
+        "legacy MOCVD spare parts",
+        "legacy MOCVD replacement parts",
+        "legacy MOCVD system customization",
+        "legacy MOCVD software upgrades",
+        "legacy MOCVD hardware upgrades",
+        "legacy MOCVD service plans",
+        "preventive maintenance for refurbished MOCVD systems",
+        "startup for refurbished MOCVD equipment",
+        "refurbishment of legacy MOCVD systems",
+        "legacy MOCVD process development services",
         "legacy MOCVD system upgrades",
-    } == set(profile["service_keywords"])
+    }
     assert not {
         "AMC",
         "annual maintenance",
@@ -432,7 +432,8 @@ def test_agnitron_service_terms_match_parts_and_refurbishment_sources():
         "replacement",
     } & set(profile["service_keywords"])
     assert "https://agnitron.com/services-and-support/parts-and-services/" in profile["source_links"]
-    assert profile["profile_version"] == "1.7"
+    assert "Parts, service plans, customization, and hardware/software upgrades are documented for Emcore/Veeco, Discovery, and Enterprise legacy MOCVD systems." in profile["embedding_text"]
+    assert profile["profile_version"] == "1.8"
 
 
 def test_parteq_service_terms_are_specific_to_published_research_services():

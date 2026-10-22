@@ -93,6 +93,19 @@
     "SYN-UPDATED-014": 15.941584002575837,
     "SYN-VACUUM-CLEANER-010": 15.288666007108986
   },
+  "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "ebdc0bf7a01b11ebff09b002f49b8713c33708d65a359a518853c8f3ef4b2c48",
+    "current_ranking_profile_inputs_sha256": "0caf63a857cf111097a996636dd450161267242f8ddaafd30a21a09d8a19d6ea",
+    "metadata_updates": [
+      "STATON: service terms now distinguish equipment maintenance, support, training, remote diagnostics, system upgrades, and coating-part replacement from a repair-cost reduction statement; separate tool production and sharpening/regrinding are linked to their official pages."
+    ],
+    "rankings_current_for_profile_inputs": false,
+    "rankings_reused": false,
+    "reason": "Evaluation rankings are retained from their exact profile snapshot; current hashes are tracked separately after later manufacturer profile reviews.",
+    "run_generated_at_utc": "2026-10-22T07:54:28+00:00",
+    "run_manufacturer_profiles_sha256": "f0f76b9e011c1fb7fc7700a3e33b704bce414f661945beebc02da70c7a01f636",
+    "run_ranking_profile_inputs_sha256": "a3d84f4bdcc5c207ace487346bf4e8d33b6c5e48b18cbea97bd6f5deec0a6fc1"
+  },
   "ranking_metrics": {
     "1": {
       "eligible_tender_count": 0,
