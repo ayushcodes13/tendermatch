@@ -186,7 +186,7 @@ def test_genicore_toll_sintering_is_a_service_not_a_product():
     assert "Toll Sintering Services" not in profile["products"]
     assert "Toll Sintering Services" in profile["service_keywords"]
     assert "https://genicore.eu/products/services/" in profile["source_links"]
-    assert profile["profile_version"] == "1.5"
+    assert profile["profile_version"] == "1.6"
 
 
 def test_genicore_profile_includes_documented_u_fast_flash_platform():
@@ -204,11 +204,12 @@ def test_genicore_material_and_application_claims_link_to_official_sources():
     assert "https://genicore.eu/materials/" in profile["source_links"]
     assert "https://genicore.eu/applications/" in profile["source_links"]
     assert "https://genicore.eu/products/graphite-dies-for-spark-plasma-sintering-systems/" in profile["source_links"]
+    assert "https://genicore.eu/products/devices/pulse-plasma-compaction-ppc/" in profile["source_links"]
     assert "Diamond Enhanced Cemented Carbide (DEC)" in profile["products"]
     assert "Super Enhanced Ceramic - Whiskers (SEC-W)" in profile["products"]
     assert "CUBNEC (cBN Composite)" in profile["products"]
     assert "aerospace and defense materials" in profile["industries_served"]
-    assert profile["profile_version"] == "1.5"
+    assert profile["profile_version"] == "1.6"
 
 
 def test_korvus_profile_links_named_deposition_sources():
