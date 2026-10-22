@@ -1,8 +1,16 @@
 // TenderMatch Salesperson Review Interface Logic
 
+// Clean up any legacy insecure localStorage credential
+try {
+  localStorage.removeItem('tendermatch_token');
+  localStorage.removeItem('tendermatch_reviewer');
+} catch (e) {
+  // Ignore storage access errors in restricted contexts
+}
+
 const STATE = {
-  token: localStorage.getItem('tendermatch_token') || 'tendermatch-local-review',
-  reviewer: localStorage.getItem('tendermatch_reviewer') || '',
+  token: sessionStorage.getItem('tendermatch_token') || '',
+  reviewer: sessionStorage.getItem('tendermatch_reviewer') || '',
   tenders: [],
   reviewers: [],
   currentFilter: 'all',
@@ -76,8 +84,8 @@ function saveAuth() {
   }
   STATE.token = token;
   STATE.reviewer = reviewer;
-  localStorage.setItem('tendermatch_token', token);
-  localStorage.setItem('tendermatch_reviewer', reviewer);
+  sessionStorage.setItem('tendermatch_token', token);
+  sessionStorage.setItem('tendermatch_reviewer', reviewer);
   updateAuthUI();
   hideAuthModal();
   showToast(`Authenticated as ${reviewer}`);
@@ -92,6 +100,9 @@ async function apiFetch(endpoint, options = {}) {
   options.headers = headers;
   const res = await fetch(endpoint, options);
   if (res.status === 401) {
+    STATE.token = '';
+    sessionStorage.removeItem('tendermatch_token');
+    updateAuthUI();
     showAuthModal();
     throw new Error('Unauthorized');
   }
@@ -223,9 +234,11 @@ function createTenderCard(tender) {
   let feedbackHistoryHtml = '';
   if (hasFeedback) {
     const latest = tender.feedback[0];
+    const safeLabel = escapeHtml(latest.label ? latest.label.replace(/_/g, ' ') : '');
+    const safeReviewer = escapeHtml(latest.reviewer || '');
     feedbackHistoryHtml = `
       <div class="feedback-history-badge">
-        Reviewed: <strong>${latest.label.replace(/_/g, ' ')}</strong> by ${latest.reviewer}
+        Reviewed: <strong>${safeLabel}</strong> by ${safeReviewer}
       </div>
     `;
   }
@@ -251,7 +264,7 @@ function createTenderCard(tender) {
     <div class="decision-matrix">
       <div class="decision-item">
         <span class="decision-label">1. Worth Reviewing?</span>
-        <span class="decision-value highlight">${q1Worth}</span>
+        <span class="decision-value highlight">${escapeHtml(q1Worth)}</span>
       </div>
       <div class="decision-item">
         <span class="decision-label">2. Recommended Fit</span>
