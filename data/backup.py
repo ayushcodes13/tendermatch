@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import argparse
-from contextlib import closing
+from contextlib import closing, nullcontext
+from datetime import datetime, timezone
 import os
 import sqlite3
 import tempfile
@@ -87,8 +88,120 @@ def backup_database(source: str | Path, destination: str | Path) -> Path:
         raise
 
 
+REQUIRED_SCHEMA_TABLES = (
+    "tenders",
+    "tender_versions",
+    "tender_amendments",
+    "tender_matches",
+    "email_batches",
+    "email_notifications",
+    "salesperson_feedback",
+    "pipeline_runs",
+)
+
+
+def verify_schema_compatibility(conn_or_path: sqlite3.Connection | str | Path) -> bool:
+    """Validate that the SQLite database contains all required TenderMatch core tables."""
+    if isinstance(conn_or_path, (str, Path)):
+        path = _database_path(conn_or_path, must_exist=True)
+        with closing(_open_existing(path)) as conn:
+            return verify_schema_compatibility(conn)
+
+    cursor = conn_or_path.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+    )
+    existing_tables = {row[0] for row in cursor.fetchall()}
+    missing = [table for table in REQUIRED_SCHEMA_TABLES if table not in existing_tables]
+    if missing:
+        raise ValueError(
+            f"Database schema compatibility check failed: missing required table(s): {', '.join(sorted(missing))}."
+        )
+    return True
+
+
+class MaintenanceLock:
+    """Context manager acquiring an exclusive maintenance lock during restore/migration."""
+
+    def __init__(self, database_path: str | Path, timeout_seconds: int = 300):
+        self.database_path = Path(database_path).expanduser()
+        self.lock_path = Path(f"{self.database_path}.maintenance")
+        self.timeout_seconds = timeout_seconds
+        self._acquired = False
+
+    def __enter__(self):
+        if self.lock_path.exists():
+            try:
+                mtime = self.lock_path.stat().st_mtime
+                if (datetime.now(timezone.utc).timestamp() - mtime) > self.timeout_seconds:
+                    self.lock_path.unlink(missing_ok=True)
+                else:
+                    raise RuntimeError(
+                        f"Maintenance lock active at {self.lock_path}; restore/migration already in progress."
+                    )
+            except FileNotFoundError:
+                pass
+
+        flags = os.O_CREAT | os.O_EXCL | os.O_WRONLY
+        try:
+            fd = os.open(self.lock_path, flags, 0o600)
+            with os.fdopen(fd, "w") as f:
+                f.write(f"pid={os.getpid()}\ntimestamp={datetime.now(timezone.utc).isoformat()}\n")
+            self._acquired = True
+        except FileExistsError:
+            raise RuntimeError(
+                f"Maintenance lock active at {self.lock_path}; restore/migration already in progress."
+            )
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._acquired:
+            self.lock_path.unlink(missing_ok=True)
+
+
+def is_maintenance_active(database_path: str | Path, timeout_seconds: int = 300) -> bool:
+    """Return True if a maintenance lock exists for the specified database and is fresh."""
+    path = Path(database_path).expanduser()
+    lock_path = Path(f"{path}.maintenance")
+    if not lock_path.exists():
+        return False
+    try:
+        mtime = lock_path.stat().st_mtime
+        if (datetime.now(timezone.utc).timestamp() - mtime) > timeout_seconds:
+            # Stale lock
+            return False
+        return True
+    except FileNotFoundError:
+        return False
+
+
+def prune_old_backups(
+    directory: str | Path, pattern: str = "*.sqlite3", keep_count: int = 7
+) -> list[Path]:
+    """Prune old backups in a directory, keeping the newest keep_count snapshots."""
+    dir_path = Path(directory).expanduser()
+    if not dir_path.is_dir():
+        raise FileNotFoundError(f"Backup directory not found: {dir_path}")
+    backups = sorted(
+        [p for p in dir_path.glob(pattern) if p.is_file() and not p.name.startswith(".")],
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    pruned = []
+    for old_backup in backups[keep_count:]:
+        old_backup.unlink()
+        pruned.append(old_backup)
+    if pruned:
+        _fsync_directory(dir_path)
+    return pruned
+
+
 def restore_database(
-    backup: str | Path, destination: str | Path, *, replace: bool = False
+    backup: str | Path,
+    destination: str | Path,
+    *,
+    replace: bool = False,
+    verify_schema: bool = False,
+    pause_maintenance: bool = True,
 ) -> Path:
     """Restore an integrity-checked snapshot atomically to a SQLite path."""
     _require_private_file_permissions()
@@ -106,24 +219,28 @@ def restore_database(
             "checkpoint or remove stale sidecars before restoring."
         )
 
-    fd, temporary_name = tempfile.mkstemp(
-        prefix=f".{destination_path.name}.", suffix=".tmp", dir=destination_path.parent
-    )
-    os.close(fd)
-    temporary_path = Path(temporary_name)
-    try:
-        os.chmod(temporary_path, 0o600)
-        _snapshot(backup_path, temporary_path)
-        if replace:
-            os.replace(temporary_path, destination_path)
-        else:
-            os.link(temporary_path, destination_path)
-            temporary_path.unlink()
-        _fsync_directory(destination_path.parent)
-        return destination_path
-    except Exception:
-        temporary_path.unlink(missing_ok=True)
-        raise
+    lock_ctx = MaintenanceLock(destination_path) if pause_maintenance else nullcontext()
+    with lock_ctx:
+        fd, temporary_name = tempfile.mkstemp(
+            prefix=f".{destination_path.name}.", suffix=".tmp", dir=destination_path.parent
+        )
+        os.close(fd)
+        temporary_path = Path(temporary_name)
+        try:
+            os.chmod(temporary_path, 0o600)
+            _snapshot(backup_path, temporary_path)
+            if verify_schema:
+                verify_schema_compatibility(temporary_path)
+            if replace:
+                os.replace(temporary_path, destination_path)
+            else:
+                os.link(temporary_path, destination_path)
+                temporary_path.unlink()
+            _fsync_directory(destination_path.parent)
+            return destination_path
+        except Exception:
+            temporary_path.unlink(missing_ok=True)
+            raise
 
 
 def main() -> int:
@@ -140,14 +257,33 @@ def main() -> int:
     restore_parser.add_argument(
         "--replace", action="store_true", help="replace an existing destination database"
     )
+    restore_parser.add_argument(
+        "--verify-schema",
+        action="store_true",
+        help="verify TenderMatch core tables before completing restore",
+    )
+
+    prune_parser = subparsers.add_parser("prune", help="prune old backups keeping newest N snapshots")
+    prune_parser.add_argument("directory", help="directory containing backups")
+    prune_parser.add_argument(
+        "--keep", type=int, default=7, help="number of snapshots to retain (default: 7)"
+    )
 
     args = parser.parse_args()
     if args.command == "backup":
         backup_database(args.database, args.snapshot)
         print("SQLite backup created; integrity check passed.")
-    else:
-        restore_database(args.snapshot, args.database, replace=args.replace)
+    elif args.command == "restore":
+        restore_database(
+            args.snapshot,
+            args.database,
+            replace=args.replace,
+            verify_schema=args.verify_schema,
+        )
         print("SQLite restore completed; integrity check passed.")
+    elif args.command == "prune":
+        pruned = prune_old_backups(args.directory, keep_count=args.keep)
+        print(f"Pruned {len(pruned)} old backup snapshot(s).")
     return 0
 
 
