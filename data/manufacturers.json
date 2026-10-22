@@ -595,9 +595,10 @@
             "https://www.hg-nic.com/products/",
             "https://www.hg-nic.com/industries-application/",
             "https://www.hg-nic.com/product-brochure/",
-            "https://www.hg-nic.com/fertilizer-production/"
+            "https://www.hg-nic.com/fertilizer-production/",
+            "https://www.hg-nic.com/ra-series/ra-7000a/"
         ],
-        "profile_version": "1.3",
+        "profile_version": "1.4",
         "profile_last_updated": "2026-10-22"
     },
     {
