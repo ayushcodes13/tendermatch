@@ -1068,7 +1068,6 @@
         "product_categories": [
             "UHV deposition systems",
             "plasma etching systems",
-            "thin film characterization",
             "quantum computing fabrication tools"
         ],
         "products": [
@@ -1148,7 +1147,7 @@
             "https://adnano-tek.com/manipulators/",
             "https://adnano-tek.com/uhv-design-components/transfer-arms/"
         ],
-        "profile_version": "1.5",
+        "profile_version": "1.6",
         "profile_last_updated": "2026-10-22"
     },
     {

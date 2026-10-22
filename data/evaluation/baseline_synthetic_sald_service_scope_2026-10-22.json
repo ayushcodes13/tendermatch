@@ -94,13 +94,14 @@
     "SYN-VACUUM-CLEANER-010": 16.226499996264465
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "c3d2df8b16e356696468da61ea95b8450a3dbd14d3021eeacd067d5afc7082a5",
-    "current_ranking_profile_inputs_sha256": "563c734d28ad5af70f5755dcb8f5cb3066bdd2287747b96e2273c630c1506cb0",
+    "current_manufacturer_profiles_sha256": "8c60c9c6b8f65f1c52693eb099c3e0f4cd0833bcbde42549707f07fb6373d0a2",
+    "current_ranking_profile_inputs_sha256": "13be4812dacb195544e8dfc546cc00388bafa76ef49be38b47046c22750a70ee",
     "metadata_updates": [
       "SALD: service keywords narrowed to documented installation, warranty service, maintenance/repair, troubleshooting, field upgrades, and related training; generic spare-parts and software/hardware-upgrade service claims removed.",
       "STATON: service terms now distinguish equipment maintenance, support, training, remote diagnostics, system upgrades, and coating-part replacement from a repair-cost reduction statement; separate tool production and sharpening/regrinding are linked to their official pages.",
       "Agnitron: qualified parts, customization, hardware/software upgrades, service plans, preventive maintenance, startup, refurbishment, and process-development service signals to documented legacy/refurbished MOCVD systems and advanced support.",
-      "GeniCore: removed generalized installation language from matching text; official installation and commissioning evidence is scoped to U-FAST FLASH."
+      "GeniCore: removed generalized installation language from matching text; official installation and commissioning evidence is scoped to U-FAST FLASH.",
+      "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,

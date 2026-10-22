@@ -2057,5 +2057,17 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 70
+  "unjudged_candidate_count": 70,
+  "profile_metadata_refresh": {
+    "run_manufacturer_profiles_sha256": "c3d2df8b16e356696468da61ea95b8450a3dbd14d3021eeacd067d5afc7082a5",
+    "run_ranking_profile_inputs_sha256": "563c734d28ad5af70f5755dcb8f5cb3066bdd2287747b96e2273c630c1506cb0",
+    "current_manufacturer_profiles_sha256": "8c60c9c6b8f65f1c52693eb099c3e0f4cd0833bcbde42549707f07fb6373d0a2",
+    "current_ranking_profile_inputs_sha256": "13be4812dacb195544e8dfc546cc00388bafa76ef49be38b47046c22750a70ee",
+    "rankings_reused": true,
+    "rankings_current_for_profile_inputs": false,
+    "reason": "The recorded ranking run is retained against its exact profile snapshot; current profile hashes are tracked separately after later profile reviews.",
+    "metadata_updates": [
+      "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment."
+    ]
+  }
 }
