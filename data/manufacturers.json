@@ -390,16 +390,25 @@
             "deposition system"
         ],
         "service_keywords": [
-            "Toll Sintering Services",
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
+            "short-series production using U-FAST technology",
+            "guarantee and post-guarantee device servicing",
+            "online device service",
+            "tele-service contracts",
+            "online operational support",
+            "technical support through partner network",
+            "feasibility studies",
+            "proof-of-concept sample production",
+            "research and development services",
+            "consulting and training on SPS and FAST sintering",
+            "graphite machining",
+            "graphite mold design",
+            "grinding services",
+            "microstructure and composition analysis",
+            "microscope observation",
+            "precision cutting",
+            "hot mounting",
+            "surface roughness measurement",
+            "hardness testing"
         ],
         "website": "https://genicore.eu",
         "source_links": [
@@ -414,7 +423,7 @@
             "https://genicore.eu/products/devices/pulse-plasma-compaction-ppc/",
             "https://genicore.eu/materials/dec/"
         ],
-        "profile_version": "1.8",
+        "profile_version": "1.9",
         "profile_last_updated": "2026-10-22"
     },
     {

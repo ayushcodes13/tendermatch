@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "222a2273bc2fcc597e6f8916f30e25890dc4194c23c82f00df5cfbddd99ee028",
-    "current_ranking_profile_inputs_sha256": "6c240b3ab442552b7e796837cefad74807a7d9a2c8d6a057564ce8f624acfe27",
+    "current_manufacturer_profiles_sha256": "b34332cc3d7a7391ecaade31c049fef432314a98a740ff5478e344989a26d6b0",
+    "current_ranking_profile_inputs_sha256": "f4cf044c0a1437129153c5bb84efccd3b410ff2c2c1de5cbdb879efcfa2c28d5",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -134,11 +134,12 @@
       "Korvus Technology: added official support/training, system-upgrade, and service-event sources; narrowed generic service terms to sourced installation, maintenance/servicing, customer support, operator training, and system upgrades; removed unsupported AMC, annual maintenance, repair, spares, commissioning, calibration, and replacement terms.",
       "Teer Coatings: linked official technical support, upgrades, field servicing/team, service-options, and testing-capabilities pages; replaced generic service terms with documented support, maintenance, on-site repair, calibration, operator training, software/process updates, magnetron retrofitting, commissioning, and coating service signals. Added Teer’s official equipment sales terms as provenance for installation and commissioning being arranged when requested and quoted.",
       "Agnitron: verified service keywords for spare/replacement parts, customization, software/hardware upgrades, service plans, preventive maintenance, equipment startup, refurbishment, process development, and legacy MOCVD upgrades against official service pages.",
-      "ParteQ GmbH: service signals narrowed to documented aerosol measurement, characterization, synthesis, process development, scale-up, analysis, prototype, production-system, and nanopowder services."
+      "ParteQ GmbH: service signals narrowed to documented aerosol measurement, characterization, synthesis, process development, scale-up, analysis, prototype, production-system, and nanopowder services.",
+      "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
-    "reason": "Historical Nippon fertilizer run retains its original ranking and run-input hashes. Current profile fingerprints are refreshed as metadata after subsequent manufacturer source audits; current ranking was not rerun for this historical report. sentence-transformers is not needed to refresh source/profile fingerprints and the historical ranking snapshot was not recomputed.",
+    "reason": "Historical report ranking snapshot and run hashes are preserved. Current manufacturer profile and ranking-input hashes have been refreshed as metadata after subsequent official-source audits; no historical ranking was rerun for the current catalog. The sentence-transformers model is not needed to refresh profile metadata; historical ranking vectors are unchanged.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
   },

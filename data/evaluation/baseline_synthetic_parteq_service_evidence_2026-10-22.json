@@ -2094,5 +2094,17 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 68
+  "unjudged_candidate_count": 68,
+  "profile_metadata_refresh": {
+    "run_generated_at_utc": "2026-10-22T05:48:57+00:00",
+    "run_manufacturer_profiles_sha256": "222a2273bc2fcc597e6f8916f30e25890dc4194c23c82f00df5cfbddd99ee028",
+    "current_manufacturer_profiles_sha256": "b34332cc3d7a7391ecaade31c049fef432314a98a740ff5478e344989a26d6b0",
+    "current_ranking_profile_inputs_sha256": "f4cf044c0a1437129153c5bb84efccd3b410ff2c2c1de5cbdb879efcfa2c28d5",
+    "rankings_reused": false,
+    "rankings_current_for_profile_inputs": false,
+    "metadata_updates": [
+      "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities."
+    ],
+    "reason": "Historical report ranking snapshot and run hashes are preserved. Current manufacturer profile and ranking-input hashes have been refreshed as metadata after subsequent official-source audits; no historical ranking was rerun for the current catalog."
+  }
 }
