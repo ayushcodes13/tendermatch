@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 15.635250005288981
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "7f9730e3f0e02825a99e8b513273d8556b7ec60bf92f2d00c82a1615345741b6",
-    "current_ranking_profile_inputs_sha256": "14089e9f150ffe15b414c2a3d3f2099381985e374e3240c25428c2bdb5e604ef",
+    "current_manufacturer_profiles_sha256": "28bb812ee3a18a5cfce26b3fbe257b5caf095dfaf5796b57addefd8fc062da32",
+    "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
     "metadata_updates": [
       "SALD: service signals now reflect its official terms and conditions and service-engineer description, including installation, acceptance testing, maintenance, repair, parts, support, and upgrades.",
       "SALD: service keywords revised to match the manufacturer terms and service-engineer description, including installation, acceptance testing, maintenance, repairs, parts, support, and upgrades.",
@@ -117,7 +117,8 @@
       "Agnitron: qualified parts, customization, hardware/software upgrades, service plans, preventive maintenance, startup, refurbishment, and process-development service signals to documented legacy/refurbished MOCVD systems and advanced support.",
       "GeniCore: removed generalized installation language from matching text; official installation and commissioning evidence is scoped to U-FAST FLASH.",
       "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment.",
-      "ParteQ: removed unsupported low-competition claim from matching text; official sources describe products and services, not tender competition levels."
+      "ParteQ: removed unsupported low-competition claim from matching text; official sources describe products and services, not tender competition levels.",
+      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
