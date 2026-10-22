@@ -479,8 +479,8 @@ def test_parteq_service_terms_are_specific_to_published_research_services():
     assert "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/" in profile["source_links"]
     assert "customer specifications" not in " ".join(profile["service_keywords"]).lower()
     assert "low competition" not in profile["embedding_text"].lower()
-    assert "nanomaterial synthesis, aerosol science, and pilot-scale material development infrastructure" in profile["embedding_text"]
-    assert profile["profile_version"] == "1.6"
+    assert "Confirm the required process, material, scale, and system configuration" in profile["embedding_text"]
+    assert profile["profile_version"] == "1.7"
 
 
 def test_korvus_service_signals_match_documented_support_and_training():
@@ -522,6 +522,7 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
 
     assert {
         "https://parteq.net/en/products/nanopowder-synthesis/",
+        "https://parteq.net/en/products/nanopowder-synthesis/spark-synthesis/",
         "https://parteq.net/en/products/aerosolmesstechnik/",
         "https://parteq.net/en/products/aerosolmesstechnik/nanoparticle-measurement-systems/",
         "https://parteq.net/en/products/aerosolmesstechnik/fine-dust-monitoring/",
@@ -534,7 +535,12 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
     assert "environmental monitoring" not in profile["industries_served"]
     assert "aerosol measurement instruments" in profile["embedding_text"]
     assert "AQ Guard air-quality aerosol measurement" not in profile["embedding_text"]
-    assert profile["profile_version"] == "1.6"
+    assert "spark-discharge synthesis systems" in profile["product_categories"]
+    assert "spark synthesis systems for graphitic and metallic nanoparticles" in profile["products"]
+    assert "spark-discharge" in profile["embedding_text"]
+    assert "spark synthesis" in profile["keywords"]
+    assert "graphitic nanoparticles" in profile["keywords"]
+    assert profile["profile_version"] == "1.7"
 
 
 def test_pg_instruments_service_terms_are_limited_to_documented_support():
