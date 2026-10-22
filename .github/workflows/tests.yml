@@ -52,3 +52,4 @@ jobs:
           tests/test_pipeline_run_ledger.py
           tests/test_safe_error_logging.py
           tests/test_deployment_smoke.py
+          tests/test_workflow_contract.py
