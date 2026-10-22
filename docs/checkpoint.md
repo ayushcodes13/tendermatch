@@ -155,3 +155,9 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
 - **P1.4 Operational Backup & Restore**: Added `verify_schema_compatibility` to `data/backup.py` validating core TenderMatch tables on restore, `MaintenanceLock` and `is_maintenance_active` coordinating with `scheduler.py` to pause scheduled runs during database maintenance, and `prune_old_backups` with retention rotation in `deploy/backup_cron.sh`.
 - **Verification**: 295 tests passed locally (`pytest -q`); 14 profiles validated with 0 errors and 0 warnings.
 
+## Phase 2 — Adversarial Notification Delivery and State Reconciliation (P2.3, P2.4)
+
+- **P2.3 Adversarial Notification Delivery Testing**: Added adversarial tests in `tests/test_email_outbox.py` covering SMTP timeout before acceptance (marks batch `failed`, records exception type without sensitive details, schedules exponential backoff), transport disconnect after DATA (preserves batch and safely completes retry when reattempted), worker process crashes during sending (recovers via 15-minute stale sending window), and multi-recipient independent delivery histories.
+- **P2.4 Digest, Terminal, and Ledger Reconciliation**: Built `test_reconcile_email_terminal_and_database_run_ledger` in `tests/test_pipeline_digest.py` verifying full consistency across email digest overview, terminal stdout, and SQLite `pipeline_runs.summary_json` across scraped, fresh, expired, stale, duplicate, previously notified, high-signal, exploration, and email delivery status.
+- **Verification**: 300 tests passed locally (`pytest -q`); 14 profiles validated with 0 errors and 0 warnings.
+
