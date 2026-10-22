@@ -946,7 +946,7 @@
         ],
         "products": [
             "Agilis Series MOCVD reactors",
-            "GOX Series Gallium Oxide systems",
+            "Agilis GOX300 Gallium Oxide MOCVD system",
             "Imperium-MOCVD control software",
             "AgniTemp multiwavelength pyrometer"
         ],
@@ -957,7 +957,7 @@
             "academic and industrial research labs",
             "material science"
         ],
-        "embedding_text": "Agnitron Technology specializes in custom Metal Organic Chemical Vapor Deposition (MOCVD) systems and advanced process control solutions for the semiconductor industry. Their product line includes the Agilis and GOX series reactors, optimized for the growth of ultra-wide bandgap materials such as Gallium Oxide (Ga2O3), III-Nitrides, and 2D materials. They offer the Imperium-MOCVD SCADA software for upgrading legacy systems from manufacturers like Veeco and Aixtron, along with AgniTemp pyrometry for high-speed in-situ thermal monitoring. These solutions are highly relevant for tenders involving epitaxial growth, wide bandgap semiconductor research, and laboratory-scale semiconductor fabrication.",
+        "embedding_text": "Agnitron Technology specializes in custom Metal Organic Chemical Vapor Deposition (MOCVD) systems and advanced process control solutions for the semiconductor industry. Its product line includes Agilis MOCVD reactors and the Agilis GOX300 large-production reactor for Gallium Oxide (Ga2O3) epitaxial film growth, along with systems for III-Nitrides and 2D materials. It offers Imperium-MOCVD SCADA software for upgrading legacy systems from manufacturers like Veeco and Aixtron, and AgniTemp pyrometry for high-speed in-situ thermal monitoring. These solutions are relevant for tenders involving epitaxial growth, wide-bandgap semiconductor research, and MOCVD equipment.",
         "keywords": [
             "MOCVD",
             "Gallium Oxide",
@@ -1005,7 +1005,7 @@
             "https://agnitron.com/products/mocvd/agilis-series-300/",
             "https://agnitron.com/products/mocvd/a-series/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {
