@@ -459,7 +459,7 @@ def test_parteq_service_terms_are_specific_to_published_research_services():
         "equipment prototype design",
         "turn-key production system realization",
         "nanopowder development and production",
-        "functionalized particle synthesis to customer specifications",
+        "particle and powder functionalization by CVD",
     }
     assert not {
         "AMC",
@@ -473,9 +473,11 @@ def test_parteq_service_terms_are_specific_to_published_research_services():
         "replacement",
     } & set(profile["service_keywords"])
     assert "https://parteq.net/en/services-in-aerosol-technology/forschungsdienstleistungen.html" in profile["source_links"]
+    assert "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/" in profile["source_links"]
+    assert "customer specifications" not in " ".join(profile["service_keywords"]).lower()
     assert "low competition" not in profile["embedding_text"].lower()
     assert "nanomaterial synthesis, aerosol science, and pilot-scale material development infrastructure" in profile["embedding_text"]
-    assert profile["profile_version"] == "1.5"
+    assert profile["profile_version"] == "1.6"
 
 
 def test_korvus_service_signals_match_documented_support_and_training():
@@ -529,7 +531,7 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
     assert "environmental monitoring" not in profile["industries_served"]
     assert "aerosol measurement instruments" in profile["embedding_text"]
     assert "AQ Guard air-quality aerosol measurement" not in profile["embedding_text"]
-    assert profile["profile_version"] == "1.5"
+    assert profile["profile_version"] == "1.6"
 
 
 def test_pg_instruments_service_terms_are_limited_to_documented_support():

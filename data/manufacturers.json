@@ -135,7 +135,7 @@
             "equipment prototype design",
             "turn-key production system realization",
             "nanopowder development and production",
-            "functionalized particle synthesis to customer specifications"
+            "particle and powder functionalization by CVD"
         ],
         "website": "https://parteq.net",
         "source_links": [
@@ -150,7 +150,7 @@
             "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/",
             "https://parteq.net/en/"
         ],
-        "profile_version": "1.5",
+        "profile_version": "1.6",
         "profile_last_updated": "2026-10-22"
     },
     {
