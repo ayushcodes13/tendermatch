@@ -600,9 +600,10 @@
             "https://www.hg-nic.com/ra-series/ra-7000f/",
             "https://www.hg-nic.com/ma-series/ma-3-solo/",
             "https://www.hg-nic.com/ma-series/ma-3000/",
-            "https://www.hg-nic.com/pe-series/pe-1000/"
+            "https://www.hg-nic.com/pe-series/pe-1000/",
+            "https://www.hg-nic.com/wa-series/wa-5a/"
         ],
-        "profile_version": "1.8",
+        "profile_version": "1.9",
         "profile_last_updated": "2026-10-22"
     },
     {
