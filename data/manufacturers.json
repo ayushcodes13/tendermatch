@@ -1088,7 +1088,7 @@
             "nanotechnology",
             "academic and industrial R&D"
         ],
-        "embedding_text": "AdNaNoTek Corporation specializes in the design and manufacture of ultrahigh vacuum (UHV) deposition and plasma etching systems. Their core expertise includes Physical Vapor Deposition (PVD) technologies such as E-beam evaporation, Molecular Beam Epitaxy (MBE), and Magnetron Sputtering, alongside advanced dry etching solutions like ICP-RIE and Ion Beam Etching. They provide specialized cluster tools for Josephson Junction fabrication, essential for quantum computing devices. These systems are highly relevant for high-end research tenders involving thin-film growth, semiconductor fabrication, and UHV material processing.",
+        "embedding_text": "AdNaNoTek Corporation specializes in the design and manufacture of ultrahigh vacuum (UHV) deposition and plasma etching systems. Their core expertise includes Physical Vapor Deposition (PVD) technologies such as E-beam evaporation, Molecular Beam Epitaxy (MBE), and Magnetron Sputtering, alongside advanced dry etching solutions like ICP-RIE and Ion Beam Etching. They provide specialized cluster tools for Josephson Junction fabrication, essential for quantum computing devices. These systems are highly relevant for high-end research tenders involving thin-film growth, semiconductor fabrication, and UHV material processing.\nOfficial service descriptions include customer and technical services, technical support, theoretical and hands-on training, and technology consultation. Confirm any requested maintenance, repair, spare parts, installation, commissioning, or calibration scope against written tender-specific evidence.",
         "keywords": [
             "UHV",
             "MBE",
@@ -1119,15 +1119,11 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
+            "customer and technical services",
+            "in-depth theoretical and hands-on training",
+            "professional technology consultation",
+            "technical support",
+            "customer support"
         ],
         "website": "https://adnano-tek.com/",
         "source_links": [
@@ -1151,7 +1147,7 @@
             "https://adnano-tek.com/manipulators/",
             "https://adnano-tek.com/uhv-design-components/transfer-arms/"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {
