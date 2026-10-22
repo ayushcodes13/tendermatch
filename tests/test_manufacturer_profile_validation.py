@@ -581,6 +581,8 @@ def test_adnanotek_services_are_limited_to_officially_described_support():
     }
     assert not {"AMC", "annual maintenance", "maintenance", "repair", "spares", "installation", "commissioning", "calibration", "replacement"} & set(profile["service_keywords"])
     assert "https://adnano-tek.com/about-adnanotek/" in profile["source_links"]
+    assert "Official service descriptions include customer and technical services" in profile["embedding_text"]
+    assert "Confirm any requested maintenance, repair, spare parts, installation, commissioning, or calibration scope" in profile["embedding_text"]
     assert profile["profile_version"] == "1.5"
 
 

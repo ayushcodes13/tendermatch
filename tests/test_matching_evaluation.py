@@ -698,4 +698,6 @@ def test_adnanotek_service_evidence_evaluation_matches_profile_and_ranking_input
     assert report["candidate_recall_on_labeled_positives"] == before["candidate_recall_on_labeled_positives"] == 1.0
     assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"] == 8 / 11
     assert [x["manufacturer_id"] for x in before["rankings"]["SYN-AMC-005"][:5]][-1] == "adnanotek"
-    assert all(x["manufacturer_id"] != "adnanotek" for x in report["rankings"]["SYN-AMC-005"][:5])
+    assert [x["manufacturer_id"] for x in report["rankings"]["SYN-AMC-005"][:5]][-1] == "adnanotek"
+    adnanotek_after = report["rankings"]["SYN-AMC-005"][-1]
+    assert adnanotek_after["rank"] == 5

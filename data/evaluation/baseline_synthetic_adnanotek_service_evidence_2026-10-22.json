@@ -11,7 +11,7 @@
     "syn-pump-002",
     "syn-pump-003"
   ],
-  "generated_at_utc": "2026-10-22T06:06:21+00:00",
+  "generated_at_utc": "2026-10-22T06:08:17+00:00",
   "human_reviewed_case_count": 0,
   "input_sha256": {
     "dataset": "979d65036a59031424444286c346610130ae53d6fc6c613d95a9550e98d21e43",
@@ -22,8 +22,8 @@
       "matching/evaluation.py": "32fbb423b875266ff60a92cc9546130a6aae9b7673fc366b2cbdbcd4426f378b",
       "matching/matcher.py": "ce1c7ba8b9511d6b5f40f836f75462e1ac794ddd8c3610529acb95282a42840a"
     },
-    "manufacturer_profiles": "761afbf76d2ee88bbabcbf9d756eb1bbfb458291a001aa6767d3156ee1d0e0f3",
-    "ranking_profile_inputs": "0fb497ecef074e591a3ce646eb9d3bd3228d990298a9e55d93f27b0964780209"
+    "manufacturer_profiles": "db113c0c2c2b0dcef1d1aafd2c0d1334355a69b58a9f15fd9793412708653b78",
+    "ranking_profile_inputs": "3c73d2a6980c7e5851cb21f731f677d6bcba367820026523a61cb8a929ce3fb9"
   },
   "label_counts": {
     "insufficient_information": 2,
@@ -35,8 +35,8 @@
   "labeled_candidate_precision_denominator": 11,
   "latency_ms_per_tender": {
     "count": 17,
-    "mean": 16.025686235961448,
-    "median": 15.586958994390443
+    "mean": 17.317840704516342,
+    "median": 15.780542002175935
   },
   "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
   "per_manufacturer": {
@@ -77,23 +77,23 @@
     }
   },
   "per_tender_latency_ms": {
-    "SYN-ACRONYM-006": 15.160916009335779,
-    "SYN-ALIAS-007": 15.406209000502713,
-    "SYN-AMC-005": 14.810790991759859,
-    "SYN-CONFLICT-008": 15.88745899789501,
-    "SYN-CORRIGENDUM-013": 16.223416998400353,
-    "SYN-FERTILIZER-COMMODITY-018": 15.586958994390443,
-    "SYN-FERTILIZER-MERCURY-017": 18.22954100498464,
-    "SYN-LAB-GENERIC-004": 15.358375007053837,
-    "SYN-MISSING-016": 16.60404099675361,
-    "SYN-NEGATIVE-009": 15.798125008586794,
-    "SYN-OVERLAP-011": 13.253041994175874,
-    "SYN-OVERLAP-CONCEPT-015": 16.35474999784492,
-    "SYN-PUMP-002": 14.783541002543643,
-    "SYN-PUMP-003": 13.38979200227186,
-    "SYN-PVD-001": 24.449832999380305,
-    "SYN-UPDATED-014": 17.456125002354383,
-    "SYN-VACUUM-CLEANER-010": 13.683750003110617
+    "SYN-ACRONYM-006": 13.580290993559174,
+    "SYN-ALIAS-007": 16.147666989127174,
+    "SYN-AMC-005": 12.383332999888808,
+    "SYN-CONFLICT-008": 15.20458300365135,
+    "SYN-CORRIGENDUM-013": 16.470249989652075,
+    "SYN-FERTILIZER-COMMODITY-018": 16.063916991697624,
+    "SYN-FERTILIZER-MERCURY-017": 16.767583991168067,
+    "SYN-LAB-GENERIC-004": 18.200334001448937,
+    "SYN-MISSING-016": 15.780542002175935,
+    "SYN-NEGATIVE-009": 15.465333010070026,
+    "SYN-OVERLAP-011": 13.891750000766478,
+    "SYN-OVERLAP-CONCEPT-015": 14.86537499295082,
+    "SYN-PUMP-002": 31.394332996569574,
+    "SYN-PUMP-003": 21.365208012866788,
+    "SYN-PVD-001": 27.95887499814853,
+    "SYN-UPDATED-014": 15.310667004087009,
+    "SYN-VACUUM-CLEANER-010": 13.553249998949468
   },
   "ranking_metrics": {
     "1": {
@@ -229,7 +229,7 @@
       },
       {
         "alias_hits": [],
-        "base_semantic_score": 0.7342,
+        "base_semantic_score": 0.7368,
         "category_hits": [],
         "concept_hits": [
           "magnetron_sputtering"
@@ -249,7 +249,7 @@
           "MANUFACTURER_KEYWORD_EVIDENCE",
           "MANUFACTURER_CONCEPT_EVIDENCE"
         ],
-        "score": 0.7942,
+        "score": 0.7968,
         "service_hits": []
       }
     ],
@@ -469,21 +469,27 @@
       },
       {
         "alias_hits": [],
-        "base_semantic_score": 0.6257,
+        "base_semantic_score": 0.5901,
         "category_hits": [],
-        "concept_hits": [],
+        "concept_hits": [
+          "pvd"
+        ],
         "contextual_negative_hits": [],
-        "keyword_hits": [],
-        "manufacturer_id": "sald",
-        "manufacturer_name": "SALD B.V.",
+        "keyword_hits": [
+          "PVD"
+        ],
+        "manufacturer_id": "adnanotek",
+        "manufacturer_name": "AdNaNoTek Corporation",
         "negative_hits": [],
         "product_hits": [],
         "rank": 5,
         "reason_codes": [
           "MANUFACTURER_TOPK_MATCH",
-          "MANUFACTURER_SCORE_LOW_RELATIVE"
+          "MANUFACTURER_SCORE_MEDIUM",
+          "MANUFACTURER_KEYWORD_EVIDENCE",
+          "MANUFACTURER_CONCEPT_EVIDENCE"
         ],
-        "score": 0.6257,
+        "score": 0.6501,
         "service_hits": []
       }
     ],
@@ -599,7 +605,7 @@
       },
       {
         "alias_hits": [],
-        "base_semantic_score": 0.6595,
+        "base_semantic_score": 0.6869,
         "category_hits": [],
         "concept_hits": [
           "magnetron_sputtering"
@@ -619,7 +625,7 @@
           "MANUFACTURER_KEYWORD_EVIDENCE",
           "MANUFACTURER_CONCEPT_EVIDENCE"
         ],
-        "score": 0.7195,
+        "score": 0.7469,
         "service_hits": []
       }
     ],
@@ -653,7 +659,7 @@
       },
       {
         "alias_hits": [],
-        "base_semantic_score": 0.6318,
+        "base_semantic_score": 0.6349,
         "category_hits": [],
         "concept_hits": [],
         "contextual_negative_hits": [],
@@ -667,7 +673,7 @@
           "MANUFACTURER_TOP3_MATCH",
           "MANUFACTURER_SCORE_LOW_RELATIVE"
         ],
-        "score": 0.6318,
+        "score": 0.6349,
         "service_hits": []
       },
       {
@@ -1098,6 +1104,25 @@
       },
       {
         "alias_hits": [],
+        "base_semantic_score": 0.5712,
+        "category_hits": [],
+        "concept_hits": [],
+        "contextual_negative_hits": [],
+        "keyword_hits": [],
+        "manufacturer_id": "adnanotek",
+        "manufacturer_name": "AdNaNoTek Corporation",
+        "negative_hits": [],
+        "product_hits": [],
+        "rank": 4,
+        "reason_codes": [
+          "MANUFACTURER_TOPK_MATCH",
+          "MANUFACTURER_SCORE_LOW_RELATIVE"
+        ],
+        "score": 0.5712,
+        "service_hits": []
+      },
+      {
+        "alias_hits": [],
         "base_semantic_score": 0.5584,
         "category_hits": [],
         "concept_hits": [],
@@ -1107,37 +1132,12 @@
         "manufacturer_name": "Spinflex Instruments Ltd",
         "negative_hits": [],
         "product_hits": [],
-        "rank": 4,
+        "rank": 5,
         "reason_codes": [
           "MANUFACTURER_TOPK_MATCH",
           "MANUFACTURER_SCORE_LOW_RELATIVE"
         ],
         "score": 0.5584,
-        "service_hits": []
-      },
-      {
-        "alias_hits": [],
-        "base_semantic_score": 0.4945,
-        "category_hits": [],
-        "concept_hits": [
-          "hydrogen_electrolyzer"
-        ],
-        "contextual_negative_hits": [],
-        "keyword_hits": [
-          "hydrogen electrolyzer"
-        ],
-        "manufacturer_id": "sald",
-        "manufacturer_name": "SALD B.V.",
-        "negative_hits": [],
-        "product_hits": [],
-        "rank": 5,
-        "reason_codes": [
-          "MANUFACTURER_TOPK_MATCH",
-          "MANUFACTURER_SCORE_LOW_RELATIVE",
-          "MANUFACTURER_KEYWORD_EVIDENCE",
-          "MANUFACTURER_CONCEPT_EVIDENCE"
-        ],
-        "score": 0.5545,
         "service_hits": []
       }
     ],
@@ -1247,7 +1247,7 @@
       },
       {
         "alias_hits": [],
-        "base_semantic_score": 0.6233,
+        "base_semantic_score": 0.6405,
         "category_hits": [],
         "concept_hits": [
           "pvd"
@@ -1267,7 +1267,7 @@
           "MANUFACTURER_KEYWORD_EVIDENCE",
           "MANUFACTURER_CONCEPT_EVIDENCE"
         ],
-        "score": 0.6833,
+        "score": 0.7005,
         "service_hits": []
       }
     ],
@@ -1493,13 +1493,13 @@
       },
       {
         "alias_hits": [],
-        "base_semantic_score": 0.6793,
+        "base_semantic_score": 0.6791,
         "category_hits": [],
         "concept_hits": [],
         "contextual_negative_hits": [],
         "keyword_hits": [],
-        "manufacturer_id": "adnanotek",
-        "manufacturer_name": "AdNaNoTek Corporation",
+        "manufacturer_id": "parteq",
+        "manufacturer_name": "ParteQ GmbH",
         "negative_hits": [],
         "product_hits": [],
         "rank": 5,
@@ -1507,7 +1507,7 @@
           "MANUFACTURER_TOPK_MATCH",
           "MANUFACTURER_SCORE_MEDIUM"
         ],
-        "score": 0.6793,
+        "score": 0.6791,
         "service_hits": []
       }
     ],
@@ -1830,7 +1830,7 @@
       },
       {
         "alias_hits": [],
-        "base_semantic_score": 0.7024,
+        "base_semantic_score": 0.7015,
         "category_hits": [],
         "concept_hits": [
           "pvd",
@@ -1852,7 +1852,7 @@
           "MANUFACTURER_KEYWORD_EVIDENCE",
           "MANUFACTURER_CONCEPT_EVIDENCE"
         ],
-        "score": 0.8224,
+        "score": 0.8215,
         "service_hits": []
       }
     ],
@@ -1900,6 +1900,25 @@
       },
       {
         "alias_hits": [],
+        "base_semantic_score": 0.5835,
+        "category_hits": [],
+        "concept_hits": [],
+        "contextual_negative_hits": [],
+        "keyword_hits": [],
+        "manufacturer_id": "adnanotek",
+        "manufacturer_name": "AdNaNoTek Corporation",
+        "negative_hits": [],
+        "product_hits": [],
+        "rank": 3,
+        "reason_codes": [
+          "MANUFACTURER_TOP3_MATCH",
+          "MANUFACTURER_SCORE_LOW_RELATIVE"
+        ],
+        "score": 0.5835,
+        "service_hits": []
+      },
+      {
+        "alias_hits": [],
         "base_semantic_score": 0.5829,
         "category_hits": [],
         "concept_hits": [],
@@ -1909,9 +1928,9 @@
         "manufacturer_name": "Korvus Technology",
         "negative_hits": [],
         "product_hits": [],
-        "rank": 3,
+        "rank": 4,
         "reason_codes": [
-          "MANUFACTURER_TOP3_MATCH",
+          "MANUFACTURER_TOPK_MATCH",
           "MANUFACTURER_SCORE_LOW_RELATIVE"
         ],
         "score": 0.5829,
@@ -1928,31 +1947,12 @@
         "manufacturer_name": "ParteQ GmbH",
         "negative_hits": [],
         "product_hits": [],
-        "rank": 4,
-        "reason_codes": [
-          "MANUFACTURER_TOPK_MATCH",
-          "MANUFACTURER_SCORE_LOW_RELATIVE"
-        ],
-        "score": 0.5805,
-        "service_hits": []
-      },
-      {
-        "alias_hits": [],
-        "base_semantic_score": 0.5785,
-        "category_hits": [],
-        "concept_hits": [],
-        "contextual_negative_hits": [],
-        "keyword_hits": [],
-        "manufacturer_id": "spinflex",
-        "manufacturer_name": "Spinflex Instruments Ltd",
-        "negative_hits": [],
-        "product_hits": [],
         "rank": 5,
         "reason_codes": [
           "MANUFACTURER_TOPK_MATCH",
           "MANUFACTURER_SCORE_LOW_RELATIVE"
         ],
-        "score": 0.5785,
+        "score": 0.5805,
         "service_hits": []
       }
     ],

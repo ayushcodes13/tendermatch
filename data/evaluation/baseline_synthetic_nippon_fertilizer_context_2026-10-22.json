@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "761afbf76d2ee88bbabcbf9d756eb1bbfb458291a001aa6767d3156ee1d0e0f3",
-    "current_ranking_profile_inputs_sha256": "0fb497ecef074e591a3ce646eb9d3bd3228d990298a9e55d93f27b0964780209",
+    "current_manufacturer_profiles_sha256": "db113c0c2c2b0dcef1d1aafd2c0d1334355a69b58a9f15fd9793412708653b78",
+    "current_ranking_profile_inputs_sha256": "3c73d2a6980c7e5851cb21f731f677d6bcba367820026523a61cb8a929ce3fb9",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -146,11 +146,12 @@
       "SALD: service keywords revised to match the manufacturer terms and service-engineer description, including installation, acceptance testing, maintenance, repairs, parts, support, and upgrades.",
       "AdNaNoTek: generic equipment-service claims were removed; retained only documented customer support, technical support, training, and technology consultation from its official About page.",
       "AdNaNoTek: generic service signals removed, retaining official-about-page customer/technical support, training, and technology consultation.",
-      "AdNaNoTek: generic equipment-service signals were removed; retained official customer/technical services, support, training, and technology consultation."
+      "AdNaNoTek: generic equipment-service signals were removed; retained official customer/technical services, support, training, and technology consultation.",
+      "AdNaNoTek: narrowed service terms, while explicit source-backed embedding context keeps unverified service tenders visible for manual checking."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
-    "reason": "Historical report ranking and original run hashes are preserved. Current profile fingerprints were refreshed as metadata after official-source audit; historical rankings were not rerun. sentence-transformers was not required for the metadata refresh.",
+    "reason": "Historical ranking snapshot and original run hashes preserved. Current profile fingerprints refreshed as metadata; historical rankings were not rerun. sentence-transformers was not required for this metadata-only refresh.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
   },
