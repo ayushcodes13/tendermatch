@@ -96,7 +96,7 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "b4c9941bbd69b12e23d75dbe0f1258459915f3549f544d0c75c795ce6451d0b5",
+    "current_manufacturer_profiles_sha256": "5b97e8968beacd3e59ce15bc0122696b149b06cf9fafc76b4d1ef4b836ad50b5",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -114,13 +114,14 @@
       "Nippon Instruments: added the dedicated EMP-Gold+ ultra-trace portable mercury analyzer product page as direct source provenance.",
       "Nippon Instruments: added the dedicated SGM-9 stack-gas mercury monitor product page as direct source provenance.",
       "Nippon Instruments: added the dedicated AM-6F continuous ambient-air mercury monitor product page as direct source provenance.",
-      "P.G. Instruments: removed the unsupported gas chromatography systems product claim after the official GC 650 category reported no products."
+      "P.G. Instruments: removed the unsupported gas chromatography systems product claim after the official GC 650 category reported no products.",
+      "Spinflex: narrowed the spinAMP product description to its directly documented solid-state pulsed X/Q-band amplifier capabilities and applications, removing an unsupported ESR/EPR-only qualifier."
     ],
     "rankings_reused": false,
-    "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results.",
+    "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374",
-    "current_ranking_profile_inputs_sha256": "b4c09ae6af9eca38c722f2f7b671bec3e4c985440447635c596c06ecdbff68c9",
+    "current_ranking_profile_inputs_sha256": "7648051113f64e926346b8e22f64c8978af7d22ecb8f468404136a68a8896c07",
     "rankings_current_for_profile_inputs": false
   },
   "ranking_metrics": {

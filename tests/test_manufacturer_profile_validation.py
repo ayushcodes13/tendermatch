@@ -93,6 +93,16 @@ def test_pg_instruments_profile_has_official_product_and_application_sources():
     assert profile["profile_version"] == "1.2"
 
 
+def test_spinflex_microwave_amplifier_scope_matches_its_official_product_page():
+    profile = next(p for p in load_profiles() if p["id"] == "spinflex")
+
+    assert "solid-state X-band and Q-band pulsed microwave amplifiers" in profile["product_categories"]
+    assert "spinAMP solid-state X-band and Q-band pulsed microwave amplifiers" in profile["products"]
+    assert not any("amplifier" in item.lower() and "ESR/EPR systems" in item for item in profile["products"])
+    assert "https://spin-flex.com/spinamp/" in profile["source_links"]
+    assert profile["profile_version"] == "1.3"
+
+
 def test_nippon_profile_sources_and_capabilities_are_specific_to_mercury_analysis():
     profile = next(p for p in load_profiles() if p["id"] == "nippon_instruments")
 
@@ -340,7 +350,7 @@ def test_spinflex_industries_limit_health_claim_to_biomedical_research():
     assert "structural biology research" in profile["industries_served"]
     assert "medicine research" not in profile["industries_served"]
     assert "https://spin-flex.com/pulse-epr-structural-biology/" in profile["source_links"]
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
 
 
 def test_sald_industries_do_not_overclaim_textiles_or_medical_packaging():
