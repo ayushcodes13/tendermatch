@@ -149,9 +149,19 @@ def validate_profiles(profiles):
         if not isinstance(source_links, list) or not source_links:
             issues.append(_issue("error", "missing_source_links", f"{base}.source_links", "At least one profile-level HTTP(S) source link is required."))
         else:
+            seen_sources = set()
             for source_index, source in enumerate(source_links):
                 if not isinstance(source, str) or not source.strip() or not _valid_http_url(source.strip()):
                     issues.append(_issue("error", "invalid_source_link", f"{base}.source_links[{source_index}]", "Expected an absolute HTTP(S) URL."))
+                    continue
+                normalized_source = source.strip()
+                if normalized_source in seen_sources:
+                    issues.append(_issue(
+                        "error", "duplicate_source_link", f"{base}.source_links[{source_index}]",
+                        "Duplicates an earlier source link after whitespace normalization.",
+                    ))
+                else:
+                    seen_sources.add(normalized_source)
 
         version = profile.get("profile_version")
         if version is None:

@@ -85,6 +85,23 @@ def test_metadata_and_urls_are_validated_without_being_fabricated():
     assert "missing_profile_last_updated" not in codes
 
 
+def test_duplicate_source_links_are_rejected_after_whitespace_normalization():
+    profile = load_profiles()[0]
+    first_source = profile["source_links"][0]
+    profile["source_links"] = [first_source, f"  {first_source}  "]
+
+    duplicates = [
+        issue for issue in validate_profiles([profile])
+        if issue["code"] == "duplicate_source_link"
+    ]
+
+    assert len(duplicates) == 1
+    assert duplicates[0]["path"] == "$[0].source_links[1]"
+    assert "duplicate_source_link" not in {
+        issue["code"] for issue in validate_profiles(load_profiles())
+    }
+
+
 def test_korvus_profile_has_dedicated_tes_thermal_evaporation_source():
     profile = next(p for p in load_profiles() if p["id"] == "korvus_technology")
 
