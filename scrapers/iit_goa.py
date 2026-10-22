@@ -8,19 +8,11 @@ IIT Goa portal. Captures regional and niche research requirements.
 Key responsibilities:
 - Scraping HTML tables from the IIT Goa portal.
 - Normalizing table cells into standardized tender fields.
-- Handling insecure SSL requests (required by some institution portals).
-
-Notes:
-- Disables insecure request warnings due to SSL configuration issues 
-  on the target portal.
 """
 import requests
-import urllib3
 from bs4 import BeautifulSoup
 from datetime import datetime
 from urllib.parse import urljoin
-
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 URL = "https://iitgoa.ac.in/tenders/"
 
@@ -36,7 +28,6 @@ def scrape_iit_goa():
         URL,
         headers={"User-Agent": "Mozilla/5.0"},
         timeout=20,
-        verify=False
     )
     response.raise_for_status()
 

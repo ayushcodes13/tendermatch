@@ -59,13 +59,21 @@ def test_iit_goa_scraper_resolves_relative_notice_links(monkeypatch):
         def find(self, name):
             return Table() if name == "table" else None
 
-    monkeypatch.setattr(iit_goa.requests, "get", lambda *args, **kwargs: FakeResponse("fixture"))
+    request = {}
+
+    def fake_get(*args, **kwargs):
+        request.update(kwargs)
+        return FakeResponse("fixture")
+
+    monkeypatch.setattr(iit_goa.requests, "get", fake_get)
     monkeypatch.setattr(iit_goa, "BeautifulSoup", lambda *args, **kwargs: Soup())
 
     tender = iit_goa.scrape_iit_goa()[0]
 
     assert tender["source_url"] == "https://iitgoa.ac.in/tenders/files/tender-2.pdf"
     assert tender["tender_id"] == tender["source_url"]
+    assert request["timeout"] == 20
+    assert request.get("verify", True) is True
 
 
 def test_generic_institution_scraper_uses_detail_url_not_process_random_hash():
