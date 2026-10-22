@@ -42,3 +42,12 @@ def test_checkout_does_not_persist_the_github_token_in_git_config():
         ) == 1, (
             f"Expected one checkout step with persist-credentials disabled in {workflow_path.name}"
         )
+
+
+def test_dependabot_checks_pinned_github_actions_weekly():
+    dependabot = (ROOT / ".github/dependabot.yml").read_text(encoding="utf-8")
+
+    assert 'package-ecosystem: github-actions' in dependabot
+    assert 'directory: "/"' in dependabot
+    assert "interval: weekly" in dependabot
+    assert "open-pull-requests-limit: 2" in dependabot
