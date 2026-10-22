@@ -1820,12 +1820,13 @@
     "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
     "run_manufacturer_profiles_sha256": "6746a6ed258501b58c7dc91e5578fbb5e6bf5dce2dbc28f58da84141eb06b540",
     "run_ranking_profile_inputs_sha256": null,
-    "current_manufacturer_profiles_sha256": "a3a374b47374afac97b6645086deb382e2d08b5e8e31cf54c0205bc52c83ee98",
-    "current_ranking_profile_inputs_sha256": "7065d4b70cf49605074b7a59f6bc66959f9e2ab30c32e4aa17c9ebe84b17bc28",
+    "current_manufacturer_profiles_sha256": "6e4bb60639ab281ba20e52ac4a7dceb3aadb572d67c945686c6c24eba776639d",
+    "current_ranking_profile_inputs_sha256": "9120441c4f6949e35739a53e98d62f98d9ecbede8778a09bab221dc867460caf",
     "rankings_reused": false,
     "reason": "Historical report snapshot; original run hashes and rankings are preserved.",
     "metadata_updates": [
-      "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed."
+      "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed.",
+      "TheSix: narrowed generic battery-testing and battery-industry language to the documented flow-battery test cell and PEM electrolyzer test cell."
     ],
     "rankings_current_for_profile_inputs": false
   }

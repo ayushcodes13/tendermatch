@@ -598,7 +598,8 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
         "https://thesixtech.com/products/temperature-controlled-fuel-cell-membrane-electrode-mea-press",
         "https://thesixtech.com/products/heated-vacuum-plate",
     } <= set(profile["source_links"])
-    assert "flow battery test cells" in profile["products"]
+    assert "Flow Battery Test Cell" in profile["products"]
+    assert "PEM Electrolyzer Test Cell" in profile["products"]
     assert "Gas Humidifier for Fuel Cells" in profile["products"]
     assert "Anode & Cathode Gas Humidifier for Fuel Cells" in profile["products"]
     assert "Heated SS316 Gas Transfer Hose for Fuel Cells" in profile["products"]
@@ -609,7 +610,24 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
     assert "Supply and installation of fuel cell testing systems" not in profile["embedding_text"]
     assert "Supply of fuel cell testing systems" in profile["embedding_text"]
     assert profile["service_keywords"] == []
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
+
+
+def test_thesix_battery_claims_are_scoped_to_documented_flow_battery_product():
+    profile = next(p for p in load_profiles() if p["id"] == "thesix_solutions")
+
+    assert "flow battery and electrochemical test cells" in profile["product_categories"]
+    assert "battery and energy systems testing" not in profile["product_categories"]
+    assert "Flow Battery Test Cell" in profile["products"]
+    assert "PEM Electrolyzer Test Cell" in profile["products"]
+    assert "flow battery research" in profile["industries_served"]
+    assert "battery and energy storage research" not in profile["industries_served"]
+    assert "flow battery test cells" in profile["embedding_text"]
+    assert "generic battery testing equipment" not in profile["embedding_text"]
+    assert "battery testing system" not in profile["embedding_text"]
+    assert "flow_battery_testing" in profile["concepts"]
+    assert "battery_testing" not in profile["concepts"]
+    assert profile["profile_version"] == "1.8"
 
 
 def test_adnanotek_services_are_limited_to_officially_described_support():
@@ -800,4 +818,4 @@ def test_thesix_profile_excludes_clinical_infusion_equipment():
         "patient dose control",
         "intravenous pump",
     ]
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
