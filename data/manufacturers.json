@@ -112,6 +112,7 @@
             "flame spray pyrolysis",
             "spark synthesis",
             "spark discharge synthesis",
+            "spark-discharge synthesis",
             "metal nanoparticle synthesis",
             "graphitic nanoparticles",
             "aerosol measurement",
@@ -157,7 +158,7 @@
             "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/",
             "https://parteq.net/en/"
         ],
-        "profile_version": "1.7",
+        "profile_version": "1.8",
         "profile_last_updated": "2026-10-22"
     },
     {
