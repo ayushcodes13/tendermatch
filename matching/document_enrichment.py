@@ -19,6 +19,8 @@ def _load_default_manufacturers() -> list[dict]:
         try:
             with open(catalog_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
+                if isinstance(data, list):
+                    return data
                 return data.get("manufacturers", [])
         except Exception:
             return []
