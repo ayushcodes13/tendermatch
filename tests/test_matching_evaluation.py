@@ -192,6 +192,10 @@ def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
         "generated_at_utc"
     ]
     assert "source_links and profile_version only" in report["profile_metadata_refresh"]["reason"]
+    assert any(
+        "Agnitron" in update
+        for update in report["profile_metadata_refresh"]["metadata_updates"]
+    )
     assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
     assert report["candidate_recall_on_labeled_positives"] == 1.0
     assert report["human_reviewed_case_count"] == 0
