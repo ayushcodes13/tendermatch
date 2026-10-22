@@ -115,8 +115,12 @@ def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
     profile = next(p for p in load_profiles() if p["id"] == "staton")
 
     assert "tool sharpening and regrinding equipment" not in profile["product_categories"]
+    assert "Precision Cutting and Forming Tools" not in profile["products"]
+    assert "tool production" in profile["service_keywords"]
+    assert "tool reconditioning" in profile["service_keywords"]
+    assert "https://statoncoating.com/contact/" in profile["source_links"]
     assert "https://statoncoating.com/research/" in profile["source_links"]
-    assert profile["profile_version"] == "1.1"
+    assert profile["profile_version"] == "1.2"
 
 
 def test_genicore_toll_sintering_is_a_service_not_a_product():
