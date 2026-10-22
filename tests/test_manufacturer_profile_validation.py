@@ -294,7 +294,16 @@ def test_genicore_service_terms_match_official_services_page():
     assert "Toll Sintering Services" not in profile["service_keywords"]
     assert not {"AMC", "annual maintenance", "maintenance", "repair", "spares", "installation", "commissioning", "calibration", "replacement"} & set(profile["service_keywords"])
     assert "https://genicore.eu/products/services/" in profile["source_links"]
-    assert profile["profile_version"] == "1.9"
+    assert profile["profile_version"] == "2.0"
+
+
+def test_genicore_installation_claim_is_not_generalized_from_flash_platform():
+    profile = next(p for p in load_profiles() if p["id"] == "genicore")
+
+    assert "installation" not in profile["embedding_text"].lower()
+    assert "commissioning" not in profile["embedding_text"].lower()
+    assert "installation" not in profile["service_keywords"]
+    assert "https://genicore.eu/products/devices/flash/" in profile["source_links"]
 
 
 def test_genicore_profile_includes_documented_u_fast_flash_platform():
@@ -320,7 +329,7 @@ def test_genicore_material_and_application_claims_link_to_official_sources():
     assert "CUBNEC" in profile["keywords"]
     assert "Cubic Boron Nitride Enhanced Cemented Carbide" in profile["keywords"]
     assert "aerospace and defense materials" in profile["industries_served"]
-    assert profile["profile_version"] == "1.9"
+    assert profile["profile_version"] == "2.0"
 
 
 def test_korvus_profile_links_named_deposition_sources():
