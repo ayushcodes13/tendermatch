@@ -22,7 +22,7 @@ install_import_stub("sentence_transformers", SentenceTransformer=object)
 
 import pipeline.run as pipeline
 from data.db import init_db, upsert_or_get_tender
-from digest.outbox import queue_digest
+from digest.outbox import queue_digest, deliver_batch
 
 
 class EmptyMatcher:
@@ -596,3 +596,197 @@ def test_pipeline_processes_still_open_tender_published_days_earlier_discovered_
     # Run 2: Next run, tender is unchanged and already notified -> must NOT be re-emailed
     pipeline.run_pipeline()
     assert len(sent) == 1  # No duplicate notification sent
+
+
+def test_reconcile_email_terminal_and_database_run_ledger(monkeypatch, tmp_path, capsys):
+    database_path = tmp_path / "reconciliation.sqlite3"
+    sent = []
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(
+        pipeline, "send_email",
+        lambda subject, body, recipient: sent.append((subject, body, recipient)),
+    )
+
+    today = date.today().isoformat()
+    future = (date.today() + timedelta(days=20)).isoformat()
+    past = (date.today() - timedelta(days=5)).isoformat()
+
+    # Pre-populate one tender as already emailed, and one as existing stale
+    conn = sqlite3.connect(database_path)
+    init_db(conn)
+    pre_emailed, _ = upsert_or_get_tender(conn, {
+        "tender_id": "T-PREV-EMAILED",
+        "title": "Previously emailed tender",
+        "organization": "Org A",
+        "published_date": today,
+        "closing_date": future,
+        "source_portal": "cppp",
+        "source_url": "https://portal.example/prev",
+        "raw_text": "Text",
+    })
+    # Queue and deliver batch so recipient_has_notification is True
+    batch_id = queue_digest(
+        conn, "sales@example.com", "Subject", "Body", [pre_emailed]
+    )
+    deliver_batch(conn, batch_id, lambda *args: None)
+
+    # Pre-populate stale tender so is_new is False
+    upsert_or_get_tender(conn, {
+        "tender_id": "T-STALE",
+        "title": "Stale lab gear",
+        "organization": "Org Stale",
+        "published_date": past,
+        "closing_date": None,
+        "source_portal": "cppp",
+        "source_url": "https://portal.example/stale",
+        "raw_text": "Stale gear",
+    })
+    conn.commit()
+    conn.close()
+
+    tenders = [
+        # 1. High signal new tender
+        {
+            "tender_id": "T-HIGH",
+            "title": "High signal spectrometer",
+            "organization": "Org High",
+            "published_date": today,
+            "closing_date": future,
+            "source_portal": "cppp",
+            "source_url": "https://portal.example/high",
+            "raw_text": "Spectrometer specification",
+        },
+        # 2. Explore tender
+        {
+            "tender_id": "T-EXPLORE",
+            "title": "General research tools",
+            "organization": "Org Explore",
+            "published_date": today,
+            "closing_date": future,
+            "source_portal": "cppp",
+            "source_url": "https://portal.example/explore",
+            "raw_text": "Research tools",
+        },
+        # 3. Duplicate of High signal tender
+        {
+            "tender_id": "T-HIGH",
+            "title": "High signal spectrometer",
+            "organization": "Org High",
+            "published_date": today,
+            "closing_date": future,
+            "source_portal": "cppp",
+            "source_url": "https://portal.example/high",
+            "raw_text": "Spectrometer specification",
+        },
+        # 4. Stale tender (old published date, no deadline)
+        {
+            "tender_id": "T-STALE",
+            "title": "Stale lab gear",
+            "organization": "Org Stale",
+            "published_date": past,
+            "closing_date": None,
+            "source_portal": "cppp",
+            "source_url": "https://portal.example/stale",
+            "raw_text": "Stale gear",
+        },
+        # 5. Expired tender (deadline in past)
+        {
+            "tender_id": "T-EXPIRED",
+            "title": "Expired system",
+            "organization": "Org Expired",
+            "published_date": past,
+            "closing_date": past,
+            "source_portal": "cppp",
+            "source_url": "https://portal.example/expired",
+            "raw_text": "Expired system",
+        },
+        # 6. Previously emailed tender
+        {
+            "tender_id": "T-PREV-EMAILED",
+            "title": "Previously emailed tender",
+            "organization": "Org A",
+            "published_date": today,
+            "closing_date": future,
+            "source_portal": "cppp",
+            "source_url": "https://portal.example/prev",
+            "raw_text": "Text",
+        },
+    ]
+
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: tenders)
+
+    def mock_classify(tender, *args, **kwargs):
+        if tender["tender_id"] == "T-HIGH":
+            return {
+                "is_blocked": False,
+                "has_signal": True,
+                "category": "high_signal",
+                "decision": "high_signal",
+                "score": 85,
+                "reason": "high match",
+            }
+        elif tender["tender_id"] == "T-EXPLORE":
+            return {
+                "is_blocked": False,
+                "has_signal": True,
+                "category": "explore",
+                "decision": "explore",
+                "score": 68,
+                "reason": "explore match",
+            }
+        return {
+            "is_blocked": False,
+            "has_signal": False,
+            "category": "low_signal",
+            "decision": "low_signal",
+            "score": 20,
+            "reason": "low match",
+        }
+
+    monkeypatch.setattr(pipeline, "classify_tender", mock_classify)
+
+    pipeline.run_pipeline()
+
+    # 1. Terminal output check
+    terminal_output = capsys.readouterr().out
+    assert "Total scraped: 6" in terminal_output
+    assert "Fresh processed: 2" in terminal_output
+    assert "Duplicates skipped: 1" in terminal_output
+    assert "Stale skipped: 1" in terminal_output
+    assert "Expired skipped: 1" in terminal_output
+    assert "Already emailed skipped: 1" in terminal_output
+    assert "Email sent and recorded." in terminal_output
+
+    # 2. Email body check
+    assert len(sent) == 1
+    subject, body, recipient = sent[0]
+    assert "Total scraped: 6" in body
+    assert "Fresh tenders processed: 2" in body
+    assert "High-signal opportunities: 1" in body
+    assert "Exploration candidates: 1" in body
+    assert "Duplicates skipped: 1" in body
+    assert "Stale tenders skipped: 1" in body
+    assert "Expired tenders skipped: 1" in body
+    assert "Previously emailed skipped: 1" in body
+
+    # 3. Database run ledger reconciliation
+    conn = sqlite3.connect(database_path)
+    run_record = conn.execute(
+        "SELECT status, summary_json FROM pipeline_runs ORDER BY started_at DESC LIMIT 1"
+    ).fetchone()
+    conn.close()
+
+    assert run_record[0] == "completed"
+    summary = json.loads(run_record[1])
+    assert summary["total_scraped"] == 6
+    assert summary["fresh_processed"] == 2
+    assert summary["duplicates_skipped"] == 1
+    assert summary["stale_skipped"] == 1
+    assert summary["expired_skipped"] == 1
+    assert summary["already_emailed_skipped"] == 1
+    assert summary["high"] == 1
+    assert summary["explore"] == 1
+    assert summary["email_delivery"] == "sent"
+

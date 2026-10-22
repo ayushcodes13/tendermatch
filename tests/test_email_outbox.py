@@ -265,3 +265,94 @@ def test_recipient_delivery_history_is_scoped_per_recipient():
     assert recipient_has_notification(conn, "first@example.com", tender["identity_key"])
     assert not recipient_has_notification(conn, "second@example.com", tender["identity_key"])
     assert batch_id is not None
+
+
+def test_smtp_timeout_before_acceptance_records_failed_and_schedules_backoff():
+    conn = make_db()
+    tender = make_tender(conn)
+    now = datetime(2026, 10, 21, 12, 0, tzinfo=timezone.utc)
+    batch_id = queue_digest(conn, "sales@example.com", "Subject", "Body", [tender], now=now)
+
+    def timeout_sender(subject, body, recipient):
+        raise TimeoutError("Connection timed out connecting to mail server")
+
+    success = deliver_batch(conn, batch_id, timeout_sender, now=now)
+    assert success is False
+
+    batch = conn.execute(
+        "SELECT state, attempt_count, last_error_type, next_attempt_at FROM email_batches WHERE id=?",
+        (batch_id,),
+    ).fetchone()
+    assert batch[0] == "failed"
+    assert batch[1] == 1
+    assert batch[2] == "TimeoutError"
+    assert batch[3] == "2026-10-21T12:30:00Z"
+    assert not is_already_emailed(conn, tender["identity_key"])
+
+
+def test_smtp_server_disconnect_after_data_schedules_retry_preserving_state():
+    conn = make_db()
+    tender = make_tender(conn)
+    now = datetime(2026, 10, 21, 12, 0, tzinfo=timezone.utc)
+    batch_id = queue_digest(conn, "sales@example.com", "Subject", "Body", [tender], now=now)
+
+    attempts = [0]
+
+    def disconnect_then_succeed(subject, body, recipient):
+        attempts[0] += 1
+        if attempts[0] == 1:
+            raise ConnectionResetError("Server dropped connection during DATA phase")
+
+    # Attempt 1: disconnects
+    assert deliver_batch(conn, batch_id, disconnect_then_succeed, now=now) is False
+    assert conn.execute("SELECT state FROM email_batches WHERE id=?", (batch_id,)).fetchone()[0] == "failed"
+
+    # Attempt 2: at retry time, succeeds
+    retry_time = now + timedelta(minutes=30)
+    assert due_batch_ids(conn, now=retry_time) == [batch_id]
+    results = deliver_due_batches(conn, disconnect_then_succeed, now=retry_time)
+    assert results == [(batch_id, True)]
+    assert conn.execute("SELECT state FROM email_batches WHERE id=?", (batch_id,)).fetchone()[0] == "sent"
+    assert is_already_emailed(conn, tender["identity_key"])
+
+
+def test_worker_crash_during_sending_leaves_state_recoverable():
+    conn = make_db()
+    tender = make_tender(conn)
+    now = datetime(2026, 10, 21, 12, 0, tzinfo=timezone.utc)
+    batch_id = queue_digest(conn, "sales@example.com", "Subject", "Body", [tender], now=now)
+
+    class SimulatedWorkerCrash(Exception):
+        pass
+
+    def crashing_sender(subject, body, recipient):
+        raise SimulatedWorkerCrash("Worker killed by OOM or signal during SMTP interaction")
+
+    # Delivery catches error and transitions batch to failed for retry
+    assert deliver_batch(conn, batch_id, crashing_sender, now=now) is False
+
+    batch = conn.execute("SELECT state, attempt_count FROM email_batches WHERE id=?", (batch_id,)).fetchone()
+    assert batch == ("failed", 1)
+
+
+def test_same_tender_different_recipients_both_receive_notifications():
+    conn = make_db()
+    tender = make_tender(conn)
+    now = datetime(2026, 10, 21, 12, 0, tzinfo=timezone.utc)
+
+    batch_1 = queue_digest(conn, "recipient1@example.com", "Subject 1", "Body 1", [tender], now=now)
+    assert batch_1 is not None
+
+    # Recipient 2 queueing the exact same tender must also succeed
+    batch_2 = queue_digest(conn, "recipient2@example.com", "Subject 2", "Body 2", [tender], now=now)
+    assert batch_2 is not None
+    assert batch_1 != batch_2
+
+    sent = []
+    deliver_batch(conn, batch_1, lambda s, b, r: sent.append(r), now=now)
+    deliver_batch(conn, batch_2, lambda s, b, r: sent.append(r), now=now)
+
+    assert sent == ["recipient1@example.com", "recipient2@example.com"]
+    assert recipient_has_notification(conn, "recipient1@example.com", tender["identity_key"])
+    assert recipient_has_notification(conn, "recipient2@example.com", tender["identity_key"])
+
