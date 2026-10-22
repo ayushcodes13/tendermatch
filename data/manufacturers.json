@@ -766,17 +766,16 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
+            "installation",
             "maintenance",
             "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
             "replacement",
             "tool production",
-            "tool reconditioning"
+            "tool reconditioning",
+            "operator training",
+            "remote diagnostics",
+            "system upgrades",
+            "customer support"
         ],
         "website": "https://www.staton.sk/en/home/",
         "source_links": [
@@ -784,9 +783,10 @@
             "https://statoncoating.com/products/octoarc-series/",
             "https://statoncoating.com/products/octomag-series/",
             "https://statoncoating.com/research/",
-            "https://statoncoating.com/contact/"
+            "https://statoncoating.com/contact/",
+            "https://statoncoating.com/services/"
         ],
-        "profile_version": "1.3",
+        "profile_version": "1.4",
         "profile_last_updated": "2026-10-22"
     },
     {
