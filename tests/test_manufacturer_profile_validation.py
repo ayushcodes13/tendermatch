@@ -392,6 +392,36 @@ def test_agnitron_service_terms_match_parts_and_refurbishment_sources():
     assert profile["profile_version"] == "1.7"
 
 
+def test_parteq_service_terms_are_specific_to_published_research_services():
+    profile = next(p for p in load_profiles() if p["id"] == "parteq")
+
+    assert set(profile["service_keywords"]) == {
+        "aerosol measurement services",
+        "particle characterization services",
+        "contract synthesis",
+        "process development and optimization",
+        "scale-up studies",
+        "economic and technical process analysis",
+        "equipment prototype design",
+        "turn-key production system realization",
+        "nanopowder development and production",
+        "functionalized particle synthesis to customer specifications",
+    }
+    assert not {
+        "AMC",
+        "annual maintenance",
+        "maintenance",
+        "repair",
+        "spares",
+        "installation",
+        "commissioning",
+        "calibration",
+        "replacement",
+    } & set(profile["service_keywords"])
+    assert "https://parteq.net/en/services-in-aerosol-technology/forschungsdienstleistungen.html" in profile["source_links"]
+    assert profile["profile_version"] == "1.4"
+
+
 def test_korvus_service_signals_match_documented_support_and_training():
     profile = next(p for p in load_profiles() if p["id"] == "korvus_technology")
 
@@ -437,7 +467,7 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
     assert "environmental monitoring" not in profile["industries_served"]
     assert "aerosol measurement instruments" in profile["embedding_text"]
     assert "AQ Guard air-quality aerosol measurement" not in profile["embedding_text"]
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
