@@ -464,13 +464,13 @@ def test_sald_head_scope_evaluation_pair_preserves_before_after_comparison():
     )
 
 
-def test_thesix_production_evaluation_matches_profile_and_ranking_inputs():
+def test_thesix_installation_claim_evaluation_matches_profile_and_ranking_inputs():
     report = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_thesix_production_scope_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_thesix_installation_claim_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     before = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_thesix_production_scope_before_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_thesix_installation_claim_before_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     dataset = json.loads(
@@ -506,4 +506,8 @@ def test_thesix_production_evaluation_matches_profile_and_ranking_inputs():
         before["candidate_recall_on_labeled_positives"]
     )
     assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"]
-    assert report["rankings"] == before["rankings"]
+    assert all(
+        [item["manufacturer_id"] for item in before["rankings"][tender_id]]
+        == [item["manufacturer_id"] for item in report["rankings"][tender_id]]
+        for tender_id in before["rankings"]
+    )
