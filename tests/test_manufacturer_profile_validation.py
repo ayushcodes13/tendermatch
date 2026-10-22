@@ -661,7 +661,26 @@ def test_on_nano_profile_links_official_products_and_subsystems():
     assert "C3+ Large-Substrate Spin Coater" in profile["products"]
     assert not any("World's Largest" in product for product in profile["products"])
     assert "patented C3+ process" not in profile["embedding_text"]
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
+
+
+def test_on_nano_service_signals_are_conditional_on_order_terms():
+    profile = next(p for p in load_profiles() if p["id"] == "on_nano")
+
+    assert set(profile["service_keywords"]) == {
+        "contracted equipment installation",
+        "contracted assembly and commissioning",
+        "customer instruction for delivered equipment",
+        "defect remediation",
+        "replacement delivery",
+        "delivery of service parts",
+        "service technician deployment",
+    }
+    assert not {"AMC", "annual maintenance", "maintenance", "repair", "spares", "calibration", "upgrade"} & set(profile["service_keywords"])
+    assert "https://on-nano.com/terms-and-conditions/" in profile["source_links"]
+    assert "when included in the customer order" in profile["embedding_text"]
+    assert "verify the specific scope in the order confirmation" in profile["embedding_text"]
+    assert profile["profile_version"] == "1.4"
 
 
 def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources():

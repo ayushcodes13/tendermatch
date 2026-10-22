@@ -2098,8 +2098,8 @@
   "profile_metadata_refresh": {
     "run_generated_at_utc": "2026-10-22T05:50:37+00:00",
     "run_manufacturer_profiles_sha256": "b34332cc3d7a7391ecaade31c049fef432314a98a740ff5478e344989a26d6b0",
-    "current_manufacturer_profiles_sha256": "db113c0c2c2b0dcef1d1aafd2c0d1334355a69b58a9f15fd9793412708653b78",
-    "current_ranking_profile_inputs_sha256": "3c73d2a6980c7e5851cb21f731f677d6bcba367820026523a61cb8a929ce3fb9",
+    "current_manufacturer_profiles_sha256": "e704d94884322e8e6c7c436df8443b706b7d97c0803f32cad122f11e5351fd1c",
+    "current_ranking_profile_inputs_sha256": "96a82f1087a6d1a7c1d3563a627846f7e3a590ae4e573c8ee04d11f42c59d418",
     "rankings_reused": false,
     "rankings_current_for_profile_inputs": false,
     "metadata_updates": [
@@ -2114,8 +2114,10 @@
       "AdNaNoTek: generic equipment-service claims were removed; retained only documented customer support, technical support, training, and technology consultation from its official About page.",
       "AdNaNoTek: generic service signals removed, retaining official-about-page customer/technical support, training, and technology consultation.",
       "AdNaNoTek: generic equipment-service signals were removed; retained official customer/technical services, support, training, and technology consultation.",
-      "AdNaNoTek: narrowed service terms, while explicit source-backed embedding context keeps unverified service tenders visible for manual checking."
+      "AdNaNoTek: narrowed service terms, while explicit source-backed embedding context keeps unverified service tenders visible for manual checking.",
+      "ON NANO: service signals are tied to its 2025 general terms and are conditional on the customer order; no generic AMC, maintenance, repair, spare, calibration, or upgrade service is asserted.",
+      "ON NANO: service matching now reflects contracted installation, commissioning, instruction, defect remediation, replacement, and service-parts terms; the 2025 order condition is explicit."
     ],
-    "reason": "Historical ranking snapshot and original run hashes preserved. Current profile fingerprints refreshed as metadata; historical rankings were not rerun."
+    "reason": "Historical report snapshot and original run hashes are preserved. Current profile fingerprints refreshed as metadata after later official-source audits; rankings not recomputed."
   }
 }
