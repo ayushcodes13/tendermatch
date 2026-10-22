@@ -1,0 +1,37 @@
+[Unit]
+Description=TenderMatch Procurement Intelligence Pipeline Service
+After=network-online.target local-fs.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=tendermatch
+Group=tendermatch
+WorkingDirectory=/opt/tendermatch
+
+# Load secrets and configuration
+EnvironmentFile=/etc/tendermatch/tendermatch.env
+
+# Path to durable persistent volume mount
+Environment=TENDERMATCH_DB_PATH=/var/lib/tendermatch/tenders.db
+Environment=PYTHONUNBUFFERED=1
+
+# Verify durable storage mount directory exists before start
+ExecStartPre=/usr/bin/test -d /var/lib/tendermatch
+ExecStart=/opt/tendermatch/.venv/bin/python scheduler.py
+
+Restart=always
+RestartSec=15
+
+# Security sandbox
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true
+ReadWritePaths=/var/lib/tendermatch /var/log/tendermatch
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
