@@ -15,6 +15,7 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 
 RELEVANT = "relevant"
@@ -34,6 +35,71 @@ RANKING_PROFILE_FIELDS = (
     "service_keywords",
     "negative_keywords",
 )
+
+
+def validate_dataset_provenance(dataset):
+    """Validate per-case provenance and ensure declared category counts agree.
+
+    Evaluation reports use the top-level counts to distinguish authored
+    synthetic cases from human-reviewed labels. Derive those counts from the
+    case provenance and reject absent, stale, or contradictory declarations.
+    """
+    if not isinstance(dataset, dict) or not isinstance(dataset.get("cases"), list):
+        raise ValueError("Dataset must contain a cases list")
+
+    expected_fields = ("synthetic_case_count", "human_reviewed_case_count")
+    counts = {}
+    for field in expected_fields:
+        value = dataset.get(field)
+        if type(value) is not int or value < 0:
+            raise ValueError(f"Dataset {field} must be a nonnegative integer")
+        counts[field] = value
+
+    observed = {"synthetic_case_count": 0, "human_reviewed_case_count": 0}
+    for index, case in enumerate(dataset["cases"]):
+        provenance = case.get("provenance") if isinstance(case, dict) else None
+        if not isinstance(provenance, dict) or not isinstance(provenance.get("source"), str) or not provenance["source"].strip():
+            raise ValueError(f"Dataset case {index} requires provenance source")
+
+        provenance_type = provenance.get("type")
+        review_status = provenance.get("review_status")
+        if provenance_type == "synthetic":
+            if review_status != "not_human_reviewed":
+                raise ValueError(f"Dataset case {index} has contradictory synthetic review status")
+            observed["synthetic_case_count"] += 1
+            continue
+
+        if provenance_type == "human_reviewed_feedback" and review_status == "human_adjudicated":
+            reviewer_field, timestamp_field = "adjudicator", "adjudicated_at"
+        elif provenance_type == "human_reviewed" and review_status == "human_reviewed":
+            reviewer_field, timestamp_field = "reviewer", "reviewed_at"
+        else:
+            raise ValueError(f"Dataset case {index} has unsupported or unreviewed provenance")
+
+        reviewer = provenance.get(reviewer_field)
+        timestamp = provenance.get(timestamp_field)
+        source_url = provenance.get("source_url")
+        if not isinstance(reviewer, str) or not reviewer.strip():
+            raise ValueError(f"Dataset case {index} requires a named human reviewer")
+        if not isinstance(timestamp, str) or not timestamp.strip():
+            raise ValueError(f"Dataset case {index} requires a review timestamp")
+        try:
+            parsed_timestamp = datetime.fromisoformat(timestamp.replace("Z", "+00:00"))
+        except ValueError:
+            raise ValueError(f"Dataset case {index} review timestamp must be ISO-8601") from None
+        if parsed_timestamp.tzinfo is None:
+            raise ValueError(f"Dataset case {index} review timestamp must include a timezone")
+        if not isinstance(source_url, str):
+            raise ValueError(f"Dataset case {index} requires a source URL")
+        parsed_url = urlsplit(source_url)
+        if parsed_url.scheme not in {"http", "https"} or not parsed_url.hostname or parsed_url.username or parsed_url.password:
+            raise ValueError(f"Dataset case {index} requires a valid HTTP(S) source URL")
+        observed["human_reviewed_case_count"] += 1
+
+    for field, actual in observed.items():
+        if counts[field] != actual:
+            raise ValueError(f"Dataset {field} declares {counts[field]} but provenance contains {actual}")
+    return observed
 
 
 def hash_ranking_profile_inputs(manufacturers):
@@ -64,6 +130,7 @@ def evaluate_rankings(dataset, ranked_candidates, *, latencies_ms=None, costs_by
     manufacturer_id and optionally rank. Latencies and costs are optional
     tender_id-to-number mappings.
     """
+    provenance_counts = validate_dataset_provenance(dataset)
     if any(k <= 0 for k in top_ks):
         raise ValueError("top_ks values must be positive integers")
 
@@ -194,8 +261,8 @@ def evaluate_rankings(dataset, ranked_candidates, *, latencies_ms=None, costs_by
             label: sum(case["label"] == label for case in cases)
             for label in sorted({case["label"] for case in cases})
         },
-        "human_reviewed_case_count": dataset.get("human_reviewed_case_count", 0),
-        "synthetic_case_count": dataset.get("synthetic_case_count", 0),
+        "human_reviewed_case_count": provenance_counts["human_reviewed_case_count"],
+        "synthetic_case_count": provenance_counts["synthetic_case_count"],
         "candidate_recall_on_labeled_positives": (
             found_relevant / len(relevant_cases) if relevant_cases else None
         ),
