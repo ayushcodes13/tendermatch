@@ -2083,5 +2083,18 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 68
+  "unjudged_candidate_count": 68,
+  "profile_metadata_refresh": {
+    "run_generated_at_utc": "2026-10-22T05:58:53+00:00",
+    "run_manufacturer_profiles_sha256": "b9ae6dd269ecdf90c519c29287866567806d6292b831a548353c7abb985c73a1",
+    "current_manufacturer_profiles_sha256": "aa3977caa0174e08723a05f1cabbeeacbf6bf8c396fdcb73a5d958d1cd235594",
+    "current_ranking_profile_inputs_sha256": "6ee0ffef3d7dc5ff463cc3e02459235aa35ce748c3d87f0cf401d681f862bc74",
+    "rankings_reused": false,
+    "rankings_current_for_profile_inputs": false,
+    "metadata_updates": [
+      "SALD: service signals now reflect its official terms and conditions and service-engineer description, including installation, acceptance testing, maintenance, repair, parts, support, and upgrades.",
+      "SALD: service keywords revised to match the manufacturer terms and service-engineer description, including installation, acceptance testing, maintenance, repairs, parts, support, and upgrades."
+    ],
+    "reason": "Historical run hashes and ranking snapshot preserved. Current profile fingerprints are refreshed as metadata after official-source audits; no historical ranking was rerun for the current catalog."
+  }
 }
