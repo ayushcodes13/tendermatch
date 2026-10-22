@@ -348,15 +348,6 @@ def test_pipeline_sends_meaningful_amendment_to_existing_recipient(monkeypatch, 
     monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
     monkeypatch.setattr(pipeline, "is_recent_tender", lambda tender, max_age_hours: True)
     def classify(tender, manufacturer_candidates):
-        if "flow rate 3" in tender["raw_text"]:
-            return {
-                "is_blocked": True,
-                "has_signal": False,
-                "category": "blocked",
-                "decision": "blocked",
-                "score": 0,
-                "reason": "changed text no longer matched",
-            }
         return {
             "is_blocked": False,
             "has_signal": True,
@@ -404,6 +395,125 @@ def test_pipeline_sends_meaningful_amendment_to_existing_recipient(monkeypatch, 
     assert conn.execute(
         "SELECT notification_type FROM email_notifications ORDER BY id"
     ).fetchall() == [("new_opportunity",), ("amendment_update",)]
+    conn.close()
+
+
+def test_pipeline_suppresses_blocked_amendment_for_existing_recipient(monkeypatch, tmp_path):
+    database_path = tmp_path / "amendment-blocked.sqlite3"
+    sent = []
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(pipeline, "is_recent_tender", lambda tender, max_age_hours: True)
+
+    def classify(tender, manufacturer_candidates):
+        if "flow rate 3" in tender["raw_text"]:
+            return {
+                "is_blocked": True,
+                "has_signal": False,
+                "category": "blocked",
+                "decision": "blocked",
+                "score": 0,
+                "reason": "amended text is blocked",
+            }
+        return {
+            "is_blocked": False,
+            "has_signal": True,
+            "category": "high_signal",
+            "decision": "high_signal",
+            "score": 80,
+            "reason": "initial opportunity matched",
+        }
+
+    monkeypatch.setattr(pipeline, "classify_tender", classify)
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(
+        pipeline, "send_email",
+        lambda subject, body, recipient: sent.append((subject, body, recipient)),
+    )
+
+    first = {
+        "tender_id": "REF-AMEND-BLOCKED",
+        "title": "Pump procurement",
+        "organization": "Agency",
+        "published_date": "2026-10-21",
+        "closing_date": "2026-11-01",
+        "source_portal": "cppp",
+        "source_url": "https://agency.example/tenders/REF-AMEND-BLOCKED",
+        "raw_text": "Technical specification: flow rate 2 L/min",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [first])
+    pipeline.run_pipeline()
+
+    revised = {
+        **first,
+        "closing_date": "2026-11-20",
+        "raw_text": "Technical specification: flow rate 3 L/min",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [revised])
+    pipeline.run_pipeline()
+
+    # Initial opportunity sent, but blocked amendment must NOT be emailed
+    assert len(sent) == 1
+    conn = sqlite3.connect(database_path)
+    assert conn.execute(
+        "SELECT notification_type FROM email_notifications ORDER BY id"
+    ).fetchall() == [("new_opportunity",)]
+    conn.close()
+
+
+def test_pipeline_suppresses_stale_or_expired_amendment_for_existing_recipient(monkeypatch, tmp_path):
+    database_path = tmp_path / "amendment-expired.sqlite3"
+    sent = []
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+
+    # Initially fresh; on second run marked not recent (expired / stale)
+    recent_flags = [True, False]
+    monkeypatch.setattr(
+        pipeline, "is_recent_tender",
+        lambda tender, max_age_hours: recent_flags.pop(0) if recent_flags else False,
+    )
+    monkeypatch.setattr(pipeline, "classify_tender", lambda tender, *args, **kwargs: {
+        "is_blocked": False,
+        "has_signal": True,
+        "category": "high_signal",
+        "decision": "high_signal",
+        "score": 80,
+        "reason": "test fixture",
+    })
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(
+        pipeline, "send_email",
+        lambda subject, body, recipient: sent.append((subject, body, recipient)),
+    )
+
+    first = {
+        "tender_id": "REF-AMEND-EXPIRED",
+        "title": "Equipment procurement",
+        "organization": "Agency",
+        "published_date": "2026-10-21",
+        "closing_date": "2026-11-01",
+        "source_portal": "cppp",
+        "source_url": "https://agency.example/tenders/REF-AMEND-EXPIRED",
+        "raw_text": "Quantity: 10 units",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [first])
+    pipeline.run_pipeline()
+
+    revised = {
+        **first,
+        "closing_date": "2026-10-01",  # Past / expired date
+        "raw_text": "Quantity: 15 units",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [revised])
+    pipeline.run_pipeline()
+
+    # Expired amendment must NOT be emailed
+    assert len(sent) == 1
+    conn = sqlite3.connect(database_path)
+    assert conn.execute(
+        "SELECT notification_type FROM email_notifications ORDER BY id"
+    ).fetchall() == [("new_opportunity",)]
     conn.close()
 
 

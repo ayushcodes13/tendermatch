@@ -209,7 +209,6 @@ def _execute_pipeline(conn, run_id, started_clock, source_results):
                 notification_type = AMENDMENT_UPDATE
                 new_t["amendment"] = latest_amendment
                 new_t["notification_type"] = notification_type
-                updated_tenders.append(new_t)
             elif notification_exists(conn, RECEIVER_EMAIL, new_t, NEW_OPPORTUNITY):
                 already_emailed += 1
                 print(f"[{status_str}] Skipping tender already notified to this recipient: {new_t.get('title')}")
@@ -328,13 +327,12 @@ def _execute_pipeline(conn, run_id, started_clock, source_results):
         if new_t.get("document_links") and category in {"high_signal", "explore"}:
             document_candidates.append(new_t)
 
-        if category == "high_signal":
-            if notification_type != AMENDMENT_UPDATE:
-                high_tenders.append(new_t)
-
+        if notification_type == AMENDMENT_UPDATE:
+            updated_tenders.append(new_t)
+        elif category == "high_signal":
+            high_tenders.append(new_t)
         elif category == "explore":
-            if notification_type != AMENDMENT_UPDATE:
-                explore_tenders.append(new_t)
+            explore_tenders.append(new_t)
 
     if DOCUMENT_ALLOWED_HOSTS and DOCUMENT_STORAGE_DIR and document_candidates:
         retrievals = retrieve_candidate_documents(
