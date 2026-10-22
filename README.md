@@ -66,7 +66,7 @@ For persistent recurring operation, use a supervised Python VM or container with
 
 `data/evaluation/golden_tender_cases.json` contains 18 synthetic adversarial examples. Human-reviewed examples are maintained separately when explicitly adjudicated. The recorded baseline and threshold sensitivity report are synthetic diagnostics, not accuracy claims. No live end-to-end portal-to-email run has been performed as part of the deterministic test suite.
 
-Manufacturer profiles currently lack claim-level source links, profile versions, and last-updated dates. Profile validation checks structure, not the truth of product or capability claims. A profile website alone is not proof of every listed capability.
+Manufacturer profiles include profile-level source links, version numbers, and last-updated dates, but do not yet map every product or capability claim to its own source. Profile validation checks structure, not the truth of each claim. A profile website alone is not proof of every listed capability.
 
 ## Feedback and documents
 
