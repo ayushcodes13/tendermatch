@@ -24,7 +24,7 @@ jobs:
           cache: pip
 
       - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest numpy requests beautifulsoup4 python-dotenv 'pypdf>=6.21,<7'
+        run: python -m pip install --upgrade pip pytest numpy requests beautifulsoup4 python-dotenv 'pypdf>=6.21,<7' 'cryptography>=44,<47'
 
       - name: Run deterministic regression suite
         run: >-
@@ -53,6 +53,7 @@ jobs:
           tests/test_feedback_adjudication.py
           tests/test_pipeline_run_ledger.py
           tests/test_database_backup.py
+          tests/test_cache_encryption.py
           tests/test_safe_error_logging.py
           tests/test_deployment_smoke.py
           tests/test_workflow_contract.py
