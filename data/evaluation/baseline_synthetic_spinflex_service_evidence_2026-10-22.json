@@ -96,7 +96,7 @@
     "SYN-VACUUM-CLEANER-010": 15.635250005288981
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "28bb812ee3a18a5cfce26b3fbe257b5caf095dfaf5796b57addefd8fc062da32",
+    "current_manufacturer_profiles_sha256": "0aea9945023b49da1b9ca1dd8dd99d508ec7679b3d8ab7c8ba74607584de95ec",
     "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
     "metadata_updates": [
       "SALD: service signals now reflect its official terms and conditions and service-engineer description, including installation, acceptance testing, maintenance, repair, parts, support, and upgrades.",
@@ -118,13 +118,16 @@
       "GeniCore: removed generalized installation language from matching text; official installation and commissioning evidence is scoped to U-FAST FLASH.",
       "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment.",
       "ParteQ: removed unsupported low-competition claim from matching text; official sources describe products and services, not tender competition levels.",
-      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications."
+      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications.",
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
     "reason": "Historical report snapshot and original run hashes are preserved. Current profile fingerprints refreshed as metadata after later official-source audits; rankings not recomputed. Original sentence-transformers ranking snapshot and run hashes remain unchanged.",
     "run_generated_at_utc": "2026-10-22T05:58:53+00:00",
-    "run_manufacturer_profiles_sha256": "b9ae6dd269ecdf90c519c29287866567806d6292b831a548353c7abb985c73a1"
+    "run_manufacturer_profiles_sha256": "b9ae6dd269ecdf90c519c29287866567806d6292b831a548353c7abb985c73a1",
+    "run_ranking_profile_inputs_sha256": "60402996e7f7aa19b2da206414f599a3a2877744ba465b2947ee881f5f0d9204",
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
   },
   "ranking_metrics": {
     "1": {

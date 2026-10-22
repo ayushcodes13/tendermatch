@@ -35,6 +35,7 @@
     "service_keywords": { "$ref": "#/$defs/nonEmptyStringArray" },
     "exclusions": { "$ref": "#/$defs/nonEmptyStringArray" },
     "supported_services": { "$ref": "#/$defs/nonEmptyStringArray" },
+    "profile_warnings": { "$ref": "#/$defs/nonEmptyStringArray" },
     "source_links": {
       "type": "array",
       "items": { "type": "string", "format": "uri" }

@@ -102,7 +102,7 @@
     }
   ],
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "28bb812ee3a18a5cfce26b3fbe257b5caf095dfaf5796b57addefd8fc062da32",
+    "current_manufacturer_profiles_sha256": "0aea9945023b49da1b9ca1dd8dd99d508ec7679b3d8ab7c8ba74607584de95ec",
     "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
@@ -167,13 +167,16 @@
       "GeniCore: removed generalized installation language from matching text; official installation and commissioning evidence is scoped to U-FAST FLASH.",
       "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment.",
       "ParteQ: removed unsupported low-competition claim from matching text; official sources describe products and services, not tender competition levels.",
-      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications."
+      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications.",
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
     "reason": "Historical report snapshot and original run hashes are preserved. sentence-transformers rankings remain tied to the original run; current profile fingerprints refreshed as metadata after later official-source audits, with rankings not recomputed.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
-    "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
+    "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374",
+    "run_ranking_profile_inputs_sha256": "fc026237ebb51ecbcc7c2aca82e2ff17f21674beea2fba373f6f3cdc0e0a4a81",
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
   },
   "ranking_metrics": {
     "1": {

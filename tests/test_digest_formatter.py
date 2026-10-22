@@ -128,6 +128,19 @@ def test_exploration_candidate_is_clearly_reviewable_and_invalid_link_is_not_ren
     assert "confirm product fit and eligibility before pursuing" in body
 
 
+def test_manufacturer_profile_warning_is_rendered_as_evidence_to_confirm():
+    _, body = format_email([{
+        "title": "Laboratory instrument supply",
+        "organization": "Institute",
+        "matches": [{
+            "manufacturer_name": "Instrument Supplier",
+            "profile_warnings": ["Verify current regional authorization before relying on distributor support."],
+        }],
+    }], [], {})
+
+    assert "Evidence to confirm: Verify current regional authorization" in body
+
+
 def test_amendment_digest_includes_updated_opportunity_context_once():
     _, body = format_email([], [], {}, updated_tenders=[{
         "title": "Pump procurement",

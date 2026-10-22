@@ -244,6 +244,7 @@ def run_current_matcher(dataset, *, top_k=5):
             "manufacturer_id", "manufacturer_name", "rank", "base_semantic_score",
             "score", "keyword_hits", "product_hits", "category_hits", "alias_hits",
             "concept_hits", "service_hits", "negative_hits", "contextual_negative_hits", "reason_codes",
+            "profile_warnings",
         )
         rankings[tender_id] = [
             {key: candidate[key] for key in evidence_fields if key in candidate}

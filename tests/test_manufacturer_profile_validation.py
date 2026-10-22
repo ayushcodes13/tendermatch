@@ -107,7 +107,7 @@ def test_pg_instruments_profile_has_official_product_and_application_sources():
     assert "gas_chromatography" not in profile["concepts"]
     assert "atomic fluorescence spectrometers" in profile["products"]
     assert "food and beverage quality control and monitoring" in profile["industries_served"]
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_spinflex_microwave_amplifier_scope_matches_its_official_product_page():
@@ -545,7 +545,10 @@ def test_pg_instruments_service_terms_are_limited_to_documented_support():
     }
     assert not {"AMC", "annual maintenance", "maintenance", "repair", "commissioning", "calibration"} & set(profile["service_keywords"])
     assert "https://storage.mtender.gov.md/get/b70ad211-467f-476d-a519-99540a51cd56-1637088115424" in profile["source_links"]
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_warnings"] == [
+        "A manufacturer-signed 2021 authorization documents a Moldova-specific distributor appointment; verify current authorization and requested service scope before relying on it."
+    ]
+    assert profile["profile_version"] == "1.4"
 
 
 def test_nordiko_service_terms_match_official_service_and_support_page():

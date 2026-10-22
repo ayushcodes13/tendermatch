@@ -117,6 +117,7 @@ class TenderMatcher:
                 "manufacturer_id": manufacturer.get("id"),
                 "manufacturer_name": manufacturer.get("name"),
                 "manufacturer_source_links": manufacturer.get("source_links", []) or [],
+                "profile_warnings": manufacturer.get("profile_warnings", []) or [],
                 "rank": rank,
 
                 "base_semantic_score": round(base_score, 4),
