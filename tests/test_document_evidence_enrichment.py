@@ -274,3 +274,281 @@ def test_pipeline_executes_document_enrichment_end_to_end(monkeypatch, tmp_path)
     assert len(sent) == 1
     subject, body, recipient = sent[0]
     assert "Document review: Official PDF verified natively across 1 page(s)." in body
+
+
+# ==============================================================================
+# P0 Verification Semantics Tests: Numerical, Domains, Claims, and Scope
+# ==============================================================================
+
+def test_numerical_parameter_mismatch_creates_explicit_conflict():
+    """Tender requiring 1500 C temperature when manufacturer max is 1100 C triggers explicit conflict."""
+    catalog = [
+        {
+            "id": "korvus",
+            "name": "Korvus Technology",
+            "products": ["HEX deposition system"],
+            "known_limitations": ["Maximum process temperature is 1100 C"],
+        }
+    ]
+    tender = {
+        "title": "Ultra High Temperature Annealing System",
+        "category": "high_signal",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}],
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Must support substrate heating up to 1500 C in high vacuum",
+                    "evidence": {"page": 1, "quote": "Must support substrate heating up to 1500 C in high vacuum"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    evidence = enriched["document_evidence"]
+    assert len(evidence["conflicts"]) == 1
+    conflict = evidence["conflicts"][0]
+    assert conflict["technical_compatibility"] == "explicit_conflict"
+    assert "1500 °C" in conflict["conflict_reason"]
+    assert "1100 °C" in conflict["conflict_reason"]
+    assert enriched["category"] == "explore"
+
+
+def test_incompatible_equipment_family_creates_explicit_conflict():
+    """Tender requiring gas chromatography when manufacturer makes PVD triggers explicit conflict."""
+    catalog = [
+        {
+            "id": "korvus",
+            "name": "Korvus Technology",
+            "products": ["HEX PVD system"],
+            "negative_keywords": ["gas chromatography", "medical infusion"],
+        }
+    ]
+    tender = {
+        "title": "Gas Chromatography System Procurement",
+        "category": "high_signal",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}],
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Supply of dual-channel gas chromatography system with flame detector",
+                    "evidence": {"page": 1, "quote": "Supply of dual-channel gas chromatography system with flame detector"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    assert len(enriched["document_evidence"]["conflicts"]) == 1
+    assert "Incompatible equipment domain" in enriched["document_evidence"]["conflicts"][0]["conflict_reason"]
+
+
+def test_source_scope_contradiction_does_not_create_false_conflict():
+    """Tender explicitly excluding civil work from contractor scope must not trigger civil work conflict."""
+    catalog = [
+        {
+            "id": "korvus",
+            "name": "Korvus Technology",
+            "products": ["HEX deposition system", "thin film deposition"],
+            "negative_keywords": ["civil construction"],
+        }
+    ]
+    tender = {
+        "title": "Thin Film Sputtering Unit",
+        "category": "high_signal",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}, {"page": 2}],
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Civil construction works and foundation laying are strictly excluded from bidder scope; vendor only supplies deposition system",
+                    "evidence": {"page": 2, "quote": "Civil construction works and foundation laying are strictly excluded from bidder scope"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    # The negative keyword 'civil construction' is excluded from bidder scope, so no conflict is raised
+    assert len(enriched["document_evidence"]["conflicts"]) == 0
+    assert enriched.get("has_document_conflicts") is not True
+
+
+def test_missing_technical_specifications_flags_insufficient_evidence():
+    """Generic equipment terms lacking technical specs must not become verified matches."""
+    catalog = [
+        {
+            "id": "korvus",
+            "name": "Korvus Technology",
+            "products": ["HEX deposition system"],
+            "keywords": ["vacuum"],
+        }
+    ]
+    tender = {
+        "title": "Laboratory Procurement",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}],
+        "fields": {
+            "technical_specifications": [
+                {
+                    "value": "vacuum pump",
+                    "evidence": {"page": 1, "quote": "Item 1: vacuum pump"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    evidence = enriched["document_evidence"]
+    assert len(evidence["verified_requirements"]) == 0
+    assert "vacuum pump" in evidence["insufficient_evidence"]
+
+
+def test_service_only_tender_against_equipment_maker_flags_conflict():
+    """Third-party maintenance tenders against equipment manufacturers trigger conflict."""
+    catalog = [
+        {
+            "id": "korvus",
+            "name": "Korvus Technology",
+            "products": ["HEX PVD system"],
+            "offered_services": ["training on HEX systems only"],
+        }
+    ]
+    tender = {
+        "title": "Third-Party AMC Tender",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}],
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Comprehensive annual maintenance contract for multi-vendor laboratory balances",
+                    "evidence": {"page": 1, "quote": "Comprehensive annual maintenance contract for multi-vendor laboratory balances"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    assert len(enriched["document_evidence"]["conflicts"]) == 1
+    assert "Service scope mismatch" in enriched["document_evidence"]["conflicts"][0]["conflict_reason"]
+
+
+def test_model_specific_capability_mismatch_creates_conflict():
+    """Tender requiring e-beam evaporation against sputtering-only platform creates conflict."""
+    catalog = [
+        {
+            "id": "teer",
+            "name": "Teer Coatings Limited",
+            "products": ["UDP magnetron sputtering system"],
+            "known_limitations": ["Platform is sputtering only; no e-beam evaporation supported"],
+        }
+    ]
+    tender = {
+        "title": "E-beam Evaporation System",
+        "matches": [{"manufacturer_id": "teer", "manufacturer_name": "Teer Coatings Limited"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}],
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Must include electron beam evaporation source with 6-pocket turret",
+                    "evidence": {"page": 1, "quote": "Must include electron beam evaporation source with 6-pocket turret"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    assert len(enriched["document_evidence"]["conflicts"]) == 1
+    assert "Model capability mismatch" in enriched["document_evidence"]["conflicts"][0]["conflict_reason"]
+
+
+def test_lexical_keyword_overlap_remains_candidate_not_promoted_to_verified():
+    """General auxiliary keyword overlap without substantiated product capability remains lexical candidate."""
+    catalog = [
+        {
+            "id": "korvus",
+            "name": "Korvus Technology",
+            "products": ["HEX deposition system"],
+            "keywords": ["vacuum chamber", "high precision", "mounting flange"],
+        }
+    ]
+    tender = {
+        "title": "Custom Metal Fabrication",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}],
+        "fields": {
+            "technical_specifications": [
+                {
+                    "value": "High precision custom apparatus with vacuum chamber and mounting flange",
+                    "evidence": {"page": 1, "quote": "High precision custom apparatus with vacuum chamber and mounting flange"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    evidence = enriched["document_evidence"]
+    # Does NOT become verified requirement!
+    assert len(evidence["verified_requirements"]) == 0
+    # Remains in lexical candidates
+    assert len(evidence["lexical_candidates"]) == 1
+    candidate = evidence["lexical_candidates"][0]
+    assert candidate["technical_compatibility"] == "lexical_candidate"
+    assert "Lexical keyword overlap detected" in candidate["notes"]
+
+
+def test_human_disposition_surfaced_on_assessed_requirements():
+    """Salesperson adjudication feedback is tracked under human_disposition."""
+    catalog = [
+        {
+            "id": "korvus",
+            "name": "Korvus Technology",
+            "products": ["HEX deposition system", "thin film deposition"],
+        }
+    ]
+    tender = {
+        "title": "Thin Film Research System",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+        "feedback": [
+            {
+                "manufacturer_id": "korvus",
+                "label": "worth_pursuing",
+                "reviewer": "sales-lead@example.com",
+            }
+        ],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1}],
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Modular thin film deposition system for educational research",
+                    "evidence": {"page": 1, "quote": "Modular thin film deposition system for educational research"},
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, catalog)
+    evidence = enriched["document_evidence"]
+    assert len(evidence["verified_requirements"]) == 1
+    req = evidence["verified_requirements"][0]
+    assert req["human_disposition"] == "reviewed_worth_pursuing"
+    assert req["technical_compatibility"] == "technical_match_supported"
+    assert req["source_extraction_validity"] == "source_verified"
