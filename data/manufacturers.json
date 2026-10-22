@@ -35,7 +35,7 @@
             "sensor applications",
             "academic R&D"
         ],
-        "embedding_text": "Supply, procurement, and installation of modular PVD coating systems including magnetron sputtering, thermal evaporation, and electron beam evaporation systems used in research and laboratory environments.\nUsed in universities and R&D labs for thin film deposition, materials research, nanotechnology, and experimental coating development.\nAlso referred to as PVD coating system, thin film deposition unit, sputtering system, or vacuum deposition system for research applications.\nSpecialized in compact, modular, and reconfigurable PVD systems for academic and research use.",
+        "embedding_text": "Korvus Technology designs and manufactures modular PVD systems for research and laboratory use. Its HEX series supports electron-beam evaporation, RF and DC sputtering including HiPIMS, thermal evaporation, and low-temperature organic evaporation. The product range includes modular PVD platforms and deposition sources for thin-film research. Korvus publishes teaching and training resources for thin-film research and describes customer support for HEX users. Confirm tender-specific system configuration and commercial terms against official documentation.",
         "keywords": [
             "PVD",
             "thin film deposition",
@@ -58,12 +58,9 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "installation",
-            "maintenance",
-            "servicing",
             "customer support",
-            "operator training",
-            "system upgrades"
+            "thin-film training",
+            "PVD training"
         ],
         "website": "https://korvustech.com/",
         "source_links": [
@@ -78,7 +75,7 @@
             "https://korvustech.com/latest-developments-of-the-hex-series/",
             "https://korvustech.com/hex-online-user-meeting/"
         ],
-        "profile_version": "1.3",
+        "profile_version": "1.4",
         "profile_last_updated": "2026-10-22"
     },
     {

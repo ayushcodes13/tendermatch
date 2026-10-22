@@ -89,7 +89,7 @@ def test_korvus_profile_has_dedicated_tes_thermal_evaporation_source():
 
     assert "TES Thermal Boat Evaporation" in profile["products"]
     assert "https://korvustech.com/pvd-thermal-evaporation/" in profile["source_links"]
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_pg_instruments_profile_has_official_product_and_application_sources():
@@ -332,7 +332,7 @@ def test_korvus_profile_links_named_deposition_sources():
         "https://korvustech.com/pvd-thermal-evaporation/",
         "https://korvustech.com/wp-content/uploads/2025/01/Korvus-2pp-TAU.pdf",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_nordiko_profile_links_official_model_and_process_sources():
@@ -466,14 +466,20 @@ def test_parteq_service_terms_are_specific_to_published_research_services():
 def test_korvus_service_signals_match_documented_support_and_training():
     profile = next(p for p in load_profiles() if p["id"] == "korvus_technology")
 
-    assert {
+    assert "installation" not in profile["embedding_text"].lower()
+    assert "maintenance" not in profile["embedding_text"].lower()
+    assert "designs and manufactures modular PVD systems" in profile["embedding_text"]
+    assert profile["service_keywords"] == [
+        "customer support",
+        "thin-film training",
+        "PVD training",
+    ]
+    assert not {
         "installation",
         "maintenance",
         "servicing",
-        "customer support",
-        "operator training",
         "system upgrades",
-    } == set(profile["service_keywords"])
+    } & set(profile["service_keywords"])
     assert not {
         "AMC",
         "annual maintenance",
@@ -488,7 +494,7 @@ def test_korvus_service_signals_match_documented_support_and_training():
         "https://korvustech.com/latest-developments-of-the-hex-series/",
         "https://korvustech.com/hex-online-user-meeting/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sources():

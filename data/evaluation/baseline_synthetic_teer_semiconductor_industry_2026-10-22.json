@@ -95,6 +95,18 @@
     "SYN-UPDATED-014": 15.450208011316136,
     "SYN-VACUUM-CLEANER-010": 12.974209006642923
   },
+  "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "d5023adeed45e38ccf0a3ca34f789a623b48fb3ff09b4e85a7e2a42f67676807",
+    "current_ranking_profile_inputs_sha256": "f902a97b5fe1d7aa5f845fbb9341c7f9f7b76681efd38800ce070752b7008104",
+    "metadata_updates": [
+      "Korvus service signals narrowed to official customer-support and thin-film/PVD training evidence; generic installation, maintenance, servicing, and system-upgrade claims removed."
+    ],
+    "rankings_current_for_profile_inputs": false,
+    "rankings_reused": false,
+    "reason": "Historical report snapshot and original run hashes are preserved. Current profile fingerprints refreshed as metadata after later official-source audits; rankings not recomputed. Original sentence-transformers ranking snapshot and run hashes remain unchanged.",
+    "run_generated_at_utc": "2026-10-22T06:24:09+00:00",
+    "run_manufacturer_profiles_sha256": "db256dec612cd24cd745efe536d0b4c39e2864177b5c6429bdc79dde970d1ef4"
+  },
   "ranking_metrics": {
     "1": {
       "eligible_tender_count": 0,
