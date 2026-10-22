@@ -2094,5 +2094,17 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 68
+  "unjudged_candidate_count": 68,
+  "profile_metadata_refresh": {
+    "run_generated_at_utc": "2026-10-22T05:44:04+00:00",
+    "run_manufacturer_profiles_sha256": "8aaab49710eaa435ddd97811d7e769f536fd126447d1c8b6264400bb69bd17b3",
+    "current_manufacturer_profiles_sha256": "222a2273bc2fcc597e6f8916f30e25890dc4194c23c82f00df5cfbddd99ee028",
+    "current_ranking_profile_inputs_sha256": "6c240b3ab442552b7e796837cefad74807a7d9a2c8d6a057564ce8f624acfe27",
+    "rankings_reused": false,
+    "rankings_current_for_profile_inputs": false,
+    "metadata_updates": [
+      "ParteQ GmbH: service keywords are now restricted to documented aerosol measurements, characterization, contract synthesis, process development, scale-up, technical/economic analysis, prototype design, turnkey systems, nanopowder production, and customer-specific functionalized-particle synthesis."
+    ],
+    "reason": "Historical Agnitron run remains unchanged. Current profile hashes are refreshed after the subsequent ParteQ service-scope review; this report retains its original ranking snapshot and was not rerun for the current catalog."
+  }
 }
