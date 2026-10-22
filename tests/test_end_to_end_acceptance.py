@@ -357,7 +357,8 @@ def test_journey_f_document_intelligence_enrichment(tmp_path, monkeypatch):
 
         enriched = enrich_tender_with_document_evidence(tender, extraction)
 
-        assert enriched["document_evidence"]["completeness"] == "verified"
+        assert enriched["document_evidence"]["completeness"] == "coverage_not_assessed"
+        assert enriched["document_evidence"]["extraction_lifecycle"]["native_text_extracted"] is True
         assert enriched["document_evidence"]["pages_reviewed"] == 3
         assert len(enriched["document_evidence"]["verified_requirements"]) >= 1
         req = enriched["document_evidence"]["verified_requirements"][0]

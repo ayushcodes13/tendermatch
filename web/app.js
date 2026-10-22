@@ -213,21 +213,71 @@ function createTenderCard(tender) {
   const mfgName = topMatch ? topMatch.manufacturer_name : 'No manufacturer matched';
   const mfgId = topMatch ? topMatch.manufacturer_id : 'unassigned';
 
+  const hasConflicts = !!(tender.has_document_conflicts || (tender.document_evidence && tender.document_evidence.conflicts && tender.document_evidence.conflicts.length > 0));
+  const isUnsupported = topMatch && topMatch.claim_provenance && topMatch.claim_provenance.claim_status === 'has_conflicts';
+  const hasVerifiedDocMatch = tender.document_evidence && tender.document_evidence.verified_requirements && tender.document_evidence.verified_requirements.length > 0;
+
+  // Calibrated screening label for Q1 (Worth Reviewing?)
+  let q1Worth = 'Needs technical verification';
+  if (hasConflicts) {
+    q1Worth = 'Explicit technical conflict';
+  } else if (isUnsupported) {
+    q1Worth = 'Unsupported';
+  } else if (topMatch && topMatch.score >= 0.70 && hasVerifiedDocMatch) {
+    q1Worth = 'Strong screening signal';
+  } else if (topMatch && topMatch.score >= 0.70) {
+    q1Worth = 'Potential fit';
+  } else if (topMatch && topMatch.score >= 0.40) {
+    q1Worth = 'Needs technical verification';
+  } else {
+    q1Worth = 'Needs technical verification';
+  }
+
   // Badge determination
   let badgeHtml = '';
   if (isAmended) {
     badgeHtml = '<span class="badge badge-updated">Corrigendum / Updated</span>';
-  } else if (topMatch && topMatch.score >= 0.70) {
-    badgeHtml = '<span class="badge badge-high">High Signal</span>';
+  } else if (hasConflicts) {
+    badgeHtml = '<span class="badge badge-conflict">Explicit Conflict</span>';
+  } else if (q1Worth === 'Strong screening signal') {
+    badgeHtml = '<span class="badge badge-high">Strong Screening Signal</span>';
+  } else if (q1Worth === 'Potential fit') {
+    badgeHtml = '<span class="badge badge-explore">Potential Fit</span>';
   } else {
-    badgeHtml = '<span class="badge badge-explore">Exploration Candidate</span>';
+    badgeHtml = '<span class="badge badge-explore">Needs Technical Verification</span>';
   }
 
   // Decision 6 questions
-  const q1Worth = topMatch && topMatch.score >= 0.70 ? 'High probability fit' : 'Moderate signal; review requirements';
   const q2Mfg = topMatch ? `${mfgName} (ID: ${mfgId})` : 'Unassigned manufacturer';
-  const q3Why = topMatch ? `Semantic score: ${(topMatch.score * 100).toFixed(0)}%` : 'General keywords in listing';
-  const q4Unproven = tender.unverified_requirements ? tender.unverified_requirements.join('; ') : 'Document specs unverified natively';
+
+  let q3Why = 'General keywords in listing';
+  if (topMatch) {
+    const hits = [
+      ...(topMatch.product_hits || []),
+      ...(topMatch.concept_hits || []),
+      ...(topMatch.keyword_hits || []),
+    ];
+    const hitsText = hits.length > 0 ? ` [${hits.slice(0, 3).join(', ')}]` : '';
+    q3Why = `Heuristic screening score: ${topMatch.score.toFixed(2)} (uncalibrated signal; not a probability)${hitsText}`;
+  }
+
+  let q4Unproven = 'Document specs unverified natively';
+  if (tender.document_evidence) {
+    const completeness = tender.document_evidence.completeness;
+    const unverifiedList = tender.document_evidence.unverified_requirements || [];
+    if (unverifiedList.length > 0) {
+      q4Unproven = unverifiedList.slice(0, 2).join('; ');
+    } else if (completeness === 'coverage_not_assessed') {
+      q4Unproven = 'Requirement coverage not comprehensively assessed';
+    } else if (completeness === 'needs_ocr') {
+      q4Unproven = 'Document is scanned; OCR required';
+    } else if (completeness === 'no_document') {
+      q4Unproven = 'No official tender document retrieved';
+    }
+  } else if (tender.unverified_requirements && tender.unverified_requirements.length > 0) {
+    q4Unproven = tender.unverified_requirements.slice(0, 2).join('; ');
+  }
+
   const q5Changed = isAmended ? `Amendment: ${tender.amendment.change_types.join(', ')}` : 'Initial publication';
   const q6Action = isAmended ? 'Recheck amendment terms & deadline' : 'Review manufacturer fit and submit feedback';
 

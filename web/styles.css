@@ -291,6 +291,12 @@ body {
   border: 1px solid rgba(168, 85, 247, 0.3);
 }
 
+.badge-conflict {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--accent-rose);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
 .tender-title {
   font-size: 1.25rem;
   font-weight: 600;

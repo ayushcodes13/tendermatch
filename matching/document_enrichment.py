@@ -396,8 +396,12 @@ def enrich_tender_with_document_evidence(
         summary = f"Tender PDF partially reviewed ({pages_reviewed} pages); subsequent requirements unverified."
         was_truncated = True
     elif status == "extracted":
-        completeness = "verified"
-        summary = f"Official PDF verified natively across {pages_reviewed} page(s)."
+        if extraction.get("comprehensive_coverage") is True:
+            completeness = "coverage_verified"
+            summary = f"Official PDF verified natively across {pages_reviewed} page(s) with comprehensive requirement coverage."
+        else:
+            completeness = "coverage_not_assessed"
+            summary = f"Official PDF native text extracted across {pages_reviewed} page(s); requirement coverage not assessed."
         was_truncated = False
     else:
         completeness = "unavailable"
@@ -519,6 +523,16 @@ def enrich_tender_with_document_evidence(
         "summary": summary,
         "pages_reviewed": pages_reviewed,
         "was_truncated": was_truncated,
+        "extraction_lifecycle": {
+            "pdf_downloaded": status not in {"no_document", None},
+            "native_text_extracted": status in {"extracted", "text_truncated", "page_limit_reached", "partial"},
+            "ocr_required": status == "needs_ocr",
+            "extraction_truncated": was_truncated,
+            "relevant_requirements_identified": len(assessed_requirements),
+            "source_quotations_verified": sum(1 for a in assessed_requirements if a.get("source_extraction_validity") == "source_verified"),
+            "requirement_coverage_evaluated": bool(extraction.get("comprehensive_coverage")),
+            "technical_compatibility_evaluated": len(assessed_requirements) > 0,
+        },
         "verified_requirements": verified_requirements,
         "lexical_candidates": lexical_candidates,
         "conflicts": conflicts,
