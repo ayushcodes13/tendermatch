@@ -23,13 +23,21 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Restore tender DB cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - name: Restore encrypted tender DB cache
+        id: restore-db
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: data/tenders.db
-          key: tender-db-cache-${{ github.run_id }}
+          path: data/tenders.db.enc
+          key: tender-db-encrypted-v1-${{ github.run_id }}
           restore-keys: |
-            tender-db-cache-
+            tender-db-encrypted-v1-
+
+      - name: Require migrated encrypted state
+        run: |
+          if [ ! -s data/tenders.db.enc ]; then
+            echo "::error::No encrypted TenderMatch database cache was found. Complete the one-time cache migration before running the pipeline."
+            exit 1
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -39,9 +47,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Decrypt and integrity-check tender database
+        env:
+          TENDERMATCH_DB_CACHE_KEY: ${{ secrets.TENDERMATCH_DB_CACHE_KEY }}
+        run: python -m data.cache_encryption decrypt data/tenders.db.enc data/tenders.db
+
       - name: Run Tender Pipeline
         env:
           SENDER_EMAIL: ${{ secrets.EMAIL_USER }}
           SENDER_PASSWORD: ${{ secrets.EMAIL_PASS }}
           RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
         run: python -m pipeline.run
+
+      - name: Encrypt tender DB before caching
+        env:
+          TENDERMATCH_DB_CACHE_KEY: ${{ secrets.TENDERMATCH_DB_CACHE_KEY }}
+        run: python -m data.cache_encryption encrypt data/tenders.db data/tenders.db.enc
+
+      - name: Save encrypted tender DB cache
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: data/tenders.db.enc
+          key: tender-db-encrypted-v1-${{ github.run_id }}

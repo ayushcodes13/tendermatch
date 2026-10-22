@@ -8,3 +8,4 @@ openpyxl
 apscheduler
 python-dotenv
 pypdf>=6.21.1,<7
+cryptography>=44,<47
