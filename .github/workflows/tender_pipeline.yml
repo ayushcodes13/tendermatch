@@ -8,6 +8,7 @@ on:
 concurrency:
   group: tender-pipeline
   cancel-in-progress: false
+  queue: max
 
 jobs:
   run-pipeline:
