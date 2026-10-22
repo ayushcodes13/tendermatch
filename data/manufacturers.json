@@ -852,15 +852,21 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
             "installation",
             "commissioning",
+            "technical support",
+            "field servicing",
+            "maintenance",
+            "preventive maintenance",
+            "repair",
+            "on-site repairs",
             "calibration",
-            "replacement"
+            "operator training",
+            "software updates",
+            "process optimisation",
+            "system upgrades",
+            "magnetron retrofitting",
+            "coating services"
         ],
         "website": "https://www.teercoatings.co.uk",
         "source_links": [
@@ -870,9 +876,15 @@
             "https://www.teercoatings.co.uk/current-r-d-projects",
             "https://www.teercoatings.co.uk/minting-industry-systems",
             "https://www.teercoatings.co.uk/coating-portfolio",
-            "https://www.teercoatings.co.uk/completed-r-d-projects"
+            "https://www.teercoatings.co.uk/completed-r-d-projects",
+            "https://www.teercoatings.co.uk/technical-support",
+            "https://www.teercoatings.co.uk/upgrades",
+            "https://www.teercoatings.co.uk/meet-the-team",
+            "https://www.teercoatings.co.uk/service-options",
+            "https://www.teercoatings.co.uk/testing-capabilities",
+            "https://www.teercoatings.co.uk/_files/ugd/4eaae2_e629d6de1a854707bad58b915971abae.pdf"
         ],
-        "profile_version": "1.5",
+        "profile_version": "1.6",
         "profile_last_updated": "2026-10-22"
     },
     {

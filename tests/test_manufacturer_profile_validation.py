@@ -165,7 +165,7 @@ def test_teer_profile_does_not_claim_nordiko_products():
     assert "optical coating R&D" in teer["industries_served"]
     assert "semiconductor and data storage" not in teer["industries_served"]
     assert "optical and photonics" not in teer["industries_served"]
-    assert teer["profile_version"] == "1.5"
+    assert teer["profile_version"] == "1.6"
 
 
 def test_teer_fuel_cell_and_electrolyser_scope_is_limited_to_documented_r_and_d():
@@ -174,7 +174,44 @@ def test_teer_fuel_cell_and_electrolyser_scope_is_limited_to_documented_r_and_d(
     assert "fuel cell and electrolyser coating R&D" in teer["industries_served"]
     assert "fuel cells and electrolysers" not in teer["industries_served"]
     assert "https://www.teercoatings.co.uk/current-r-d-projects" in teer["source_links"]
-    assert teer["profile_version"] == "1.5"
+    assert teer["profile_version"] == "1.6"
+
+
+def test_teer_service_signals_match_documented_support_and_coating_services():
+    profile = next(p for p in load_profiles() if p["id"] == "teer_coatings")
+
+    assert {
+        "installation",
+        "commissioning",
+        "technical support",
+        "field servicing",
+        "maintenance",
+        "preventive maintenance",
+        "repair",
+        "on-site repairs",
+        "calibration",
+        "operator training",
+        "software updates",
+        "process optimisation",
+        "system upgrades",
+        "magnetron retrofitting",
+        "coating services",
+    } == set(profile["service_keywords"])
+    assert not {
+        "AMC",
+        "annual maintenance",
+        "spares",
+        "replacement",
+    } & set(profile["service_keywords"])
+    assert {
+        "https://www.teercoatings.co.uk/technical-support",
+        "https://www.teercoatings.co.uk/upgrades",
+        "https://www.teercoatings.co.uk/meet-the-team",
+        "https://www.teercoatings.co.uk/service-options",
+        "https://www.teercoatings.co.uk/testing-capabilities",
+        "https://www.teercoatings.co.uk/_files/ugd/4eaae2_e629d6de1a854707bad58b915971abae.pdf",
+    } <= set(profile["source_links"])
+    assert profile["profile_version"] == "1.6"
 
 
 def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
