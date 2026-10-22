@@ -404,9 +404,11 @@ def test_agnitron_profile_links_official_products_software_and_service_sources()
     } <= set(profile["source_links"])
     assert "Agilis GOX300 Gallium Oxide MOCVD system" in profile["products"]
     assert "GOX Series Gallium Oxide systems" not in profile["products"]
-    assert "Agilis GOX300 large-production reactor" in profile["embedding_text"]
+    assert "GOX300 supports a 305 mm wafer carrier" in profile["embedding_text"]
+    assert "Confirm wafer count, throughput, and intended production scale" in profile["embedding_text"]
+    assert "large-production reactor" not in profile["embedding_text"]
     assert "AgniTemp multiwavelength pyrometer" in profile["products"]
-    assert profile["profile_version"] == "1.8"
+    assert profile["profile_version"] == "1.9"
 
 
 def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
@@ -443,8 +445,8 @@ def test_agnitron_service_terms_match_parts_and_refurbishment_sources():
         "replacement",
     } & set(profile["service_keywords"])
     assert "https://agnitron.com/services-and-support/parts-and-services/" in profile["source_links"]
-    assert "Parts, service plans, customization, and hardware/software upgrades are documented for Emcore/Veeco, Discovery, and Enterprise legacy MOCVD systems." in profile["embedding_text"]
-    assert profile["profile_version"] == "1.8"
+    assert "Agnitron lists parts, customization, upgrades, and service plans for Emcore/Veeco, Discovery, and Enterprise MOCVD systems." in profile["embedding_text"]
+    assert profile["profile_version"] == "1.9"
 
 
 def test_parteq_service_terms_are_specific_to_published_research_services():

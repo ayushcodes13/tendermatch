@@ -135,3 +135,9 @@ Checkpoint refreshed after PR #176 merged. Both ranking and threshold evaluators
 
 - The validator previously treated missing source links, profile version, and review date as warnings. All current profiles include these fields; the schema and semantic validator now require them and fail on missing/empty values. This enforces profile-level provenance metadata while claim-by-claim source mapping remains unfinished.
 - Focused profile tests passed (46 tests); validation reports 14 profiles with 0 errors and 0 warnings. The full deterministic CI-equivalent suite passed 238 tests with one existing macOS LibreSSL/urllib3 warning. GitHub Actions `deterministic-tests` passed before merge, and `main` contains the merged change.
+
+## Agnitron GOX300 product-scope review ([PR #178](https://github.com/ayushcodes13/tendermatch/pull/178))
+
+- The official [GOX Series 300 page](https://agnitron.com/products/mocvd/agilis-series-300/) describes gallium-oxide and aluminum gallium oxide epitaxial growth and a 305 mm wafer carrier with multiple configurations. It does not establish a “large-production” reactor or production throughput.
+- Replaced the unsupported scale claim with the documented wafer-carrier configuration and an explicit note to confirm wafer count, throughput, and production scale. Updated the profile version and replaced the regression assertion that had preserved the unsupported phrase.
+- Profile tests passed (46); validation reports 14 profiles with 0 errors and 0 warnings. No embedding/ranking evaluation was run for this text change, so its matching impact is not measured; the dataset remains synthetic-only. The current profile-file and ranking-input hashes were refreshed as metadata in 91 historical reports; their original run hashes, rankings, scores, and timestamps remain unchanged, and reports are marked stale for current ranking inputs.
