@@ -106,8 +106,9 @@ def test_nippon_profile_sources_and_capabilities_are_specific_to_mercury_analysi
     assert "https://www.hg-nic.com/pe-series/pe-1000/" in profile["source_links"]
     assert "https://www.hg-nic.com/wa-series/wa-5a/" in profile["source_links"]
     assert "https://www.hg-nic.com/wa-series/wa-5f/" in profile["source_links"]
+    assert "https://www.hg-nic.com/emp-series/emp-3/" in profile["source_links"]
     assert "cement production" in profile["industries_served"]
-    assert profile["profile_version"] == "1.10"
+    assert profile["profile_version"] == "1.11"
 
 
 def test_teer_profile_does_not_claim_nordiko_products():
