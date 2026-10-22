@@ -360,7 +360,7 @@ def test_nordiko_profile_links_official_model_and_process_sources():
         "https://nordiko-tech.co.uk/ion-beam-technology",
         "https://nordiko-tech.co.uk/sputtering-technology",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.4"
+    assert profile["profile_version"] == "1.5"
 
 
 def test_nordiko_profile_omits_unsupported_reactive_ion_etching_claims():
@@ -371,17 +371,18 @@ def test_nordiko_profile_omits_unsupported_reactive_ion_etching_claims():
     assert "plasma etching and deposition" not in profile["product_categories"]
     assert "aerospace and telecommunications" not in profile["industries_served"]
     assert "ion beam milling systems" in profile["product_categories"]
-    assert "N1500-600 Large-area PECVD reactor" in profile["products"]
-    assert profile["profile_version"] == "1.4"
+    assert "N1500-600 large-area PECVD reactor (substrates up to 500 mm diameter)" in profile["products"]
+    assert profile["profile_version"] == "1.5"
 
 
 def test_nordiko_n1500_is_classified_as_pecvd_not_sputtering():
     profile = next(p for p in load_profiles() if p["id"] == "nordiko")
 
-    assert "N1500-600 Large-area PECVD reactor" in profile["products"]
+    assert "N1500-600 large-area PECVD reactor (substrates up to 500 mm diameter)" in profile["products"]
     assert "N1500 Sputtering System" not in profile["products"]
     assert "plasma-enhanced chemical vapour deposition systems" in profile["product_categories"]
-    assert profile["profile_version"] == "1.4"
+    assert "https://nordiko-tech.co.uk/nordiko-n1500" in profile["source_links"]
+    assert profile["profile_version"] == "1.5"
 
 
 def test_agnitron_profile_links_official_products_software_and_service_sources():
@@ -571,7 +572,7 @@ def test_nordiko_service_terms_match_official_service_and_support_page():
     assert "https://nordiko-tech.co.uk/service-and-support" in profile["source_links"]
     assert "Supply and procurement of industrial-scale PVD coating systems" in profile["embedding_text"]
     assert "procurement, and installation" not in profile["embedding_text"]
-    assert profile["profile_version"] == "1.4"
+    assert profile["profile_version"] == "1.5"
 
 
 def test_spinflex_service_keywords_remain_unset_without_verified_support_scope():

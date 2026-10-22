@@ -461,7 +461,7 @@
             "Nordiko 5000 Configurable Process Module",
             "N2000 Compact Sputtering System",
             "N300 Laboratory Scale Sputtering System",
-            "N1500-600 Large-area PECVD reactor"
+            "N1500-600 large-area PECVD reactor (substrates up to 500 mm diameter)"
         ],
         "industries_served": [
             "MRAM and magnetic storage",
@@ -524,7 +524,7 @@
             "https://nordiko-tech.co.uk/sputtering-technology",
             "https://nordiko-tech.co.uk/service-and-support"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {
