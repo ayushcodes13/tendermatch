@@ -2,6 +2,7 @@ from io import BytesIO
 import json
 import sqlite3
 
+import pytest
 from pypdf import PdfWriter
 from pypdf.generic import (
     DecodedStreamObject,
@@ -10,7 +11,16 @@ from pypdf.generic import (
 )
 
 from data.db import init_db
-from data.extraction import extract_pdf_requirements, record_extraction_result
+from data.extraction import (
+    MAX_PAGE_TEXT_CHARS,
+    MAX_EXTRACTED_VALUES,
+    MAX_EVIDENCE_LINE_CHARS,
+    MAX_PDF_PAGES,
+    MAX_WORKER_TIMEOUT_SECONDS,
+    _worker_environment,
+    extract_pdf_requirements,
+    record_extraction_result,
+)
 
 
 SOURCE = "https://docs.example.gov/tender/spec.pdf"
@@ -54,7 +64,7 @@ def test_extracts_only_labeled_fields_with_exact_page_evidence(tmp_path):
 
     result = extract_pdf_requirements(path, source_url=SOURCE, content_fingerprint=FINGERPRINT)
 
-    assert result["status"] == "extracted"
+    assert result["status"] == "extracted", result
     assert result["fields"]["equipment_type"][0] == {
         "value": "Laboratory centrifuge",
         "evidence": {
@@ -118,6 +128,71 @@ def test_page_and_text_limits_are_recorded(tmp_path):
         long_path, source_url=SOURCE, content_fingerprint=FINGERPRINT, max_page_text_chars=30
     )
     assert text_limited["status"] == "text_truncated"
+
+
+def test_extraction_worker_wall_clock_limit_is_enforced(tmp_path):
+    path = tmp_path / "worker-timeout.pdf"
+    path.write_bytes(make_pdf(["Quantity: 3 units"]))
+
+    result = extract_pdf_requirements(
+        path,
+        source_url=SOURCE,
+        content_fingerprint=FINGERPRINT,
+        worker_timeout_seconds=0.001,
+    )
+
+    assert result["status"] == "limited"
+    assert result["error_type"] == "WorkerTimeout"
+
+
+@pytest.mark.parametrize(
+    "limits",
+    [
+        {"max_pages": MAX_PDF_PAGES + 1},
+        {"max_page_text_chars": MAX_PAGE_TEXT_CHARS + 1},
+        {"worker_timeout_seconds": MAX_WORKER_TIMEOUT_SECONDS + 1},
+    ],
+)
+def test_worker_limits_cannot_be_raised_above_hard_caps(tmp_path, limits):
+    with pytest.raises(ValueError):
+        extract_pdf_requirements(
+            tmp_path / "not-opened.pdf",
+            source_url=SOURCE,
+            content_fingerprint=FINGERPRINT,
+            **limits,
+        )
+
+
+def test_evidence_line_and_result_count_are_bounded(tmp_path):
+    long_path = tmp_path / "long-evidence-line.pdf"
+    long_path.write_bytes(
+        make_pdf(["Technical Specifications: " + "x" * MAX_EVIDENCE_LINE_CHARS])
+    )
+    long_result = extract_pdf_requirements(
+        long_path, source_url=SOURCE, content_fingerprint=FINGERPRINT
+    )
+    assert long_result["status"] == "text_truncated"
+    assert long_result["fields"] == {}
+
+    many_path = tmp_path / "many-evidence-lines.pdf"
+    many_path.write_bytes(
+        make_pdf(["Quantity: 1" for _ in range(MAX_EXTRACTED_VALUES + 1)])
+    )
+    many_result = extract_pdf_requirements(
+        many_path, source_url=SOURCE, content_fingerprint=FINGERPRINT
+    )
+    assert many_result["status"] == "field_limit_reached"
+    assert len(many_result["fields"]["quantity"]) == MAX_EXTRACTED_VALUES
+
+
+def test_worker_environment_does_not_inherit_smtp_secrets(monkeypatch):
+    monkeypatch.setenv("SENDER_PASSWORD", "synthetic-secret")
+    monkeypatch.setenv("EMAIL_PASS", "synthetic-secret")
+
+    environment = _worker_environment()
+
+    assert "SENDER_PASSWORD" not in environment
+    assert "EMAIL_PASS" not in environment
 
 
 def test_invalid_and_encrypted_documents_are_not_treated_as_empty(tmp_path):
