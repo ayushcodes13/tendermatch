@@ -592,7 +592,7 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
     assert "Supply and installation of fuel cell testing systems" not in profile["embedding_text"]
     assert "Supply of fuel cell testing systems" in profile["embedding_text"]
     assert profile["service_keywords"] == []
-    assert profile["profile_version"] == "1.6"
+    assert profile["profile_version"] == "1.7"
 
 
 def test_adnanotek_services_are_limited_to_officially_described_support():
@@ -762,3 +762,14 @@ def test_on_nano_substrate_formats_are_not_industry_labels():
     assert "glass panel substrates" in profile["keywords"]
     assert "glass-panel substrates" in profile["embedding_text"]
     assert profile["profile_version"] == "1.5"
+
+
+def test_thesix_profile_excludes_clinical_infusion_equipment():
+    profile = next(p for p in load_profiles() if p["id"] == "thesix_solutions")
+
+    assert profile["negative_keywords"] == [
+        "medical infusion pump",
+        "patient dose control",
+        "intravenous pump",
+    ]
+    assert profile["profile_version"] == "1.7"
