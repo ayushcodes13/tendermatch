@@ -239,23 +239,25 @@ def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
 
     assert "tool sharpening and regrinding equipment" not in profile["product_categories"]
     assert "Precision Cutting and Forming Tools" not in profile["products"]
-    assert "tool production" in profile["service_keywords"]
-    assert "tool reconditioning" in profile["service_keywords"]
     assert {
         "installation",
         "maintenance",
-        "repair",
+        "tool production",
+        "tool sharpening and regrinding",
         "operator training",
         "remote diagnostics",
         "system upgrades",
+        "replacement of coating equipment parts",
         "customer support",
-    } <= set(profile["service_keywords"])
-    assert not {"AMC", "annual maintenance", "spares", "commissioning", "calibration"} & set(profile["service_keywords"])
+    } == set(profile["service_keywords"])
+    assert not {"repair", "replacement", "AMC", "annual maintenance", "spares", "commissioning", "calibration"} & set(profile["service_keywords"])
     assert "https://statoncoating.com/services/" in profile["source_links"]
     assert "https://statoncoating.com/contact/" in profile["source_links"]
     assert "https://statoncoating.com/research/" in profile["source_links"]
-    assert profile["profile_version"] == "1.4"
     assert "https://statoncoating.com/products/" in profile["source_links"]
+    assert "https://www.staton.sk/en/services/sharpening-regrinding-tools/" in profile["source_links"]
+    assert "https://www.staton.sk/en/services/tools/tool-production/" in profile["source_links"]
+    assert profile["profile_version"] == "1.5"
     assert "tool manufacturing and metalworking" in profile["industries_served"]
     assert "medical and biocompatible coatings" in profile["industries_served"]
     assert "minting and decorative coatings" in profile["industries_served"]
