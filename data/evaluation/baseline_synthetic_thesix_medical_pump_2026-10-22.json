@@ -93,6 +93,20 @@
     "SYN-UPDATED-014": 14.865082994219847,
     "SYN-VACUUM-CLEANER-010": 13.695375004317611
   },
+  "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "7adfea94a1318d3f5a4b1c837cc36c0c6c6c74fd598a838070ddd20dcb433b5c",
+    "current_ranking_profile_inputs_sha256": "98ce2dc2a1cb247680b2d407899e8aa51a46aa4e83540675f12b8eee1e7c63ad",
+    "metadata_updates": [
+      "TheSix soft medical-infusion negative signals added; original historical run hashes and rankings preserved.",
+      "SALD: service keywords narrowed to installation, acceptance testing, original-warranty services, preventive maintenance monitoring, documented machine maintenance/repair, troubleshooting, field upgrades, and related training; generic spare-parts and software/hardware-upgrade service claims removed."
+    ],
+    "rankings_current_for_profile_inputs": false,
+    "rankings_reused": false,
+    "reason": "Historical TheSix before/after run remains tied to its original profile inputs and ranking snapshot. Current profile fingerprints refreshed as metadata after the later SALD service-scope review; the rankings were not recomputed.",
+    "run_generated_at_utc": "2026-10-22T07:39:50+00:00",
+    "run_manufacturer_profiles_sha256": "132643a273087f5deb9ddb45d83fc07b521bb93119541738e6fdff4388ceacf8",
+    "run_ranking_profile_inputs_sha256": "5242d543bda881ad6fbbed45b36541763eabf4609bf7332322f4be1498bd2b04"
+  },
   "ranking_metrics": {
     "1": {
       "eligible_tender_count": 0,

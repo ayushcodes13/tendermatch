@@ -632,7 +632,7 @@ def test_sald_profile_links_patented_deposition_head_claim_to_official_sources()
         "https://spatialald.com/terms-conditions/",
         "https://spatialald.com/careers/service-engineer/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.6"
+    assert profile["profile_version"] == "1.7"
 
 
 def test_sald_service_terms_are_grounded_in_terms_and_service_role():
@@ -643,19 +643,17 @@ def test_sald_service_terms_are_grounded_in_terms_and_service_role():
         "preventive maintenance monitoring",
         "equipment maintenance services",
         "equipment repair services",
-        "spare parts",
-        "replacement parts",
-        "hardware upgrades",
-        "software upgrades",
+        "warranty service",
         "field upgrades",
-        "customer support",
-        "service engineering",
+        "technical support",
+        "upgrade-related customer training",
         "technical troubleshooting support",
     }
     assert not {"AMC", "annual maintenance", "calibration", "commissioning"} & set(profile["service_keywords"])
+    assert not {"spare parts", "replacement parts", "hardware upgrades", "software upgrades"} & set(profile["service_keywords"])
     assert "https://spatialald.com/terms-conditions/" in profile["source_links"]
     assert "https://spatialald.com/careers/service-engineer/" in profile["source_links"]
-    assert profile["profile_version"] == "1.6"
+    assert profile["profile_version"] == "1.7"
 
 
 def test_spinflex_industries_limit_health_claim_to_biomedical_research():
