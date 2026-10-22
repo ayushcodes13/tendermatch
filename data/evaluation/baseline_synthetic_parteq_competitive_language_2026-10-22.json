@@ -2061,8 +2061,8 @@
   "profile_metadata_refresh": {
     "run_manufacturer_profiles_sha256": "7f9730e3f0e02825a99e8b513273d8556b7ec60bf92f2d00c82a1615345741b6",
     "run_ranking_profile_inputs_sha256": "14089e9f150ffe15b414c2a3d3f2099381985e374e3240c25428c2bdb5e604ef",
-    "current_manufacturer_profiles_sha256": "5973ac9a3ade853a06c746915c271bf472d2b2d45ea03b942fe0897f8fcafa33",
-    "current_ranking_profile_inputs_sha256": "52702dd20e52804139bff0a3e46c04d327e793ac0422fa655c9e0288a7fc2fa8",
+    "current_manufacturer_profiles_sha256": "ba5fc772bc46fad5261830d252505b2206589dac988e349022cc55f1d98f28ba",
+    "current_ranking_profile_inputs_sha256": "60748b9b04cc13f5d4b6a9d54a9ecf92bed471f015cee37fec80bc8144458f20",
     "rankings_reused": true,
     "rankings_current_for_profile_inputs": false,
     "reason": "The recorded ranking run is retained against its exact profile snapshot; current profile hashes are tracked separately after later profile reviews.",
@@ -2071,7 +2071,8 @@
       "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged.",
       "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed.",
       "TheSix: narrowed generic battery-testing and battery-industry language to the documented flow-battery test cell and PEM electrolyzer test cell.",
-      "Nordiko: the N1500-600 product entry now records the official maximum substrate diameter of 500 mm; historical rankings remain tied to their recorded profile snapshots because a paired rerun was unavailable."
+      "Nordiko: the N1500-600 product entry now records the official maximum substrate diameter of 500 mm; historical rankings remain tied to their recorded profile snapshots because a paired rerun was unavailable.",
+      "TheSix: the generic conductivity measurement systems product label is replaced by the vendor-named TIC-95 Ionic Conductivity Cell for Membrane Conductivity Testing; no paired ranking rerun was available."
     ],
     "run_generated_at_utc": "2026-10-22T08:38:25+00:00",
     "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"

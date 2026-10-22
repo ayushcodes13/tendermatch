@@ -17,3 +17,7 @@ Current audit (2026-10-22): 14 profiles have no structural validation errors. Al
 ## Nordiko N1500 substrate capacity
 
 The official [Nordiko N1500 page](https://nordiko-tech.co.uk/nordiko-n1500) identifies the N1500-600 as a cold-wall, RF-excited PECVD reactor and says it accepts substrates up to 500 mm in diameter. The profile names that model and records the documented substrate limit explicitly so the model suffix is not mistaken for a 600 mm substrate rating. This clarification affects a ranking input; a paired matcher run was not available in the current local environment because `sentence_transformers` is not installed and the package installation attempt timed out. The deterministic profile regression test checks the source URL and capacity wording, but does not measure ranking effects.
+
+## TheSix TIC-95 conductivity product scope
+
+The official [TIC-95 product page](https://thesixtech.com/products/ionic-conductivity-cell) describes one Ionic Conductivity Cell for membrane testing, including membrane conductivity and resistance measurements. The profile now names that specific cell rather than a generic plural family of conductivity measurement systems. The revised product text affects ranking inputs; a paired matcher run was not available because `sentence_transformers` is missing locally. Historical evaluation reports retain their original run hashes and rankings and are marked as historical for the new profile fingerprint.
