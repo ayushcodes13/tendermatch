@@ -190,6 +190,7 @@ def format_email(high_tenders, explore_tenders, stats, updated_tenders=None):
     lines.append(f"Low-signal tenders: {stats.get('low', 0)}")
     lines.append(f"Blocked tenders: {stats.get('blocked', 0)}")
     lines.append(f"Stale tenders skipped: {stats.get('stale_skipped', 0)}")
+    lines.append(f"Expired tenders skipped: {stats.get('expired_skipped', 0)}")
     lines.append(f"Duplicates skipped: {stats.get('duplicates_skipped', 0)}")
     lines.append(f"Previously emailed skipped: {stats.get('already_emailed_skipped', 0)}")
     lines.append("")

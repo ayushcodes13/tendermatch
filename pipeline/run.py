@@ -370,6 +370,7 @@ def _execute_pipeline(conn, run_id, started_clock, source_results):
     print(f"Fresh processed: {len(processed)}")
     print(f"Duplicates skipped: {duplicates}")
     print(f"Stale skipped: {stale_skipped}")
+    print(f"Expired skipped: {expired_skipped}")
     print(f"Already emailed skipped: {already_emailed}")
 
     stats = {

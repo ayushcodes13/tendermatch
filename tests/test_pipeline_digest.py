@@ -112,7 +112,7 @@ def test_pipeline_reports_missing_recipient_without_attempting_email(
     assert json.loads(summary_json)["email_delivery"] == "skipped_missing_recipient"
 
 
-def test_pipeline_digest_reports_counts_for_mixed_tender_outcomes(monkeypatch, tmp_path):
+def test_pipeline_digest_reports_counts_for_mixed_tender_outcomes(monkeypatch, tmp_path, capsys):
     database_path = tmp_path / "mixed-digest.sqlite3"
     sent = []
     today = date.today().isoformat()
@@ -148,6 +148,15 @@ def test_pipeline_digest_reports_counts_for_mixed_tender_outcomes(monkeypatch, t
             "published_date": stale_date,
             "source_portal": "cppp",
             "raw_text": "Old opportunity",
+        },
+        {
+            "tender_id": "REF-EXPIRED",
+            "title": "Expired tender",
+            "organization": "Research Institute",
+            "published_date": today,
+            "closing_date": (date.today() - timedelta(days=1)).isoformat(),
+            "source_portal": "cppp",
+            "raw_text": "Expired opportunity",
         },
         {
             "tender_id": "REF-HIGH",
@@ -203,7 +212,7 @@ def test_pipeline_digest_reports_counts_for_mixed_tender_outcomes(monkeypatch, t
     monkeypatch.setattr(
         pipeline,
         "is_recent_tender",
-        lambda tender, max_age_hours: tender["title"] != "Stale tender",
+        lambda tender, max_age_hours: tender["title"] not in {"Stale tender", "Expired tender"},
     )
     monkeypatch.setattr(
         pipeline,
@@ -230,15 +239,24 @@ def test_pipeline_digest_reports_counts_for_mixed_tender_outcomes(monkeypatch, t
     assert len(sent) == 1
     _, body, recipient = sent[0]
     assert recipient == "sales@example.com"
-    assert "Total scraped: 7" in body
+    assert "Total scraped: 8" in body
     assert "Fresh tenders processed: 4" in body
     assert "High-signal opportunities: 1" in body
     assert "Exploration candidates: 1" in body
     assert "Low-signal tenders: 1" in body
     assert "Blocked tenders: 1" in body
     assert "Stale tenders skipped: 1" in body
+    assert "Expired tenders skipped: 1" in body
     assert "Duplicates skipped: 1" in body
     assert "Previously emailed skipped: 1" in body
+    assert "Expired skipped: 1" in capsys.readouterr().out
+
+    conn = sqlite3.connect(database_path)
+    summary_json = conn.execute(
+        "SELECT summary_json FROM pipeline_runs"
+    ).fetchone()[0]
+    conn.close()
+    assert json.loads(summary_json)["expired_skipped"] == 1
 
 
 def test_pipeline_does_not_suppress_distinct_tenders_with_the_same_title(monkeypatch):
