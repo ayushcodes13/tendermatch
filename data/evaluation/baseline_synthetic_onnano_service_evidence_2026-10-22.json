@@ -96,12 +96,13 @@
     "SYN-VACUUM-CLEANER-010": 12.53912498941645
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "d5023adeed45e38ccf0a3ca34f789a623b48fb3ff09b4e85a7e2a42f67676807",
+    "current_manufacturer_profiles_sha256": "204f05a16ffc008ee993b6bdadb05bc12ca56921334947853d4b12f254a6e810",
     "current_ranking_profile_inputs_sha256": "f902a97b5fe1d7aa5f845fbb9341c7f9f7b76681efd38800ce070752b7008104",
     "metadata_updates": [
       "Nippon Instruments: replaced generic service keywords with official servicing, product support, mercury measurement, training, demonstration, and application-development evidence; noted model- and region-dependent availability and discontinued-product parts limitations.",
       "Teer Coatings: removed the semiconductor coating systems industry claim because the reviewed official pages described PVD generally and did not substantiate Teer-specific semiconductor systems or deployments.",
-      "Korvus service signals narrowed to official customer-support and thin-film/PVD training evidence; generic installation, maintenance, servicing, and system-upgrade claims removed."
+      "Korvus service signals narrowed to official customer-support and thin-film/PVD training evidence; generic installation, maintenance, servicing, and system-upgrade claims removed.",
+      "ON NANO substrate format labels were removed from industries_served; ranking-profile inputs are unchanged."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,

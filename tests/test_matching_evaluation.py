@@ -780,8 +780,11 @@ def test_korvus_service_evidence_pair_preserves_ranking_diagnostic():
     profiles_path = ROOT / "data/manufacturers.json"
     profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
 
-    assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
+    assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
     assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(profiles)
+    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is True
     assert before["input_sha256"]["manufacturer_profiles"] != report["input_sha256"]["manufacturer_profiles"]
     assert before["input_sha256"]["ranking_profile_inputs"] != report["input_sha256"]["ranking_profile_inputs"]
     assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]

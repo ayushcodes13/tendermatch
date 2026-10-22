@@ -687,7 +687,7 @@ def test_on_nano_profile_links_official_products_and_subsystems():
     assert "C3+ Large-Substrate Spin Coater" in profile["products"]
     assert not any("World's Largest" in product for product in profile["products"])
     assert "patented C3+ process" not in profile["embedding_text"]
-    assert profile["profile_version"] == "1.4"
+    assert profile["profile_version"] == "1.5"
 
 
 def test_on_nano_service_signals_are_conditional_on_order_terms():
@@ -706,7 +706,7 @@ def test_on_nano_service_signals_are_conditional_on_order_terms():
     assert "https://on-nano.com/terms-and-conditions/" in profile["source_links"]
     assert "when included in the customer order" in profile["embedding_text"]
     assert "verify the specific scope in the order confirmation" in profile["embedding_text"]
-    assert profile["profile_version"] == "1.4"
+    assert profile["profile_version"] == "1.5"
 
 
 def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources():
@@ -752,3 +752,13 @@ def test_profile_cli_reports_warnings_but_only_fails_on_errors(capsys):
     output = capsys.readouterr().out
     assert result == 0
     assert "Validated 14 profiles: 0 errors, 0 warnings" in output
+
+
+def test_on_nano_substrate_formats_are_not_industry_labels():
+    profile = next(p for p in load_profiles() if p["id"] == "on_nano")
+
+    assert "GPS (Glass Panel Substrates)" not in profile["industries_served"]
+    assert "organic panels" not in profile["industries_served"]
+    assert "glass panel substrates" in profile["keywords"]
+    assert "glass-panel substrates" in profile["embedding_text"]
+    assert profile["profile_version"] == "1.5"
