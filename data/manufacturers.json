@@ -396,9 +396,10 @@
             "https://genicore.eu/products/services/",
             "https://genicore.eu/materials/",
             "https://genicore.eu/applications/",
-            "https://genicore.eu/products/graphite-dies-for-spark-plasma-sintering-systems/"
+            "https://genicore.eu/products/graphite-dies-for-spark-plasma-sintering-systems/",
+            "https://genicore.eu/products/devices/pulse-plasma-compaction-ppc/"
         ],
-        "profile_version": "1.5",
+        "profile_version": "1.6",
         "profile_last_updated": "2026-10-22"
     },
     {
