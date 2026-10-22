@@ -334,7 +334,7 @@
             "Pulse Plasma Compaction (PPC)",
             "Diamond Enhanced Cemented Carbide (DEC)",
             "Super Enhanced Ceramic - Whiskers (SEC-W)",
-            "CUBNEC (cBN Composite)",
+            "CUBNEC (Cubic Boron Nitride Enhanced Cemented Carbide)",
             "Precision Graphite Dies"
         ],
         "industries_served": [
@@ -356,6 +356,8 @@
             "graphite dies",
             "super-hard materials",
             "composite sintering",
+            "CUBNEC",
+            "Cubic Boron Nitride Enhanced Cemented Carbide",
             "vacuum furnace"
         ],
         "concepts": [
@@ -400,7 +402,7 @@
             "https://genicore.eu/products/devices/pulse-plasma-compaction-ppc/",
             "https://genicore.eu/materials/dec/"
         ],
-        "profile_version": "1.7",
+        "profile_version": "1.8",
         "profile_last_updated": "2026-10-22"
     },
     {
