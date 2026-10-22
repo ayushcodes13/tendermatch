@@ -166,7 +166,6 @@
             "UV-Vis spectrophotometers",
             "atomic absorption spectrometers",
             "atomic fluorescence spectrometers",
-            "gas chromatography systems",
             "flame photometers",
             "laboratory water purification systems"
         ],
@@ -175,7 +174,6 @@
             "atomic absorption spectrometers (AAS)",
             "UV-Vis spectrophotometers",
             "atomic fluorescence spectrometers",
-            "gas chromatography systems",
             "flame photometers",
             "water purification systems"
         ],
@@ -189,13 +187,12 @@
             "water purity testing",
             "biotechnology and life sciences"
         ],
-        "embedding_text": "P.G. Instruments Limited supplies laboratory analytical instrumentation with a focus on spectroscopy. Its published range includes ICP-OES, UV-Vis spectroscopy, atomic absorption spectroscopy, atomic fluorescence spectroscopy, gas chromatography, flame photometry, and water purification. The manufacturer lists applications in environmental monitoring and control, pharmaceutical production and quality control, food and beverage quality control, oil and gas production and monitoring, iron and steel quality control, geology and metallurgy, water purity, and biotechnology and life sciences. Confirm the required analytical method, model specifications, certifications, and support against the tender and official product evidence.",
+        "embedding_text": "P.G. Instruments Limited supplies laboratory analytical instrumentation with a focus on spectroscopy. Its published range includes ICP-OES, UV-Vis spectroscopy, atomic absorption spectroscopy, atomic fluorescence spectroscopy, flame photometry, and water purification. The manufacturer lists applications in environmental monitoring and control, pharmaceutical production and quality control, food and beverage quality control, oil and gas production and monitoring, iron and steel quality control, geology and metallurgy, water purity, and biotechnology and life sciences. Confirm the required analytical method, model specifications, certifications, and support against the tender and official product evidence.",
         "keywords": [
             "ICP-OES",
             "UV-Vis spectroscopy",
             "atomic absorption",
             "atomic fluorescence",
-            "gas chromatography",
             "flame photometry",
             "flame photometer",
             "spectrophotometer",
@@ -207,7 +204,6 @@
             "uv_vis_spectroscopy",
             "atomic_absorption_spectroscopy",
             "atomic_fluorescence_spectroscopy",
-            "gas_chromatography",
             "flame_photometry",
             "water_purification",
             "analytical_instrumentation"
@@ -234,7 +230,7 @@
             "https://www.pginstruments.com/product/t65-uv-visible-spectrophotometer/",
             "https://www.pginstruments.com/product-category/atomic_fluorescence/"
         ],
-        "profile_version": "1.1",
+        "profile_version": "1.2",
         "profile_last_updated": "2026-10-22"
     },
     {

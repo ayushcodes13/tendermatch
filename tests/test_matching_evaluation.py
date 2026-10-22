@@ -223,16 +223,19 @@ def test_synthetic_baseline_preserves_run_catalog_hash_and_tracks_ranking_inputs
     assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == (
         current_profiles_sha256
     )
-    assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(
+    assert report["input_sha256"]["ranking_profile_inputs"] != hash_ranking_profile_inputs(
         current_profiles
     )
-    assert report["profile_metadata_refresh"]["rankings_reused"] is True
+    assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == (
+        hash_ranking_profile_inputs(current_profiles)
+    )
+    assert report["profile_metadata_refresh"]["rankings_reused"] is False
+    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is False
     assert report["profile_metadata_refresh"]["run_generated_at_utc"] == report[
         "generated_at_utc"
     ]
-    assert "Only source_links and profile_version changed" in report[
-        "profile_metadata_refresh"
-    ]["reason"]
+    assert "historical" in report["profile_metadata_refresh"]["reason"]
+    assert "sentence-transformers" in report["profile_metadata_refresh"]["reason"]
     assert any(
         "Agnitron" in update
         for update in report["profile_metadata_refresh"]["metadata_updates"]
@@ -291,6 +294,10 @@ def test_synthetic_baseline_preserves_run_catalog_hash_and_tracks_ranking_inputs
     )
     assert any(
         "Nippon Instruments" in update and "AM-6F" in update
+        for update in report["profile_metadata_refresh"]["metadata_updates"]
+    )
+    assert any(
+        "P.G. Instruments" in update and "unsupported gas chromatography" in update
         for update in report["profile_metadata_refresh"]["metadata_updates"]
     )
     assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
