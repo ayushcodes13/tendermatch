@@ -605,9 +605,10 @@
             "https://www.hg-nic.com/wa-series/wa-5f/",
             "https://www.hg-nic.com/emp-series/emp-3/",
             "https://www.hg-nic.com/emp-series/emp-gold/",
-            "https://www.hg-nic.com/sgm-series/sgm-9/"
+            "https://www.hg-nic.com/sgm-series/sgm-9/",
+            "https://www.hg-nic.com/am-series/am-6f/"
         ],
-        "profile_version": "1.13",
+        "profile_version": "1.14",
         "profile_last_updated": "2026-10-22"
     },
     {
