@@ -181,11 +181,11 @@ def test_teer_profile_does_not_claim_nordiko_products():
     assert "https://www.teercoatings.co.uk/coating-portfolio" in teer["source_links"]
     assert "https://www.teercoatings.co.uk/completed-r-d-projects" in teer["source_links"]
     assert "minting and coin production" in teer["industries_served"]
-    assert "semiconductor coating systems" in teer["industries_served"]
+    assert "semiconductor coating systems" not in teer["industries_served"]
     assert "optical coating R&D" in teer["industries_served"]
     assert "semiconductor and data storage" not in teer["industries_served"]
     assert "optical and photonics" not in teer["industries_served"]
-    assert teer["profile_version"] == "1.6"
+    assert teer["profile_version"] == "1.7"
 
 
 def test_teer_fuel_cell_and_electrolyser_scope_is_limited_to_documented_r_and_d():
@@ -194,7 +194,7 @@ def test_teer_fuel_cell_and_electrolyser_scope_is_limited_to_documented_r_and_d(
     assert "fuel cell and electrolyser coating R&D" in teer["industries_served"]
     assert "fuel cells and electrolysers" not in teer["industries_served"]
     assert "https://www.teercoatings.co.uk/current-r-d-projects" in teer["source_links"]
-    assert teer["profile_version"] == "1.6"
+    assert teer["profile_version"] == "1.7"
 
 
 def test_teer_service_signals_match_documented_support_and_coating_services():
@@ -231,7 +231,7 @@ def test_teer_service_signals_match_documented_support_and_coating_services():
         "https://www.teercoatings.co.uk/testing-capabilities",
         "https://www.teercoatings.co.uk/_files/ugd/4eaae2_e629d6de1a854707bad58b915971abae.pdf",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.6"
+    assert profile["profile_version"] == "1.7"
 
 
 def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
