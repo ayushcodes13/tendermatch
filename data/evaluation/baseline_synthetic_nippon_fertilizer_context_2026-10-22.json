@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "2692b98f0ac9dd11d01c7acecff67975af92286cc20b60aeb26bb8cc00c11a10",
-    "current_ranking_profile_inputs_sha256": "6e67d5cf48252f0162edb8360d6a17203513db916a49acdc2d8982bb49659fef",
+    "current_manufacturer_profiles_sha256": "631444fa8bc86ee4d649b84ad6da21bc68b63a3ae6e5d012d3b28bdb2b1dcc2a",
+    "current_ranking_profile_inputs_sha256": "14cce0773e33ce98f74f862325e4f4e19c13b93392b2271cb1feb3742fabd0cd",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -122,11 +122,12 @@
       "AdNaNoTek: added dedicated UHV component, manipulator, and transfer-arm pages as direct provenance for transfer robots and manipulators.",
       "GeniCore: added the dedicated Pulse Plasma Compaction product page as direct provenance for its PPC system capability.",
       "GeniCore: added the dedicated Diamond Enhanced Cemented Carbide material page as direct provenance for its DEC product claim.",
-      "ON NANO: removed unsupported glass-core-substrate and high-density-packaging wording; retained glass-panel and advanced-packaging descriptions present on its official products page."
+      "ON NANO: removed unsupported glass-core-substrate and high-density-packaging wording; retained glass-panel and advanced-packaging descriptions present on its official products page.",
+      "GeniCore: corrected CUBNEC to the official expansion “Cubic Boron Nitride Enhanced Cemented Carbide” and added exact phrase keywords from the official applications page."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
-    "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results. ON NANO also removed unsupported glass-core-substrate and high-density-packaging claims; this stored ranking predates that profile correction.",
+    "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results. ON NANO also removed unsupported glass-core-substrate and high-density-packaging claims; this stored ranking predates that profile correction. GeniCore corrected the CUBNEC expansion and exact lexical terms based on its official applications page; the paired current-model evaluation showed no top-five ranking changes.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
   },
