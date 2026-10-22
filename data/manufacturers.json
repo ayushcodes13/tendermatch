@@ -792,8 +792,8 @@
             "medical and healthcare",
             "minting and coin production",
             "fuel cell and electrolyser coating R&D",
-            "semiconductor and data storage",
-            "optical and photonics",
+            "semiconductor coating systems",
+            "optical coating R&D",
             "academic R&D"
         ],
         "embedding_text": "Supply, procurement, and installation of industrial PVD coating systems using magnetron sputtering and ion plating technologies for high-performance surface coatings.\nUsed for applying hard, wear-resistant, and low-friction coatings on cutting tools, automotive components, and industrial parts requiring tribological performance and durability.\nAlso referred to as PVD coating system, magnetron sputtering system, ion plating system, or industrial coating equipment.\nSpecialized in advanced industrial coatings for tools and components, including tribological and solid lubricant coatings.",
@@ -840,9 +840,11 @@
             "https://www.teercoatings.co.uk/clusterbeam",
             "https://www.teercoatings.co.uk/pvd",
             "https://www.teercoatings.co.uk/current-r-d-projects",
-            "https://www.teercoatings.co.uk/minting-industry-systems"
+            "https://www.teercoatings.co.uk/minting-industry-systems",
+            "https://www.teercoatings.co.uk/coating-portfolio",
+            "https://www.teercoatings.co.uk/completed-r-d-projects"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {
