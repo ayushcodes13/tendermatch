@@ -329,7 +329,7 @@ def test_nordiko_profile_links_official_model_and_process_sources():
         "https://nordiko-tech.co.uk/ion-beam-technology",
         "https://nordiko-tech.co.uk/sputtering-technology",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_nordiko_profile_omits_unsupported_reactive_ion_etching_claims():
@@ -341,7 +341,7 @@ def test_nordiko_profile_omits_unsupported_reactive_ion_etching_claims():
     assert "aerospace and telecommunications" not in profile["industries_served"]
     assert "ion beam milling systems" in profile["product_categories"]
     assert "N1500-600 Large-area PECVD reactor" in profile["products"]
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_nordiko_n1500_is_classified_as_pecvd_not_sputtering():
@@ -350,7 +350,7 @@ def test_nordiko_n1500_is_classified_as_pecvd_not_sputtering():
     assert "N1500-600 Large-area PECVD reactor" in profile["products"]
     assert "N1500 Sputtering System" not in profile["products"]
     assert "plasma-enhanced chemical vapour deposition systems" in profile["product_categories"]
-    assert profile["profile_version"] == "1.3"
+    assert profile["profile_version"] == "1.4"
 
 
 def test_agnitron_profile_links_official_products_software_and_service_sources():
@@ -506,6 +506,29 @@ def test_pg_instruments_service_terms_are_limited_to_documented_support():
     assert not {"AMC", "annual maintenance", "maintenance", "repair", "commissioning", "calibration"} & set(profile["service_keywords"])
     assert "https://storage.mtender.gov.md/get/b70ad211-467f-476d-a519-99540a51cd56-1637088115424" in profile["source_links"]
     assert profile["profile_version"] == "1.3"
+
+
+def test_nordiko_service_terms_match_official_service_and_support_page():
+    profile = next(p for p in load_profiles() if p["id"] == "nordiko")
+
+    assert set(profile["service_keywords"]) == {
+        "worldwide ongoing customer support",
+        "preventative maintenance packages tailored to system use",
+        "hourly online service and support",
+        "repair of electrical and electronic components",
+        "replacement unit quoted when repair is not possible",
+        "spare parts and consumables service",
+        "system maintenance and refurbishment",
+        "end-user and maintenance training courses",
+        "hotline technical support",
+        "legacy system upgrades",
+        "production ion beam system upgrades",
+    }
+    assert "installation" not in profile["service_keywords"]
+    assert "https://nordiko-tech.co.uk/service-and-support" in profile["source_links"]
+    assert "Supply and procurement of industrial-scale PVD coating systems" in profile["embedding_text"]
+    assert "procurement, and installation" not in profile["embedding_text"]
+    assert profile["profile_version"] == "1.4"
 
 
 def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():

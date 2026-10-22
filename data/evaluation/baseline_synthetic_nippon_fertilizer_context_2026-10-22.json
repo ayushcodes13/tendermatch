@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "b9ebbd739f3653034a133389355ef5fa7317ce206c3301fcab51987ab1fe8787",
-    "current_ranking_profile_inputs_sha256": "7816796c7ae9a8754bc8922caab93a8c01407ba33e2920e19df36578197442d4",
+    "current_manufacturer_profiles_sha256": "97621c5e4ebee42dd3bf4d1efd551c23d488bb44afb0ba5570945812177dcc5b",
+    "current_ranking_profile_inputs_sha256": "0a9dd56952f7cfabdf20a665dc21d570c4a2db29db1c5b38dd2438597dddb2bb",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -137,11 +137,13 @@
       "ParteQ GmbH: service signals narrowed to documented aerosol measurement, characterization, synthesis, process development, scale-up, analysis, prototype, production-system, and nanopowder services.",
       "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities.",
       "P.G. Instruments: profile service signals narrowed to manufacturer-authorized distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty replacement, and spare-parts availability based on a 2021 signed authorization document.",
-      "P.G. Instruments: added service-scope evidence from its signed 2021 manufacturer authorization document for distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty defective-part replacement, and spare-parts availability."
+      "P.G. Instruments: added service-scope evidence from its signed 2021 manufacturer authorization document for distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty defective-part replacement, and spare-parts availability.",
+      "Nordiko: service terms now use official support, preventive maintenance, hourly online help, component repairs, spare parts, refurbishment, training, and upgrades; the unsupported installation claim was removed from embedding text.",
+      "Nordiko: official support-page signals added for preventive maintenance, online support, component repair, spares, refurbishment, training, and system upgrades; unsupported installation wording was removed from the description."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
-    "reason": "Historical report rankings and run hashes preserved; current profile metadata fingerprints refreshed after source audits. The sentence-transformers model was not required, and no historical ranking was rerun for this catalog.",
+    "reason": "Historical report ranking snapshot and run hashes are preserved. Current profile fingerprints were refreshed as metadata after later source audits; the sentence-transformers model was not required and rankings were not recomputed. sentence-transformers is not needed for historical report metadata refresh.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
   },
