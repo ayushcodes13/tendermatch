@@ -1113,9 +1113,12 @@
             "https://adnano-tek.com/",
             "https://adnano-tek.com/reactive-ion-etching-rie/",
             "https://adnano-tek.com/inductively-coupled-plasma-icp/",
-            "https://adnano-tek.com/electron-cyclotron-resonance-ecr/"
+            "https://adnano-tek.com/electron-cyclotron-resonance-ecr/",
+            "https://adnano-tek.com/uhv-design-components/",
+            "https://adnano-tek.com/manipulators/",
+            "https://adnano-tek.com/uhv-design-components/transfer-arms/"
         ],
-        "profile_version": "1.3",
+        "profile_version": "1.4",
         "profile_last_updated": "2026-10-22"
     },
     {
