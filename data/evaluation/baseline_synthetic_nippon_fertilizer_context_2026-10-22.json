@@ -96,7 +96,7 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "4c2549483470489ff46226edc56a89ab59f46c3ff664dd8cbcb6397daed4384c",
+    "current_manufacturer_profiles_sha256": "33069fd7252d0c19df0cc46116d3a71bc8fbc95a1c00839f4638badd04a1d495",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -117,7 +117,8 @@
       "P.G. Instruments: removed the unsupported gas chromatography systems product claim after the official GC 650 category reported no products.",
       "Spinflex: narrowed the spinAMP product description to its directly documented solid-state pulsed X/Q-band amplifier capabilities and applications, removing an unsupported ESR/EPR-only qualifier.",
       "Agnitron: added the official Custom Systems page as direct provenance for the Agilis GOX300 large-production Gallium Oxide MOCVD system.",
-      "AdNaNoTek: added dedicated official pages for RIE, ICP, and ECR plasma etching systems as direct provenance for the RIE/ICP-RIE/ECR-RIE profile claim."
+      "AdNaNoTek: added dedicated official pages for RIE, ICP, and ECR plasma etching systems as direct provenance for the RIE/ICP-RIE/ECR-RIE profile claim.",
+      "AdNaNoTek: added dedicated UHV component, manipulator, and transfer-arm pages as direct provenance for transfer robots and manipulators."
     ],
     "rankings_reused": false,
     "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results.",
