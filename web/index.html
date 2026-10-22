@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TenderMatch Salesperson Review Interface - Review tender opportunities, substantiate manufacturer fit, and record audit-grade procurement feedback.">
+  <title>TenderMatch | Salesperson Review & Adjudication Interface</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- Top Navigation Header -->
+    <header class="top-nav" id="main-nav">
+      <div class="nav-brand">
+        <div class="logo-mark">⚡</div>
+        <div class="brand-text">
+          <h1>TenderMatch</h1>
+          <span class="brand-subtitle">Procurement Intelligence Review</span>
+        </div>
+      </div>
+
+      <div class="nav-controls">
+        <div class="auth-status" id="auth-status-container">
+          <span class="auth-dot" id="auth-dot"></span>
+          <span id="auth-user-label">Unauthenticated</span>
+          <button id="auth-modal-btn" class="btn btn-secondary btn-sm" aria-label="Configure Reviewer Token">Change Token</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-layout" id="main-content">
+      <!-- Control / Filter Bar -->
+      <section class="toolbar-section" id="toolbar" aria-label="Tender filters and controls">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor" width="18" height="18">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+          </svg>
+          <input type="text" id="tender-search" placeholder="Search opportunities by title, organization, or ID..." aria-label="Search tenders">
+        </div>
+
+        <div class="filter-group" id="filter-buttons">
+          <button class="filter-chip active" data-filter="all" id="filter-all">All Opportunities (<span id="count-all">0</span>)</button>
+          <button class="filter-chip" data-filter="unreviewed" id="filter-unreviewed">Needs Review (<span id="count-unreviewed">0</span>)</button>
+          <button class="filter-chip" data-filter="amended" id="filter-amended">Updated / Corrigendum (<span id="count-amended">0</span>)</button>
+          <button class="filter-chip" data-filter="reviewed" id="filter-reviewed">Reviewed (<span id="count-reviewed">0</span>)</button>
+        </div>
+      </section>
+
+      <!-- Opportunity Feed -->
+      <section class="feed-section" id="opportunities-feed" aria-live="polite">
+        <div class="feed-header">
+          <h2 id="feed-title">Active Opportunities</h2>
+          <span class="feed-subtitle" id="feed-subtitle">Sorted by signal priority and recency</span>
+        </div>
+
+        <div id="tender-cards-list" class="tender-cards-list">
+          <!-- Dynamic opportunity cards loaded by app.js -->
+          <div class="loading-state" id="feed-loading">
+            <div class="spinner"></div>
+            <p>Loading procurement opportunities...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Authentication Modal -->
+    <div class="modal-backdrop" id="auth-modal" style="display: none;">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Reviewer Authentication</h3>
+          <button class="btn-close" id="auth-modal-close" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-desc">Enter your configured authentication token and reviewer email to unlock one-click adjudication.</p>
+          <div class="form-group">
+            <label for="auth-token-input">Security Token</label>
+            <input type="password" id="auth-token-input" placeholder="Enter TENDERMATCH_REVIEW_AUTH_TOKEN..." value="tendermatch-local-review">
+          </div>
+          <div class="form-group">
+            <label for="reviewer-select">Reviewer Identity</label>
+            <select id="reviewer-select">
+              <option value="">Select an authorized reviewer...</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="auth-cancel-btn">Cancel</button>
+          <button class="btn btn-primary" id="auth-save-btn">Authenticate & Save</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast" style="display: none;"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
