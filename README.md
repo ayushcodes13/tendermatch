@@ -58,6 +58,8 @@ Running `python -m pipeline.run` performs real portal requests and may send emai
 
 For a persistent host, set `TENDERMATCH_DB_PATH` to a SQLite file on a mounted durable volume. Its parent directory must already exist. Keep document storage on protected persistent storage too before enabling `TENDERMATCH_DOCUMENT_HOSTS` and `TENDERMATCH_DOCUMENT_DIR`. Review source access terms before allowlisting a host.
 
+For operator-managed snapshots on a protected host, `python -m data.backup backup "$TENDERMATCH_DB_PATH" /protected/backups/tenders-YYYYMMDD.sqlite3` creates an integrity-checked, owner-readable SQLite backup using SQLite's online backup API. Restore with `python -m data.backup restore /protected/backups/tenders-YYYYMMDD.sqlite3 "$TENDERMATCH_DB_PATH" --replace`. Stop the scheduler and pipeline before restoring. The command does not schedule backups or upload them; the operator must protect and retain the destination separately. The Actions cache remains temporary and is not a backup target.
+
 The local `scheduler.py` process runs serially every 30 minutes but is not supervised by a service manager. The Actions workflow is the configured scheduled runner; neither configuration makes its cache durable. See [`docs/checkpoint.md`](docs/checkpoint.md) for verified status and remaining operational blockers.
 
 For persistent recurring operation, use a supervised Python VM or container with a durable mounted SQLite volume, protected secret configuration, and backup/recovery procedures. No such host or Vercel web application is configured in this repository.
