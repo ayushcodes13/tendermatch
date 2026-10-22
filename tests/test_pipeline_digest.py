@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 import sqlite3
 import sys
 from types import ModuleType
@@ -65,6 +66,135 @@ def test_pipeline_generates_digest_with_its_statistics_schema(monkeypatch):
     assert "Total scraped: 1" in sent["body"]
     assert "Fresh tenders processed: 1" in sent["body"]
     assert "High-signal opportunities: 1" in sent["body"]
+
+
+def test_pipeline_digest_reports_counts_for_mixed_tender_outcomes(monkeypatch, tmp_path):
+    database_path = tmp_path / "mixed-digest.sqlite3"
+    sent = []
+    today = date.today().isoformat()
+    stale_date = (date.today() - timedelta(days=90)).isoformat()
+    previously_notified = {
+        "tender_id": "REF-PREVIOUSLY-EMAILED",
+        "title": "Previously notified tender",
+        "organization": "Research Institute",
+        "published_date": today,
+        "source_portal": "cppp",
+        "raw_text": "Existing opportunity",
+    }
+
+    seed = sqlite3.connect(database_path)
+    init_db(seed)
+    saved, _ = upsert_or_get_tender(seed, previously_notified)
+    batch_id = queue_digest(
+        seed, "sales@example.com", "Previous digest", "Previous body", [saved]
+    )
+    seed.execute("UPDATE email_batches SET state='sent' WHERE id=?", (batch_id,))
+    seed.execute(
+        "UPDATE email_notifications SET state='sent' WHERE batch_id=?", (batch_id,)
+    )
+    seed.commit()
+    seed.close()
+
+    tenders = [
+        previously_notified,
+        {
+            "tender_id": "REF-STALE",
+            "title": "Stale tender",
+            "organization": "Research Institute",
+            "published_date": stale_date,
+            "source_portal": "cppp",
+            "raw_text": "Old opportunity",
+        },
+        {
+            "tender_id": "REF-HIGH",
+            "title": "High-signal tender",
+            "organization": "Research Institute",
+            "published_date": today,
+            "source_portal": "cppp",
+            "raw_text": "New opportunity",
+        },
+        {
+            "tender_id": "REF-HIGH",
+            "title": "High-signal tender",
+            "organization": "Research Institute",
+            "published_date": today,
+            "source_portal": "cppp",
+            "raw_text": "New opportunity",
+        },
+        {
+            "tender_id": "REF-EXPLORE",
+            "title": "Exploration tender",
+            "organization": "Research Institute",
+            "published_date": today,
+            "source_portal": "cppp",
+            "raw_text": "Potential opportunity",
+        },
+        {
+            "tender_id": "REF-BLOCKED",
+            "title": "Blocked tender",
+            "organization": "Research Institute",
+            "published_date": today,
+            "source_portal": "cppp",
+            "raw_text": "Irrelevant opportunity",
+        },
+        {
+            "tender_id": "REF-LOW",
+            "title": "Low-signal tender",
+            "organization": "Research Institute",
+            "published_date": today,
+            "source_portal": "cppp",
+            "raw_text": "Low signal opportunity",
+        },
+    ]
+    categories = {
+        "High-signal tender": "high_signal",
+        "Exploration tender": "explore",
+        "Blocked tender": "blocked",
+        "Low-signal tender": "low_signal",
+    }
+
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: tenders)
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(
+        pipeline,
+        "is_recent_tender",
+        lambda tender, max_age_hours: tender["title"] != "Stale tender",
+    )
+    monkeypatch.setattr(
+        pipeline,
+        "classify_tender",
+        lambda tender, manufacturer_candidates: {
+            "is_blocked": categories[tender["title"]] == "blocked",
+            "has_signal": categories[tender["title"]] in {"high_signal", "explore"},
+            "category": categories[tender["title"]],
+            "decision": categories[tender["title"]],
+            "score": 80,
+            "reason": "controlled digest statistics fixture",
+        },
+    )
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(pipeline, "deliver_due_batches", lambda *args: 0)
+    monkeypatch.setattr(
+        pipeline,
+        "send_email",
+        lambda subject, body, recipient: sent.append((subject, body, recipient)),
+    )
+
+    pipeline.run_pipeline()
+
+    assert len(sent) == 1
+    _, body, recipient = sent[0]
+    assert recipient == "sales@example.com"
+    assert "Total scraped: 7" in body
+    assert "Fresh tenders processed: 4" in body
+    assert "High-signal opportunities: 1" in body
+    assert "Exploration candidates: 1" in body
+    assert "Low-signal tenders: 1" in body
+    assert "Blocked tenders: 1" in body
+    assert "Stale tenders skipped: 1" in body
+    assert "Duplicates skipped: 1" in body
+    assert "Previously emailed skipped: 1" in body
 
 
 def test_pipeline_does_not_suppress_distinct_tenders_with_the_same_title(monkeypatch):
