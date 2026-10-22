@@ -1,13 +1,14 @@
 import os
-import subprocess
 import sqlite3
 import stat
-from pathlib import Path
+import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
 from data.backup import backup_database, restore_database
+from data.db import init_db
 
 
 def _create_database(path, rows=("original",)):
@@ -145,3 +146,31 @@ def test_backup_and_restore_cli_round_trip(tmp_path):
     assert "integrity check passed" in backup_result.stdout
     assert "integrity check passed" in restore_result.stdout
     assert _rows(restored) == ["cli-value"]
+
+
+def test_snapshot_preserves_tendermatch_tables_and_feedback_guards(tmp_path):
+    database = tmp_path / "tendermatch.sqlite3"
+    snapshot = tmp_path / "snapshot.sqlite3"
+    conn = sqlite3.connect(database)
+    init_db(conn)
+    conn.execute(
+        """INSERT INTO pipeline_runs (run_id, status, started_at, source_results_json)
+           VALUES ('run-1', 'success', '2026-10-22T00:00:00Z', '{}')"""
+    )
+    conn.execute(
+        """INSERT INTO salesperson_feedback
+           (tender_identity_key, manufacturer_id, label, reviewer, reviewed_at)
+           VALUES ('tender-1', 'maker-1', 'relevant', 'reviewer-1', '2026-10-22T00:00:00Z')"""
+    )
+    conn.commit()
+    conn.close()
+
+    backup_database(database, snapshot)
+
+    with sqlite3.connect(snapshot) as restored:
+        assert restored.execute("SELECT run_id FROM pipeline_runs").fetchone() == ("run-1",)
+        assert restored.execute(
+            "SELECT tender_identity_key FROM salesperson_feedback"
+        ).fetchone() == ("tender-1",)
+        with pytest.raises(sqlite3.IntegrityError, match="immutable"):
+            restored.execute("UPDATE salesperson_feedback SET reason = 'changed' WHERE id = 1")
