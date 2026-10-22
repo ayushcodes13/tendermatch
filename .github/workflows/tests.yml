@@ -56,4 +56,5 @@ jobs:
           tests/test_cache_encryption.py
           tests/test_safe_error_logging.py
           tests/test_deployment_smoke.py
+          tests/test_review_interface.py
           tests/test_workflow_contract.py
