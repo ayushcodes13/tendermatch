@@ -8,6 +8,8 @@ import pytest
 
 from matching.matcher import TenderMatcher
 
+ROOT = Path(__file__).resolve().parents[1]
+
 
 class FakeEmbedder:
     def __init__(self, manufacturers, embeddings, query_embedding):
@@ -244,3 +246,27 @@ def test_genicore_short_series_sintering_matches_service_not_product():
 
     assert match["product_hits"] == []
     assert "short-series production using U-FAST technology" in match["service_hits"]
+
+
+def test_thesix_medical_infusion_mismatch_is_softly_penalized_and_retained():
+    profiles = json.loads((ROOT / "data/manufacturers.json").read_text(encoding="utf-8"))
+    thesix = next(profile for profile in profiles if profile["id"] == "thesix_solutions")
+    matcher = make_matcher([thesix, {"id": "other", "name": "Other"}], [[0.8, 0.6], [0.1, 0.9]], [1.0, 0.0])
+
+    medical = matcher.match_topk(
+        {"title": "Medical infusion pumps with patient dose controls for hospital wards"},
+        top_k=2,
+    )
+    candidate = next(item for item in medical if item["manufacturer_id"] == "thesix_solutions")
+
+    assert set(candidate["negative_hits"]) == {"medical infusion pump", "patient dose control"}
+    assert candidate["score"] < candidate["base_semantic_score"]
+    assert "thesix_solutions" in {item["manufacturer_id"] for item in medical}
+
+    industrial = matcher.match_topk(
+        {"title": "Industrial water transfer pump for a manufacturing cooling loop"},
+        top_k=2,
+    )
+    industrial_candidate = next(item for item in industrial if item["manufacturer_id"] == "thesix_solutions")
+    assert industrial_candidate["negative_hits"] == []
+    assert industrial_candidate["score"] == industrial_candidate["base_semantic_score"]

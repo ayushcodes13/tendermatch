@@ -783,8 +783,7 @@ def test_korvus_service_evidence_pair_preserves_ranking_diagnostic():
     assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
     assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
     assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
-    assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(profiles)
-    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is True
+    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is False
     assert before["input_sha256"]["manufacturer_profiles"] != report["input_sha256"]["manufacturer_profiles"]
     assert before["input_sha256"]["ranking_profile_inputs"] != report["input_sha256"]["ranking_profile_inputs"]
     assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
@@ -802,3 +801,21 @@ def test_korvus_service_evidence_pair_preserves_ranking_diagnostic():
         != [item["manufacturer_id"] for item in report["rankings"][tender_id]]
     ]
     assert len(changed) == 11
+
+
+def test_thesix_medical_pump_pair_preserves_recall_and_removes_false_positive_from_top_five():
+    report = json.loads((ROOT / "data/evaluation/baseline_synthetic_thesix_medical_pump_2026-10-22.json").read_text(encoding="utf-8"))
+    before = json.loads((ROOT / "data/evaluation/baseline_synthetic_thesix_medical_pump_before_2026-10-22.json").read_text(encoding="utf-8"))
+    profiles_path = ROOT / "data/manufacturers.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+
+    assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(profiles)
+    assert report["candidate_recall_on_labeled_positives"] == before["candidate_recall_on_labeled_positives"] == 1.0
+    assert before["labeled_candidate_precision"] == 8 / 10
+    assert report["labeled_candidate_precision"] == 8 / 9
+    assert "syn-pump-002" in before["false_positive_case_ids"]
+    assert "syn-pump-002" not in report["false_positive_case_ids"]
+    assert "thesix_solutions" in [item["manufacturer_id"] for item in before["rankings"]["SYN-PUMP-002"]]
+    assert "thesix_solutions" not in [item["manufacturer_id"] for item in report["rankings"]["SYN-PUMP-002"]]
+    assert report["unjudged_candidate_count"] == before["unjudged_candidate_count"] + 1
