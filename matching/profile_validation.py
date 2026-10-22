@@ -1,8 +1,7 @@
 """Validate manufacturer profile structure without inferring capabilities.
 
-Optional provenance and version fields are checked when present. Their absence
-is reported as a warning so existing profiles remain usable while claims await
-source-backed review.
+Profile-level provenance and revision fields are required structural metadata.
+They do not establish that every capability claim is supported by its sources.
 """
 
 import argparse
@@ -26,7 +25,8 @@ REQUIRED_LISTS = (
     "negative_keywords",
     "service_keywords",
 )
-OPTIONAL_LISTS = ("aliases", "source_links", "exclusions", "supported_services", "profile_warnings")
+OPTIONAL_LISTS = ("aliases", "exclusions", "supported_services", "profile_warnings")
+REQUIRED_METADATA = ("source_links", "profile_version", "profile_last_updated")
 NEGATIVE_LISTS = ("negative_keywords", "exclusions")
 POSITIVE_LISTS = (
     "products",
@@ -146,22 +146,22 @@ def validate_profiles(profiles):
                         ))
 
         source_links = profile.get("source_links")
-        if source_links is None or source_links == []:
-            issues.append(_issue("warning", "missing_source_links", f"{base}.source_links", "No profile-level source links are recorded; capability claims remain unverified."))
-        elif isinstance(source_links, list):
+        if not isinstance(source_links, list) or not source_links:
+            issues.append(_issue("error", "missing_source_links", f"{base}.source_links", "At least one profile-level HTTP(S) source link is required."))
+        else:
             for source_index, source in enumerate(source_links):
                 if not isinstance(source, str) or not source.strip() or not _valid_http_url(source.strip()):
                     issues.append(_issue("error", "invalid_source_link", f"{base}.source_links[{source_index}]", "Expected an absolute HTTP(S) URL."))
 
         version = profile.get("profile_version")
         if version is None:
-            issues.append(_issue("warning", "missing_profile_version", f"{base}.profile_version", "No profile version is recorded."))
+            issues.append(_issue("error", "missing_profile_version", f"{base}.profile_version", "A TenderMatch-maintained profile version is required."))
         elif not isinstance(version, str) or not VERSION_PATTERN.fullmatch(version):
             issues.append(_issue("error", "invalid_profile_version", f"{base}.profile_version", "Expected a version such as 1 or 1.2.0."))
 
         updated = profile.get("profile_last_updated")
         if updated is None:
-            issues.append(_issue("warning", "missing_profile_last_updated", f"{base}.profile_last_updated", "No profile update date is recorded."))
+            issues.append(_issue("error", "missing_profile_last_updated", f"{base}.profile_last_updated", "A profile review date is required."))
         elif not isinstance(updated, str) or not DATE_PATTERN.fullmatch(updated):
             issues.append(_issue("error", "invalid_profile_last_updated", f"{base}.profile_last_updated", "Expected an ISO date in YYYY-MM-DD form."))
         elif not _is_valid_iso_date(updated):

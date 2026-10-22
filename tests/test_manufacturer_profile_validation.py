@@ -4,6 +4,7 @@ from pathlib import Path
 
 from matching.profile_validation import (
     OPTIONAL_LISTS,
+    REQUIRED_METADATA,
     REQUIRED_LISTS,
     REQUIRED_STRINGS,
     main,
@@ -35,9 +36,9 @@ def test_json_schema_documents_the_same_required_and_optional_fields():
         (ROOT / "data" / "manufacturer-profile.schema.json").read_text(encoding="utf-8")
     )
 
-    expected_required = set(REQUIRED_STRINGS) | {"active"} | set(REQUIRED_LISTS)
+    expected_required = set(REQUIRED_STRINGS) | {"active"} | set(REQUIRED_LISTS) | set(REQUIRED_METADATA)
     assert set(schema["required"]) == expected_required
-    assert set(REQUIRED_LISTS) | set(OPTIONAL_LISTS) <= set(schema["properties"])
+    assert set(REQUIRED_LISTS) | set(OPTIONAL_LISTS) | set(REQUIRED_METADATA) <= set(schema["properties"])
 
 
 def test_duplicate_identity_duplicate_terms_and_positive_negative_conflicts_fail():
@@ -784,17 +785,19 @@ def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources
     assert profile["profile_version"] == "1.8"
 
 
-def test_empty_source_list_does_not_hide_missing_evidence_warning():
-    profile = load_profiles()[0]
-    profile["source_links"] = []
+def test_profile_level_provenance_and_revision_metadata_are_required():
+    for field, value, code in (
+        ("source_links", [], "missing_source_links"),
+        ("profile_version", None, "missing_profile_version"),
+        ("profile_last_updated", None, "missing_profile_last_updated"),
+    ):
+        profile = load_profiles()[0]
+        profile[field] = value
 
-    warnings = validate_profiles([profile])
+        issues = validate_profiles([profile])
 
-    warning = next(issue for issue in warnings if issue["code"] == "missing_source_links")
-    assert warning["severity"] == "warning"
-    assert warning["message"] == (
-        "No profile-level source links are recorded; capability claims remain unverified."
-    )
+        issue = next(issue for issue in issues if issue["code"] == code)
+        assert issue["severity"] == "error"
 
 
 def test_profile_cli_reports_warnings_but_only_fails_on_errors(capsys):
