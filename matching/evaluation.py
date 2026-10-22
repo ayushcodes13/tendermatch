@@ -21,6 +21,39 @@ RELEVANT = "relevant"
 NOT_RELEVANT = "not_relevant"
 REVIEW_LABELS = {"potentially_relevant_needs_review", "insufficient_information"}
 MODEL_NAME = "BAAI/bge-small-en-v1.5"
+RANKING_PROFILE_FIELDS = (
+    "active",
+    "id",
+    "name",
+    "embedding_text",
+    "keywords",
+    "products",
+    "product_categories",
+    "aliases",
+    "concepts",
+    "service_keywords",
+    "negative_keywords",
+)
+
+
+def hash_ranking_profile_inputs(manufacturers):
+    """Hash the manufacturer fields that can affect embeddings or ranking.
+
+    The full profile-file hash is recorded separately because source links and
+    other provenance metadata are useful for reproducing the report payload,
+    but do not affect candidate generation or rank scores.
+    """
+    projection = [
+        {field: manufacturer.get(field) for field in RANKING_PROFILE_FIELDS}
+        for manufacturer in manufacturers
+    ]
+    canonical = json.dumps(
+        projection,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(canonical).hexdigest()
 
 
 def evaluate_rankings(dataset, ranked_candidates, *, latencies_ms=None, costs_by_tender=None,
@@ -271,6 +304,7 @@ def main(argv=None):
     root = Path(__file__).resolve().parents[1]
     dataset_bytes = json.dumps(dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     profile_path = root / "data" / "manufacturers.json"
+    manufacturers = json.loads(profile_path.read_text(encoding="utf-8"))
     code_paths = (
         Path(__file__),
         root / "matching" / "embedder.py",
@@ -281,6 +315,7 @@ def main(argv=None):
     report["input_sha256"] = {
         "dataset": hashlib.sha256(dataset_bytes).hexdigest(),
         "manufacturer_profiles": hashlib.sha256(profile_path.read_bytes()).hexdigest(),
+        "ranking_profile_inputs": hash_ranking_profile_inputs(manufacturers),
         "evaluation_and_matching_code": {
             path.relative_to(root).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in code_paths
