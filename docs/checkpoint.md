@@ -172,4 +172,33 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
 - **P4.4 Document Completeness Disclosure**: Updated `digest/formatter.py` to disclose document verification status (verified, partial, needs_ocr, unavailable, no_document), page-cited verified capabilities, and explicit conflict alerts.
 - **Verification**: 306 tests passed locally (`pytest -q`); 14 profiles validated with 0 errors and 0 warnings.
 
+## Phase 5 — Claim-Level Manufacturer Provenance (P5.1 – P5.3)
+
+- **P5.1 Claim-Level Provenance Registry & Schema**: Created JSON schema `data/claim-provenance.schema.json` and canonical registry `data/manufacturer_claims.json` with 18 substantiated claim records across all 14 manufacturers tracking exact source URLs, locators, verbatim quotes, validation states (validated capability, product-specific, conditional, unverified, unsupported), and limitations.
+- **P5.2 Candidate Claim Evaluation**: Implemented `matching/claim_provenance.py` (`load_claims`, `validate_claims`, `assess_candidate_claims`) and connected it to `matching/matcher.py`, `matching/trace.py`, and `matching/decision.py`. Candidates with unsupported claim conflicts are automatically routed to `agent_review` with reason code `UNSUPPORTED_MANUFACTURER_CLAIM_CONFLICT`.
+- **P5.3 Maintenance Workflow**: CLI validator `python -m matching.claim_provenance` provides automated verification in development and CI.
+- **Verification**: 4 focused tests, 317 full-suite tests passed.
+
+## Phase 3 — Scraper Quality, Resilience, and Source Isolation (PR #197)
+
+- Built hermetic realistic fixture test suite in `tests/test_scrapers_quality.py` for CPPP Central, CPPP GeM, IISc Bangalore, IIT Madras API, IIT Palakkad, and IIT Goa.
+- Verified malformed row handling, timezone conversions to UTC, and per-source failure isolation in `collect_all_tenders()` so that failures in one portal do not disrupt remaining scrapers.
+- **Verification**: 9 targeted tests, 326 full-suite tests passed.
+
+## Phase 10 — End-to-End Acceptance Journeys A through I (PR #198)
+
+- Implemented comprehensive acceptance suite in `tests/test_end_to_end_acceptance.py` demonstrating all 9 customer workflows:
+  - **Journey A (Discovery)**: Valid tender scraped, stored, matched, explained, claim-verified, and queued in outbox.
+  - **Journey B (Deduplication)**: Identical tender runs deduplicate cleanly without generating duplicate notifications.
+  - **Journey C (Amendment)**: Deadline extension generates distinct version and amendment corrigendum digest.
+  - **Journey D (Wrong-Domain)**: Irrelevant civil/drainage tender is rejected by hard junk gating.
+  - **Journey E (Ambiguity Preservation)**: Domain collision (laboratory vacuum vs floor cleaning) routes cleanly to `agent_review`.
+  - **Journey F (Document Intelligence)**: Native PDF requirements extraction links page citations to manufacturer capabilities with completeness disclosure.
+  - **Journey G (SMTP Recovery)**: Stale in-flight sending batch recovered and delivered upon worker restart.
+  - **Journey H (Feedback to Adjudication)**: Salesperson feedback captured, exported, adjudicated, and promoted to evaluation dataset.
+  - **Journey I (Disaster Recovery)**: Database backed up, restored to fresh environment, and verified with schema compatibility.
+- Fixed `_load_default_manufacturers` in `matching/document_enrichment.py` to support list-format JSON catalogs.
+- **Verification**: 9 acceptance journey tests passed; 335 full-suite tests passed in 8.8s; 14 profiles and 18 claims validated with 0 errors and 0 warnings.
+
+
 
