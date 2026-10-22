@@ -58,3 +58,5 @@ Run the dataset integrity checks with:
 ```bash
 python -m pytest -q tests/test_matching_dataset.py
 ```
+
+The SALD service-scope follow-up is preserved in `data/evaluation/baseline_synthetic_sald_service_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_sald_service_scope_2026-10-22.json`. SALD's terms support installation, acceptance testing, and original-warranty services; the company's service-engineer role describes maintenance, repair, technical troubleshooting, field upgrades, and upgrade-related training. The terms state that post-warranty services use separate terms, so this profile does not assert generic spare-parts or software/hardware-upgrade services. On the same 18 synthetic cases, all 8 labeled positives remain retrieved, precision stays 8/9, the false-positive case list and unjudged count stay unchanged, and all top-five manufacturer orderings are unchanged. Labels are synthetic and not human-reviewed.

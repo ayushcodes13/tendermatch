@@ -959,13 +959,10 @@
             "preventive maintenance monitoring",
             "equipment maintenance services",
             "equipment repair services",
-            "spare parts",
-            "replacement parts",
-            "hardware upgrades",
-            "software upgrades",
+            "warranty service",
             "field upgrades",
-            "customer support",
-            "service engineering",
+            "technical support",
+            "upgrade-related customer training",
             "technical troubleshooting support"
         ],
         "website": "https://spatialald.com/",
@@ -981,7 +978,7 @@
             "https://spatialald.com/terms-conditions/",
             "https://spatialald.com/careers/service-engineer/"
         ],
-        "profile_version": "1.6",
+        "profile_version": "1.7",
         "profile_last_updated": "2026-10-22"
     },
     {
