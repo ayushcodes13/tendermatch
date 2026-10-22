@@ -565,7 +565,7 @@
             "fertilizer production mercury analysis",
             "environmental mercury monitoring in air and water"
         ],
-        "embedding_text": "Nippon Instruments Corporation specializes in mercury analyzers and monitors. Its official catalog includes direct total-mercury analyzers for solid, liquid, and gaseous samples; ultra-trace mercury analyzers for aqueous samples; petroleum mercury analyzers; gaseous-matrix mercury analyzers; portable gaseous elemental mercury analyzers; stack-gas mercury monitors; and continuous ambient-air mercury monitors. Published methods include direct thermal decomposition, gold amalgamation, cold vapor atomic absorption spectroscopy (CVAAS), and cold vapor atomic fluorescence spectroscopy (CVAFS). Listed applications include coal, oil and gas, chemical production, waste processing, industrial discharge, mining and smelting, cement, and fertilizer production. NIC identifies WA-, RA-, EMP-, and MA-series analyzers for mercury analysis in fertilizer-production natural gas, water, workplace air, and fertilizer products. This profile is for mercury measurement; it does not establish general non-mercury trace-metal analysis or generic atomic-absorption capability. Confirm sample matrix, method, product model, and required service against official product evidence.",
+        "embedding_text": "Nippon Instruments Corporation specializes in mercury analyzers and monitors. Its official catalog includes direct total-mercury analyzers for solid, liquid, and gaseous samples; ultra-trace mercury analyzers for aqueous samples; petroleum mercury analyzers; gaseous-matrix mercury analyzers; portable gaseous elemental mercury analyzers; stack-gas mercury monitors; and continuous ambient-air mercury monitors. Published methods include direct thermal decomposition, gold amalgamation, cold vapor atomic absorption spectroscopy (CVAAS), and cold vapor atomic fluorescence spectroscopy (CVAFS). Listed applications include coal, oil and gas, chemical production, waste processing, industrial discharge, mining and smelting, cement, and fertilizer production. NIC identifies WA-, RA-, EMP-, and MA-series analyzers for mercury analysis in fertilizer-production natural gas, water, workplace air, and fertilizer products. This profile is for mercury measurement; it does not establish general non-mercury trace-metal analysis or generic atomic-absorption capability. Confirm sample matrix, method, product model, and required service against official product evidence. NIC states its business includes servicing mercury analyzers and provides technical support to equipment customers, advice to prospective customers, sample measurement services, product-operation training, application demonstrations, and application development. Service availability may depend on product model and region: NIC warns that parts or consumables may become unavailable for discontinued products, making repair and maintenance extremely difficult. Verify model-specific service availability with NIC or the appointed local partner.",
         "keywords": [
             "mercury analyzer",
             "direct mercury analyzer",
@@ -603,15 +603,14 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
+            "mercury analyzer servicing",
+            "technical support for mercury analysis equipment customers",
+            "technical advice for prospective mercury analyzer customers",
+            "mercury measurement services",
+            "product operation training",
+            "mercury application demonstrations",
+            "mercury application development",
+            "sample analysis services"
         ],
         "website": "https://www.hg-nic.com/",
         "source_links": [
@@ -629,9 +628,13 @@
             "https://www.hg-nic.com/emp-series/emp-3/",
             "https://www.hg-nic.com/emp-series/emp-gold/",
             "https://www.hg-nic.com/sgm-series/sgm-9/",
-            "https://www.hg-nic.com/am-series/am-6f/"
+            "https://www.hg-nic.com/am-series/am-6f/",
+            "https://www.hg-nic.com/about-nic/",
+            "https://www.hg-nic.com/nippon-instruments-corporation-nic-centre-of-excellence-thailand/",
+            "https://www.hg-nic.com/support-notice/",
+            "https://www.hg-nic.com/contact/"
         ],
-        "profile_version": "1.14",
+        "profile_version": "1.15",
         "profile_last_updated": "2026-10-22"
     },
     {

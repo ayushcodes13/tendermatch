@@ -143,7 +143,27 @@ def test_nippon_profile_sources_and_capabilities_are_specific_to_mercury_analysi
     assert "https://www.hg-nic.com/sgm-series/sgm-9/" in profile["source_links"]
     assert "https://www.hg-nic.com/am-series/am-6f/" in profile["source_links"]
     assert "cement production" in profile["industries_served"]
-    assert profile["profile_version"] == "1.14"
+    assert profile["profile_version"] == "1.15"
+
+
+def test_nippon_service_signals_match_official_support_scope():
+    profile = next(p for p in load_profiles() if p["id"] == "nippon_instruments")
+
+    assert set(profile["service_keywords"]) == {
+        "mercury analyzer servicing",
+        "technical support for mercury analysis equipment customers",
+        "technical advice for prospective mercury analyzer customers",
+        "mercury measurement services",
+        "product operation training",
+        "mercury application demonstrations",
+        "mercury application development",
+        "sample analysis services",
+    }
+    assert not {"AMC", "annual maintenance", "maintenance", "repair", "spares", "installation", "commissioning", "calibration", "replacement"} & set(profile["service_keywords"])
+    assert "https://www.hg-nic.com/about-nic/" in profile["source_links"]
+    assert "https://www.hg-nic.com/support-notice/" in profile["source_links"]
+    assert "making repair and maintenance extremely difficult" in profile["embedding_text"]
+    assert "Verify model-specific service availability" in profile["embedding_text"]
 
 
 def test_teer_profile_does_not_claim_nordiko_products():

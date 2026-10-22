@@ -713,8 +713,9 @@ def test_on_nano_service_evidence_evaluation_matches_profile_and_ranking_inputs(
     dataset_bytes = json.dumps(dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
     assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
-    assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
-    assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(profiles)
+    assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
+    assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
     assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
     assert before["input_sha256"]["evaluation_and_matching_code"] == report["input_sha256"]["evaluation_and_matching_code"]
     assert before["model_revision"] == report["model_revision"]
@@ -726,3 +727,28 @@ def test_on_nano_service_evidence_evaluation_matches_profile_and_ranking_inputs(
     assert changed == ["SYN-CORRIGENDUM-013", "SYN-OVERLAP-CONCEPT-015"]
     assert report["rankings"]["SYN-CORRIGENDUM-013"][1]["manufacturer_id"] == "on_nano"
     assert report["rankings"]["SYN-OVERLAP-CONCEPT-015"][4]["manufacturer_id"] == "on_nano"
+
+
+def test_nippon_service_evidence_evaluation_matches_profile_and_ranking_inputs():
+    report = json.loads((ROOT / "data/evaluation/baseline_synthetic_nippon_service_evidence_2026-10-22.json").read_text(encoding="utf-8"))
+    before = json.loads((ROOT / "data/evaluation/baseline_synthetic_nippon_service_evidence_before_2026-10-22.json").read_text(encoding="utf-8"))
+    dataset = json.loads((ROOT / "data/evaluation/golden_tender_cases.json").read_text(encoding="utf-8"))
+    profiles_path = ROOT / "data/manufacturers.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+    dataset_bytes = json.dumps(dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+    assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
+    assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
+    assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
+    assert report["input_sha256"]["ranking_profile_inputs"] == report["profile_metadata_refresh"]["run_ranking_profile_inputs_sha256"]
+    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is False
+    assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
+    assert before["input_sha256"]["evaluation_and_matching_code"] == report["input_sha256"]["evaluation_and_matching_code"]
+    assert before["model_revision"] == report["model_revision"]
+    assert before["input_sha256"]["ranking_profile_inputs"] != report["input_sha256"]["ranking_profile_inputs"]
+    assert before["input_sha256"]["manufacturer_profiles"] != report["input_sha256"]["manufacturer_profiles"]
+    assert report["candidate_recall_on_labeled_positives"] == before["candidate_recall_on_labeled_positives"] == 1.0
+    assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"] == 8 / 11
+    changed = [tender_id for tender_id in before["rankings"] if [x["manufacturer_id"] for x in before["rankings"][tender_id]] != [x["manufacturer_id"] for x in report["rankings"][tender_id]]]
+    assert changed == ["SYN-CORRIGENDUM-013", "SYN-FERTILIZER-COMMODITY-018", "SYN-LAB-GENERIC-004", "SYN-MISSING-016", "SYN-VACUUM-CLEANER-010"]

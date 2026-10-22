@@ -95,6 +95,19 @@
     "SYN-UPDATED-014": 13.750500002061017,
     "SYN-VACUUM-CLEANER-010": 12.53912498941645
   },
+  "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "a48ae5b2f0570c8f03b9fb8a2808d0d689d127c98f91854f1a37a8bd5fcfe000",
+    "current_ranking_profile_inputs_sha256": "c9b7919a3aa97cd821adfaf2d219bdbd4f28897ec7e3131be67123260f65de8f",
+    "metadata_updates": [
+      "Nippon Instruments: replaced generic service keywords with official servicing, product support, mercury measurement, training, demonstration, and application-development evidence; noted model- and region-dependent availability and discontinued-product parts limitations."
+    ],
+    "rankings_current_for_profile_inputs": false,
+    "rankings_reused": false,
+    "reason": "Historical sentence-transformers ranking snapshot and original run hashes are preserved; current profile fingerprints refreshed as metadata after the later Nippon Instruments service-scope audit. Rankings not recomputed.",
+    "run_generated_at_utc": "2026-10-22T06:10:53+00:00",
+    "run_manufacturer_profiles_sha256": "e704d94884322e8e6c7c436df8443b706b7d97c0803f32cad122f11e5351fd1c",
+    "run_ranking_profile_inputs_sha256": "96a82f1087a6d1a7c1d3563a627846f7e3a590ae4e573c8ee04d11f42c59d418"
+  },
   "ranking_metrics": {
     "1": {
       "eligible_tender_count": 0,

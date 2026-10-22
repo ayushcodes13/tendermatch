@@ -95,6 +95,26 @@
     "SYN-UPDATED-014": 14.890624996041879,
     "SYN-VACUUM-CLEANER-010": 15.635250005288981
   },
+  "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "a48ae5b2f0570c8f03b9fb8a2808d0d689d127c98f91854f1a37a8bd5fcfe000",
+    "current_ranking_profile_inputs_sha256": "c9b7919a3aa97cd821adfaf2d219bdbd4f28897ec7e3131be67123260f65de8f",
+    "metadata_updates": [
+      "SALD: service signals now reflect its official terms and conditions and service-engineer description, including installation, acceptance testing, maintenance, repair, parts, support, and upgrades.",
+      "SALD: service keywords revised to match the manufacturer terms and service-engineer description, including installation, acceptance testing, maintenance, repairs, parts, support, and upgrades.",
+      "AdNaNoTek: generic equipment-service claims were removed; retained only documented customer support, technical support, training, and technology consultation from its official About page.",
+      "AdNaNoTek: generic service signals removed, retaining official-about-page customer/technical support, training, and technology consultation.",
+      "AdNaNoTek: generic equipment-service signals were removed; retained official customer/technical services, support, training, and technology consultation.",
+      "AdNaNoTek: narrowed service terms, while explicit source-backed embedding context keeps unverified service tenders visible for manual checking.",
+      "ON NANO: service signals are tied to its 2025 general terms and are conditional on the customer order; no generic AMC, maintenance, repair, spare, calibration, or upgrade service is asserted.",
+      "ON NANO: service matching now reflects contracted installation, commissioning, instruction, defect remediation, replacement, and service-parts terms; the 2025 order condition is explicit.",
+      "Nippon Instruments: replaced generic service keywords with official servicing, product support, mercury measurement, training, demonstration, and application-development evidence; noted model- and region-dependent availability and discontinued-product parts limitations."
+    ],
+    "rankings_current_for_profile_inputs": false,
+    "rankings_reused": false,
+    "reason": "Historical report snapshot and original run hashes are preserved. Current profile fingerprints refreshed as metadata after later official-source audits; rankings not recomputed. Original sentence-transformers ranking snapshot and run hashes remain unchanged.",
+    "run_generated_at_utc": "2026-10-22T05:58:53+00:00",
+    "run_manufacturer_profiles_sha256": "b9ae6dd269ecdf90c519c29287866567806d6292b831a548353c7abb985c73a1"
+  },
   "ranking_metrics": {
     "1": {
       "eligible_tender_count": 0,
@@ -2083,24 +2103,5 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 68,
-  "profile_metadata_refresh": {
-    "run_generated_at_utc": "2026-10-22T05:58:53+00:00",
-    "run_manufacturer_profiles_sha256": "b9ae6dd269ecdf90c519c29287866567806d6292b831a548353c7abb985c73a1",
-    "current_manufacturer_profiles_sha256": "e704d94884322e8e6c7c436df8443b706b7d97c0803f32cad122f11e5351fd1c",
-    "current_ranking_profile_inputs_sha256": "96a82f1087a6d1a7c1d3563a627846f7e3a590ae4e573c8ee04d11f42c59d418",
-    "rankings_reused": false,
-    "rankings_current_for_profile_inputs": false,
-    "metadata_updates": [
-      "SALD: service signals now reflect its official terms and conditions and service-engineer description, including installation, acceptance testing, maintenance, repair, parts, support, and upgrades.",
-      "SALD: service keywords revised to match the manufacturer terms and service-engineer description, including installation, acceptance testing, maintenance, repairs, parts, support, and upgrades.",
-      "AdNaNoTek: generic equipment-service claims were removed; retained only documented customer support, technical support, training, and technology consultation from its official About page.",
-      "AdNaNoTek: generic service signals removed, retaining official-about-page customer/technical support, training, and technology consultation.",
-      "AdNaNoTek: generic equipment-service signals were removed; retained official customer/technical services, support, training, and technology consultation.",
-      "AdNaNoTek: narrowed service terms, while explicit source-backed embedding context keeps unverified service tenders visible for manual checking.",
-      "ON NANO: service signals are tied to its 2025 general terms and are conditional on the customer order; no generic AMC, maintenance, repair, spare, calibration, or upgrade service is asserted.",
-      "ON NANO: service matching now reflects contracted installation, commissioning, instruction, defect remediation, replacement, and service-parts terms; the 2025 order condition is explicit."
-    ],
-    "reason": "Historical report snapshot and original run hashes are preserved. Current profile fingerprints refreshed as metadata after later official-source audits; rankings not recomputed."
-  }
+  "unjudged_candidate_count": 68
 }
