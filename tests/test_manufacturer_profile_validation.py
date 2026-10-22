@@ -230,7 +230,10 @@ def test_agnitron_profile_links_official_products_software_and_service_sources()
         "https://agnitron.com/products/mocvd/agilis-series-300/",
         "https://agnitron.com/products/mocvd/a-series/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.2"
+    assert "Agilis GOX300 Gallium Oxide MOCVD system" in profile["products"]
+    assert "GOX Series Gallium Oxide systems" not in profile["products"]
+    assert "Agilis GOX300 large-production reactor" in profile["embedding_text"]
+    assert profile["profile_version"] == "1.3"
 
 
 def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
