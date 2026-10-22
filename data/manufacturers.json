@@ -297,17 +297,7 @@
             "energy_storage"
         ],
         "negative_keywords": [],
-        "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
-        ],
+        "service_keywords": [],
         "website": "https://thesixtech.com/",
         "source_links": [
             "https://thesixtech.com/",
@@ -325,7 +315,7 @@
             "https://thesixtech.com/products/temperature-controlled-fuel-cell-membrane-electrode-mea-press",
             "https://thesixtech.com/products/heated-vacuum-plate"
         ],
-        "profile_version": "1.5",
+        "profile_version": "1.6",
         "profile_last_updated": "2026-10-22"
     },
     {

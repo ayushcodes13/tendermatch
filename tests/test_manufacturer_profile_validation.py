@@ -361,7 +361,8 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
     assert "Large Heated Vacuum Table HVT-300" in profile["products"]
     assert "Supply and installation of fuel cell testing systems" not in profile["embedding_text"]
     assert "Supply of fuel cell testing systems" in profile["embedding_text"]
-    assert profile["profile_version"] == "1.5"
+    assert profile["service_keywords"] == []
+    assert profile["profile_version"] == "1.6"
 
 
 def test_sald_profile_links_patented_deposition_head_claim_to_official_sources():
