@@ -623,7 +623,9 @@ def test_adnanotek_services_are_limited_to_officially_described_support():
     assert "https://adnano-tek.com/about-adnanotek/" in profile["source_links"]
     assert "Official service descriptions include customer and technical services" in profile["embedding_text"]
     assert "Confirm any requested maintenance, repair, spare parts, installation, commissioning, or calibration scope" in profile["embedding_text"]
-    assert profile["profile_version"] == "1.6"
+    assert "high-end research tenders" not in profile["embedding_text"]
+    assert "relevant for tenders involving thin-film growth, semiconductor fabrication, and UHV material processing" in profile["embedding_text"]
+    assert profile["profile_version"] == "1.7"
 
 
 def test_sald_profile_links_patented_deposition_head_claim_to_official_sources():
@@ -743,7 +745,7 @@ def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources
         "https://adnano-tek.com/magnetron-sputtering-systems/",
     } <= set(profile["source_links"])
     assert "thin film characterization" not in profile["product_categories"]
-    assert profile["profile_version"] == "1.6"
+    assert profile["profile_version"] == "1.7"
 
 
 def test_empty_source_list_does_not_hide_missing_evidence_warning():
