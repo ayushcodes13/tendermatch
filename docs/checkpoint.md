@@ -4,18 +4,18 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `523b434` after Spinflex profile PR #62; this branch starts directly from that commit.
+- Current base: `main` at `91fbac7` after ParteQ CVD provenance PR #63; this branch starts directly from that commit.
 - Pre-existing draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”. Its runtime guidance is now incorporated in README; the draft remains open and redundant.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
-- Required runtime setup still missing: GitHub Actions secret `RECEIVER_EMAIL`.
+- GitHub Actions secret `RECEIVER_EMAIL` is configured. Only its presence was verified; no workflow was manually triggered and no live email was sent.
 
 ## Phase 0 — Reliability
 
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
 | P0.1 Digest stats and formatting | Complete | `fix/digest-stats-contract`; [PR #2](https://github.com/ayushcodes13/tendermatch/pull/2) | 3 targeted tests passed; merged as `609ff68`. | Live scraper and SMTP delivery are intentionally not part of the controlled test. |
-| P0.2 Configuration and email credentials | Partially verified | `fix/email-config-contract`; [PR #3](https://github.com/ayushcodes13/tendermatch/pull/3) | 5 targeted tests passed; merged as `c90d30c`. SMTP uses mocked transport. | Add `RECEIVER_EMAIL` secret before scheduled delivery can work. |
+| P0.2 Configuration and email credentials | Partially verified | `fix/email-config-contract`; [PR #3](https://github.com/ayushcodes13/tendermatch/pull/3) | 5 targeted tests passed; merged as `c90d30c`. SMTP uses mocked transport. The `RECEIVER_EMAIL` GitHub Actions secret is now configured and was verified by name only. | Live SMTP delivery remains unverified; no test email or manual workflow run was sent. |
 | P0.3 Date parsing and freshness | Complete | `fix/tender-date-freshness`; [PR #5](https://github.com/ayushcodes13/tendermatch/pull/5) | 25 targeted tests passed; compile check passed; independently reviewed; merged as `cc4e236`. | No live portal drift check; date-unknown candidates remain reviewable. |
 | P0.4 Database identity, deduplication, transactions | Complete | `fix/tender-database-deduplication`; [PR #6](https://github.com/ayushcodes13/tendermatch/pull/6) | Focused suite: 37 passed; independent review found no confirmed defects; merged as `18728e3`. | No production SQLite file was available to validate migration on customer data. Cross-portal duplicates without shared official IDs or source URLs remain unresolved; IISc document-link stability needs monitoring. |
 | P0.5 Scheduled execution and persistence | Partially verified; Actions retained temporarily | [PR #7](https://github.com/ayushcodes13/tendermatch/pull/7), [PR #8](https://github.com/ayushcodes13/tendermatch/pull/8), merged as `ae5d928` and `12e34cb` | Workflow runs serialize across refs; `TENDERMATCH_DB_PATH` supports an existing mounted volume and fails when its directory is absent. | User selected Actions temporarily. Its cache is not durable storage; provider, costs, credentials, backup/recovery, and deployment remain unresolved. New queued runs can replace a pending run. |
@@ -71,4 +71,4 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Next
 
-Next: Continue P2.1 claim-level review across manufacturer profiles. Direct source links are now recorded for all 14 profiles, but profile-level links do not verify every capability, product variant, service condition, or industry assertion. PR #59 adds SALD flexible-OLED provenance, PR #60 adds GeniCore U-FAST FLASH, PR #61 narrows Teer to documented coating R&D, and PR #62 narrows Spinflex to biomedical and structural-biology research. The current change adds ParteQ CVD claim-level provenance. The evaluation dataset remains 16 synthetic pairs and zero human-reviewed cases. P0.5 remains on GitHub Actions temporarily; durable database storage and backups are not configured. Scheduled digest delivery still needs the intended recipient address for the `RECEIVER_EMAIL` secret. P4.3 remains deferred pending evidence of measurable value, cost, latency, and safety benefit.
+Next: Continue P2.1 claim-level review across manufacturer profiles. Direct source links are now recorded for all 14 profiles, but profile-level links do not verify every capability, product variant, service condition, or industry assertion. PR #59 adds SALD flexible-OLED provenance, PR #60 adds GeniCore U-FAST FLASH, PR #61 narrows Teer to documented coating R&D, PR #62 narrows Spinflex to biomedical and structural-biology research, and PR #63 adds ParteQ CVD claim-level provenance. The evaluation dataset remains 16 synthetic pairs and zero human-reviewed cases. P0.5 remains on GitHub Actions temporarily; durable database storage and backups are not configured. The recipient secret is configured, but live scheduled delivery remains unverified. P4.3 remains deferred pending evidence of measurable value, cost, latency, and safety benefit.
