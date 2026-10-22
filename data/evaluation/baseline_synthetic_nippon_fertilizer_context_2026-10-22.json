@@ -96,12 +96,13 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "a033d621c789c04e57ace5370653f7af1d6d3e52e82840ae1d859246a55ab3f8",
+    "current_manufacturer_profiles_sha256": "786534c8bd504f67569a0053a9d47e5d63eb725936cf43097479a7fd096c777c",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
       "P.G. Instruments: added the dedicated WP750 Series water purifier product page as source provenance.",
-      "Korvus Technology: added the dedicated TES Thermal Boat Evaporation product page as direct source provenance."
+      "Korvus Technology: added the dedicated TES Thermal Boat Evaporation product page as direct source provenance.",
+      "Agnitron: added the dedicated legacy MOCVD refurbishment and upgrade page as direct service provenance."
     ],
     "rankings_reused": true,
     "reason": "Only source_links and profile_version changed after this matcher run. The original run profile hash and rankings are preserved; ranking_profile_inputs confirms score-affecting fields are unchanged. No fresh matcher run was possible because sentence-transformers is unavailable locally.",

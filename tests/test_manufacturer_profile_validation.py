@@ -245,6 +245,7 @@ def test_agnitron_profile_links_official_products_software_and_service_sources()
         "https://agnitron.com/products/insitu-monitoring/",
         "https://agnitron.com/products/control-software/",
         "https://agnitron.com/services-and-support/",
+        "https://agnitron.com/services-and-support/refurbished-mocvd/",
         "https://agnitron.com/products/mocvd/agilis-100/",
         "https://agnitron.com/products/mocvd/agilis-500/",
         "https://agnitron.com/products/mocvd/agilis-700/",
@@ -255,7 +256,7 @@ def test_agnitron_profile_links_official_products_software_and_service_sources()
     assert "GOX Series Gallium Oxide systems" not in profile["products"]
     assert "Agilis GOX300 large-production reactor" in profile["embedding_text"]
     assert "AgniTemp multiwavelength pyrometer" in profile["products"]
-    assert profile["profile_version"] == "1.4"
+    assert profile["profile_version"] == "1.5"
 
 
 def test_agnitron_legacy_mocvd_upgrades_are_classified_as_services():
