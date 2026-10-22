@@ -2,7 +2,7 @@
   "dataset_id": "tendermatch-manufacturer-match-v1",
   "description": "Synthetic adversarial tender/manufacturer examples for deterministic regression coverage. These are not ground truth or measured customer cases.",
   "human_reviewed_case_count": 0,
-  "synthetic_case_count": 16,
+  "synthetic_case_count": 18,
   "cases": [
     {
       "case_id": "syn-pvd-001",
@@ -178,6 +178,28 @@
       "reason": "Hydrogen research equipment overlaps the manufacturer's profile, but the exact power rating, certification, and delivery capability are not documented there.",
       "technical_evidence": ["hydrogen electrolyzer package", "500 kW", "mandatory certification", "30-day delivery"],
       "known_exclusions": ["certification not verified", "rating not verified", "delivery capability not verified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-fertilizer-mercury-017",
+      "tender_id": "SYN-FERTILIZER-MERCURY-017",
+      "description": "Supply of a mercury analyzer for fertilizer-plant natural gas and finished fertilizer samples, with gaseous and solid sample methods specified.",
+      "manufacturer_id": "nippon_instruments",
+      "label": "relevant",
+      "reason": "NIC documents mercury analyzers for natural gas and fertilizer products, including WA-series gas analysis and MA-series fertilizer-product analysis.",
+      "technical_evidence": ["mercury analyzer", "fertilizer production", "natural gas", "fertilizer products"],
+      "known_exclusions": ["exact model configuration requires confirmation", "site suitability and service eligibility remain unverified"],
+      "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case based on official NIC fertilizer-production page", "review_status": "not_human_reviewed"}
+    },
+    {
+      "case_id": "syn-fertilizer-commodity-018",
+      "tender_id": "SYN-FERTILIZER-COMMODITY-018",
+      "description": "Supply of bulk urea and phosphate fertilizer for seasonal agricultural distribution; no mercury analysis or measurement equipment is requested.",
+      "manufacturer_id": "nippon_instruments",
+      "label": "not_relevant",
+      "reason": "The tender procures fertilizer commodities rather than mercury measurement equipment, which is NIC's documented offering for this application.",
+      "technical_evidence": ["bulk urea", "phosphate fertilizer", "agricultural distribution"],
+      "known_exclusions": ["no analyzer or monitor requested", "no measurement service requested"],
       "provenance": {"type": "synthetic", "source": "authored adversarial evaluation case", "review_status": "not_human_reviewed"}
     }
   ]

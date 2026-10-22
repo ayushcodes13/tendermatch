@@ -19,7 +19,7 @@ def test_golden_dataset_cases_are_complete_and_provenance_labeled():
     cases = dataset["cases"]
 
     assert dataset["human_reviewed_case_count"] == 0
-    assert dataset["synthetic_case_count"] == len(cases) == 16
+    assert dataset["synthetic_case_count"] == len(cases) == 18
     assert len({case["case_id"] for case in cases}) == len(cases)
     assert {
         "syn-pump-002", "syn-pump-003", "syn-lab-generic-004", "syn-amc-005",
@@ -27,6 +27,7 @@ def test_golden_dataset_cases_are_complete_and_provenance_labeled():
         "syn-negative-009", "syn-overlap-korvus-011", "syn-overlap-staton-012",
         "syn-corrigendum-013", "syn-updated-014", "syn-vacuum-cleaner-010",
         "syn-missing-capability-016",
+        "syn-fertilizer-mercury-017", "syn-fertilizer-commodity-018",
     } <= {case["case_id"] for case in cases}
     assert len({(case["tender_id"], case["manufacturer_id"]) for case in cases}) == len(cases)
     overlap_cases = [case for case in cases if case["tender_id"] == "SYN-OVERLAP-011"]

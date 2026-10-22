@@ -174,7 +174,7 @@ def test_missing_and_invalid_datasets_return_concise_cli_errors(tmp_path, capsys
 
 def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
     report = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_teer_sector_scope_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_nippon_fertilizer_evidence_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     dataset = json.loads(
@@ -190,3 +190,5 @@ def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
     assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
     assert report["candidate_recall_on_labeled_positives"] == 1.0
     assert report["human_reviewed_case_count"] == 0
+    assert report["rankings"]["SYN-FERTILIZER-MERCURY-017"][0]["manufacturer_id"] == "nippon_instruments"
+    assert "syn-fertilizer-commodity-018" in report["false_positive_case_ids"]
