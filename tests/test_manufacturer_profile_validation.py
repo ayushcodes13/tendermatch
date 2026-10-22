@@ -85,7 +85,10 @@ def test_nippon_profile_sources_and_capabilities_are_specific_to_mercury_analysi
     assert "MA Series direct mercury analyzers" in profile["products"]
     assert "atomic absorption systems" not in profile["product_categories"]
     assert "trace metal analyzers" not in profile["product_categories"]
-    assert profile["profile_version"] == "1.1"
+    assert "fertilizer production" not in profile["industries_served"]
+    assert "fertilizer" not in profile["embedding_text"].lower()
+    assert "cement production" in profile["industries_served"]
+    assert profile["profile_version"] == "1.2"
 
 
 def test_teer_profile_does_not_claim_nordiko_products():
