@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from matching.evaluation import evaluate_rankings
+from matching.evaluation import evaluate_rankings, hash_ranking_profile_inputs
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -146,6 +146,31 @@ def test_duplicate_candidates_and_nonpositive_k_are_rejected():
         evaluate_rankings(dataset, {"T-1": [{"manufacturer_id": "m1", "rank": 0}]})
 
 
+def test_ranking_profile_fingerprint_ignores_provenance_but_tracks_match_inputs():
+    profile = {
+        "active": True,
+        "id": "maker",
+        "name": "Maker Inc.",
+        "embedding_text": "sintering systems",
+        "keywords": ["SPS"],
+        "products": ["SPS system"],
+        "product_categories": ["sintering"],
+        "aliases": ["Maker"],
+        "concepts": ["spark_plasma_sintering"],
+        "service_keywords": ["maintenance"],
+        "negative_keywords": ["medical pump"],
+        "source_links": ["https://example.test/old"],
+        "profile_version": "1.0",
+    }
+
+    initial = hash_ranking_profile_inputs([profile])
+    metadata_only = {**profile, "source_links": ["https://example.test/new"], "profile_version": "1.1"}
+    changed_ranking_input = {**metadata_only, "products": ["different product"]}
+
+    assert hash_ranking_profile_inputs([metadata_only]) == initial
+    assert hash_ranking_profile_inputs([changed_ranking_input]) != initial
+
+
 def test_current_algorithm_report_is_explicitly_unavailable_without_dependency(capsys):
     from matching.evaluation import main
 
@@ -172,7 +197,7 @@ def test_missing_and_invalid_datasets_return_concise_cli_errors(tmp_path, capsys
     assert "Traceback" not in invalid_error.err
 
 
-def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
+def test_synthetic_baseline_preserves_run_catalog_hash_and_tracks_ranking_inputs():
     report = json.loads(
         (ROOT / "data/evaluation/baseline_synthetic_nippon_fertilizer_context_2026-10-22.json")
         .read_text(encoding="utf-8")
@@ -184,14 +209,30 @@ def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
         dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
 
-    assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(
+    current_profiles = json.loads(
+        (ROOT / "data/manufacturers.json").read_text(encoding="utf-8")
+    )
+    current_profiles_sha256 = hashlib.sha256(
         (ROOT / "data/manufacturers.json").read_bytes()
     ).hexdigest()
+    original_run_profiles_sha256 = "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
+    assert report["input_sha256"]["manufacturer_profiles"] == original_run_profiles_sha256
+    assert report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"] == (
+        original_run_profiles_sha256
+    )
+    assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == (
+        current_profiles_sha256
+    )
+    assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(
+        current_profiles
+    )
     assert report["profile_metadata_refresh"]["rankings_reused"] is True
-    assert report["profile_metadata_refresh"]["previous_report_generated_at_utc"] == report[
+    assert report["profile_metadata_refresh"]["run_generated_at_utc"] == report[
         "generated_at_utc"
     ]
-    assert "source_links and profile_version only" in report["profile_metadata_refresh"]["reason"]
+    assert "Only source_links and profile_version changed" in report[
+        "profile_metadata_refresh"
+    ]["reason"]
     assert any(
         "Agnitron" in update
         for update in report["profile_metadata_refresh"]["metadata_updates"]

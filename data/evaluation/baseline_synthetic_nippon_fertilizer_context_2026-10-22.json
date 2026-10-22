@@ -22,7 +22,8 @@
       "matching/evaluation.py": "c06a1572b9c979cce11237dc10fbec51f9ec1a989a83fb985cfa4d5c6aeefc1b",
       "matching/matcher.py": "ce1c7ba8b9511d6b5f40f836f75462e1ac794ddd8c3610529acb95282a42840a"
     },
-    "manufacturer_profiles": "469329f97956230171e208afb6c640afe9ce47c103af65a19339729c1f30c4ca"
+    "manufacturer_profiles": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374",
+    "ranking_profile_inputs": "fc026237ebb51ecbcc7c2aca82e2ff17f21674beea2fba373f6f3cdc0e0a4a81"
   },
   "label_counts": {
     "insufficient_information": 2,
@@ -95,13 +96,15 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "469329f97956230171e208afb6c640afe9ce47c103af65a19339729c1f30c4ca",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance."
     ],
-    "previous_report_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "rankings_reused": true,
-    "reason": "source_links and profile_version only; these fields do not affect embeddings or ranking. The local matcher could not be rerun because sentence-transformers is unavailable."
+    "reason": "Only source_links and profile_version changed after this matcher run. The original run profile hash and rankings are preserved; ranking_profile_inputs confirms score-affecting fields are unchanged. No fresh matcher run was possible because sentence-transformers is unavailable locally.",
+    "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
+    "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
   },
   "ranking_metrics": {
     "1": {
