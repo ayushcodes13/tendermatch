@@ -51,3 +51,12 @@ def test_dependabot_checks_pinned_github_actions_weekly():
     assert 'directory: "/"' in dependabot
     assert "interval: weekly" in dependabot
     assert "open-pull-requests-limit: 2" in dependabot
+
+
+def test_dependabot_checks_python_dependencies_weekly():
+    dependabot = (ROOT / ".github/dependabot.yml").read_text(encoding="utf-8")
+    pip_update = dependabot.split("package-ecosystem: pip", 1)[1]
+
+    assert 'directory: "/"' in pip_update
+    assert "interval: weekly" in pip_update
+    assert "open-pull-requests-limit: 2" in pip_update
