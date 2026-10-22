@@ -271,7 +271,7 @@
             "electrochemistry",
             "academic R&D"
         ],
-        "embedding_text": "Supply and installation of fuel cell testing systems, electrolyzer test stations, battery testing equipment, and electrochemical analysis systems used in energy research and hydrogen technology.\nIncludes equipment for testing performance, durability, and efficiency of fuel cells, batteries, and energy storage systems in research laboratories and R&D facilities.\nAlso referred to in tenders as fuel cell test system, electrolyzer testing setup, battery testing system, electrochemical testing equipment, or hydrogen energy research system.",
+        "embedding_text": "Supply of fuel cell testing systems, electrolyzer test stations, battery testing equipment, and electrochemical analysis systems used in energy research and hydrogen technology.\nIncludes equipment for testing performance, durability, and efficiency of fuel cells, batteries, and energy storage systems in research laboratories and R&D facilities.\nAlso referred to in tenders as fuel cell test system, electrolyzer testing setup, battery testing system, electrochemical testing equipment, or hydrogen energy research system.",
         "keywords": [
             "fuel cell",
             "electrolyzer",
@@ -325,7 +325,7 @@
             "https://thesixtech.com/products/temperature-controlled-fuel-cell-membrane-electrode-mea-press",
             "https://thesixtech.com/products/heated-vacuum-plate"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {
