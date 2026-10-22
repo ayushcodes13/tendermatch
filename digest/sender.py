@@ -25,6 +25,10 @@ from email.mime.multipart import MIMEMultipart
 from config import SENDER_EMAIL, SENDER_PASSWORD
 
 
+class EmailDeliveryError(RuntimeError):
+    """Sanitized SMTP failure that never exposes the server response."""
+
+
 def send_email(subject, body, recipient_email):
     """
     Sends a plaintext email via SMTP.
@@ -55,6 +59,7 @@ def send_email(subject, body, recipient_email):
     msg.attach(MIMEText(body, "plain"))
 
     server = None
+    failure_type = None
     try:
         server = smtplib.SMTP("smtp.gmail.com", 587, timeout=30)
         server.starttls()
@@ -64,8 +69,8 @@ def send_email(subject, body, recipient_email):
         print("📩 Email sent successfully.")
 
     except Exception as exc:
-        print(f"❌ Email failed ({type(exc).__name__}).")
-        raise
+        failure_type = type(exc).__name__
+        print(f"❌ Email failed ({failure_type}).")
     finally:
         if server is not None:
             try:
@@ -74,3 +79,8 @@ def send_email(subject, body, recipient_email):
                 # SMTP accepted the message before cleanup; a QUIT failure does
                 # not make the delivery outcome uncertain or trigger a retry.
                 pass
+
+    if failure_type is not None:
+        # Raise after leaving the handler so the original SMTP exception and
+        # any credential-bearing server response are not chained to the error.
+        raise EmailDeliveryError(f"SMTP delivery failed ({failure_type})")
