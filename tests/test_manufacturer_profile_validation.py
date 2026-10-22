@@ -269,7 +269,10 @@ def test_on_nano_profile_links_official_products_and_subsystems():
         "https://on-nano.com/sub-systems/",
         "https://on-nano.com/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.1"
+    assert "C3+ Large-Substrate Spin Coater" in profile["products"]
+    assert not any("World's Largest" in product for product in profile["products"])
+    assert "patented C3+ process" not in profile["embedding_text"]
+    assert profile["profile_version"] == "1.2"
 
 
 def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources():

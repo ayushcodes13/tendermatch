@@ -1118,7 +1118,7 @@
             "semiconductor processing modules"
         ],
         "products": [
-            "World's Largest Spin Coater (C3+ Technology)",
+            "C3+ Large-Substrate Spin Coater",
             "ON Nano Matrix Coater",
             "ON Nano Matrix Developer",
             "ON Nano Matrix Hot Module",
@@ -1141,7 +1141,7 @@
             "defense and security manufacturing",
             "scientific R&D"
         ],
-        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm.\nFeatured technology includes the patented C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput.\nOffers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production Matrix systems.\nKey applications include GPTG projects, high-density packaging, and glass core substrate processing.\nSystems are designed with a compact footprint, SECS/GEM compatibility, and gas phase cleaning processes that reduce chemical usage by over 90%.",
+        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm.\nFeatured technology includes the C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput.\nOffers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production Matrix systems.\nKey applications include GPTG projects, high-density packaging, and glass core substrate processing.\nSystems are designed with a compact footprint, SECS/GEM compatibility, and gas phase cleaning processes that reduce chemical usage by over 90%.",
         "keywords": [
             "C3+ technology",
             "spin coater",
@@ -1187,7 +1187,7 @@
             "https://on-nano.com/sub-systems/",
             "https://on-nano.com/"
         ],
-        "profile_version": "1.1",
+        "profile_version": "1.2",
         "profile_last_updated": "2026-10-22"
     }
 ]
