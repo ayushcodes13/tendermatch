@@ -96,7 +96,7 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "98ff14a0818a4fee2063ae2bdd24ac433d0fa7b405c6a9a458543c6ca46e7ce3",
+    "current_manufacturer_profiles_sha256": "6ac225a7f0b359f98b1c08af80f3a9df2fef5d1f5ce9c99c9e3d69611998e22a",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -107,7 +107,8 @@
       "Nippon Instruments: added the dedicated RA-7000F ultra-trace aqueous mercury analyzer product page as direct source provenance.",
       "Nippon Instruments: added the dedicated MA-3 Solo direct mercury analyzer product page as direct source provenance.",
       "Nippon Instruments: added the dedicated MA-3000 direct mercury analyzer product page as direct source provenance.",
-      "Nippon Instruments: added the dedicated PE-1000 liquid petroleum mercury analyzer product page as direct source provenance."
+      "Nippon Instruments: added the dedicated PE-1000 liquid petroleum mercury analyzer product page as direct source provenance.",
+      "Nippon Instruments: added the dedicated WA-5A gaseous-matrix mercury analyzer product page as direct source provenance."
     ],
     "rankings_reused": true,
     "reason": "Only source_links and profile_version changed after this matcher run. The original run profile hash and rankings are preserved; ranking_profile_inputs confirms score-affecting fields are unchanged. No fresh matcher run was possible because sentence-transformers is unavailable locally.",
