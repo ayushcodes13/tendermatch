@@ -705,12 +705,8 @@
         ],
         "industries_served": [
             "tool manufacturing and metalworking",
-            "automotive and transportation",
-            "medical and biocompatible devices",
-            "aerospace and defense",
-            "food processing",
-            "woodworking",
-            "minting and decorative arts",
+            "medical and biocompatible coatings",
+            "minting and decorative coatings",
             "academic R&D"
         ],
         "embedding_text": "Supply and installation of turn-key PVD and PECVD coating systems including cathodic arc evaporation and magnetron sputtering equipment for industrial coating applications.\nUsed in manufacturing environments for coating cutting tools, forming dies, and automotive components with hard, wear-resistant, and low-friction coatings.\nAlso referred to as PVD coating machine, cathodic arc evaporation system, magnetron sputtering unit, or turn-key coating system.\nSpecialized in complete industrial coating solutions with integrated process optimization.",
@@ -761,7 +757,7 @@
             "https://statoncoating.com/research/",
             "https://statoncoating.com/contact/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {

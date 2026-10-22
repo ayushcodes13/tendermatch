@@ -122,7 +122,15 @@ def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
     assert "tool reconditioning" in profile["service_keywords"]
     assert "https://statoncoating.com/contact/" in profile["source_links"]
     assert "https://statoncoating.com/research/" in profile["source_links"]
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
+    assert "https://statoncoating.com/products/" in profile["source_links"]
+    assert "tool manufacturing and metalworking" in profile["industries_served"]
+    assert "medical and biocompatible coatings" in profile["industries_served"]
+    assert "minting and decorative coatings" in profile["industries_served"]
+    assert "aerospace and defense" not in profile["industries_served"]
+    assert "food processing" not in profile["industries_served"]
+    assert "woodworking" not in profile["industries_served"]
+    assert "medical and biocompatible devices" not in profile["industries_served"]
 
 
 def test_genicore_toll_sintering_is_a_service_not_a_product():
