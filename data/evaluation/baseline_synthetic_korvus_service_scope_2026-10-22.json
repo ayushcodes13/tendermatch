@@ -95,11 +95,12 @@
     "SYN-VACUUM-CLEANER-010": 14.620582995121367
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "7adfea94a1318d3f5a4b1c837cc36c0c6c6c74fd598a838070ddd20dcb433b5c",
-    "current_ranking_profile_inputs_sha256": "98ce2dc2a1cb247680b2d407899e8aa51a46aa4e83540675f12b8eee1e7c63ad",
+    "current_manufacturer_profiles_sha256": "f0f76b9e011c1fb7fc7700a3e33b704bce414f661945beebc02da70c7a01f636",
+    "current_ranking_profile_inputs_sha256": "a3d84f4bdcc5c207ace487346bf4e8d33b6c5e48b18cbea97bd6f5deec0a6fc1",
     "metadata_updates": [
       "TheSix soft medical-infusion negative signals added; original historical run hashes and rankings preserved.",
-      "SALD: service keywords narrowed to installation, acceptance testing, original-warranty services, preventive maintenance monitoring, documented machine maintenance/repair, troubleshooting, field upgrades, and related training; generic spare-parts and software/hardware-upgrade service claims removed."
+      "SALD: service keywords narrowed to installation, acceptance testing, original-warranty services, preventive maintenance monitoring, documented machine maintenance/repair, troubleshooting, field upgrades, and related training; generic spare-parts and software/hardware-upgrade service claims removed.",
+      "STATON: service terms now distinguish equipment maintenance, support, training, remote diagnostics, system upgrades, and coating-part replacement from a repair-cost reduction statement; separate tool production and sharpening/regrinding are linked to their official pages."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,

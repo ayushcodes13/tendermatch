@@ -224,16 +224,16 @@ def test_staton_profile_does_not_match_tool_reconditioning_as_equipment():
     assert match["category_hits"] == []
 
 
-def test_staton_tool_reconditioning_is_recorded_as_service_evidence():
+def test_staton_tool_sharpening_and_regrinding_is_service_evidence():
     root = Path(__file__).resolve().parents[1]
     manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
     staton = next(profile for profile in manufacturers if profile["id"] == "staton")
     matcher = make_matcher([staton], [[1.0]], [1.0])
 
-    match = matcher.match_topk({"title": "Tool reconditioning service"})[0]
+    match = matcher.match_topk({"title": "Tool sharpening and regrinding service"})[0]
 
     assert match["product_hits"] == []
-    assert match["service_hits"] == ["tool reconditioning"]
+    assert match["service_hits"] == ["tool sharpening and regrinding"]
 
 
 def test_genicore_short_series_sintering_matches_service_not_product():

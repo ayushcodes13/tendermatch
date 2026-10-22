@@ -774,13 +774,12 @@
         "service_keywords": [
             "installation",
             "maintenance",
-            "repair",
-            "replacement",
             "tool production",
-            "tool reconditioning",
+            "tool sharpening and regrinding",
             "operator training",
             "remote diagnostics",
             "system upgrades",
+            "replacement of coating equipment parts",
             "customer support"
         ],
         "website": "https://www.staton.sk/en/home/",
@@ -790,9 +789,11 @@
             "https://statoncoating.com/products/octomag-series/",
             "https://statoncoating.com/research/",
             "https://statoncoating.com/contact/",
-            "https://statoncoating.com/services/"
+            "https://statoncoating.com/services/",
+            "https://www.staton.sk/en/services/sharpening-regrinding-tools/",
+            "https://www.staton.sk/en/services/tools/tool-production/"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {
