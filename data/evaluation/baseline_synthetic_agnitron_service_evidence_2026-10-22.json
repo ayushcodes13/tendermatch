@@ -2098,14 +2098,16 @@
   "profile_metadata_refresh": {
     "run_generated_at_utc": "2026-10-22T05:44:04+00:00",
     "run_manufacturer_profiles_sha256": "8aaab49710eaa435ddd97811d7e769f536fd126447d1c8b6264400bb69bd17b3",
-    "current_manufacturer_profiles_sha256": "b34332cc3d7a7391ecaade31c049fef432314a98a740ff5478e344989a26d6b0",
-    "current_ranking_profile_inputs_sha256": "f4cf044c0a1437129153c5bb84efccd3b410ff2c2c1de5cbdb879efcfa2c28d5",
+    "current_manufacturer_profiles_sha256": "b9ebbd739f3653034a133389355ef5fa7317ce206c3301fcab51987ab1fe8787",
+    "current_ranking_profile_inputs_sha256": "7816796c7ae9a8754bc8922caab93a8c01407ba33e2920e19df36578197442d4",
     "rankings_reused": false,
     "rankings_current_for_profile_inputs": false,
     "metadata_updates": [
       "ParteQ GmbH: service keywords are now restricted to documented aerosol measurements, characterization, contract synthesis, process development, scale-up, technical/economic analysis, prototype design, turnkey systems, nanopowder production, and customer-specific functionalized-particle synthesis.",
-      "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities."
+      "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities.",
+      "P.G. Instruments: profile service signals narrowed to manufacturer-authorized distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty replacement, and spare-parts availability based on a 2021 signed authorization document.",
+      "P.G. Instruments: added service-scope evidence from its signed 2021 manufacturer authorization document for distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty defective-part replacement, and spare-parts availability."
     ],
-    "reason": "Historical report ranking snapshot and run hashes are preserved. Current manufacturer profile and ranking-input hashes have been refreshed as metadata after subsequent official-source audits; no historical ranking was rerun for the current catalog."
+    "reason": "Historical report rankings and run hashes preserved; current profile metadata fingerprints refreshed after source audits. The sentence-transformers model was not required, and no historical ranking was rerun for this catalog."
   }
 }

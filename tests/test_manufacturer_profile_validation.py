@@ -107,7 +107,7 @@ def test_pg_instruments_profile_has_official_product_and_application_sources():
     assert "gas_chromatography" not in profile["concepts"]
     assert "atomic fluorescence spectrometers" in profile["products"]
     assert "food and beverage quality control and monitoring" in profile["industries_served"]
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
 
 
 def test_spinflex_microwave_amplifier_scope_matches_its_official_product_page():
@@ -489,6 +489,23 @@ def test_parteq_profile_links_official_synthesis_instrumentation_and_service_sou
     assert "aerosol measurement instruments" in profile["embedding_text"]
     assert "AQ Guard air-quality aerosol measurement" not in profile["embedding_text"]
     assert profile["profile_version"] == "1.4"
+
+
+def test_pg_instruments_service_terms_are_limited_to_documented_support():
+    profile = next(p for p in load_profiles() if p["id"] == "pg_instruments")
+
+    assert set(profile["service_keywords"]) == {
+        "authorized distributor instrument servicing",
+        "instrument installation",
+        "IQ/OQ testing",
+        "emergency service support",
+        "technical support",
+        "warranty replacement of defective parts",
+        "spare parts availability",
+    }
+    assert not {"AMC", "annual maintenance", "maintenance", "repair", "commissioning", "calibration"} & set(profile["service_keywords"])
+    assert "https://storage.mtender.gov.md/get/b70ad211-467f-476d-a519-99540a51cd56-1637088115424" in profile["source_links"]
+    assert profile["profile_version"] == "1.3"
 
 
 def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
