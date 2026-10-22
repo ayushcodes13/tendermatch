@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 13.200083005358465
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "0aea9945023b49da1b9ca1dd8dd99d508ec7679b3d8ab7c8ba74607584de95ec",
-    "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
+    "current_manufacturer_profiles_sha256": "a3a374b47374afac97b6645086deb382e2d08b5e8e31cf54c0205bc52c83ee98",
+    "current_ranking_profile_inputs_sha256": "7065d4b70cf49605074b7a59f6bc66959f9e2ab30c32e4aa17c9ebe84b17bc28",
     "metadata_updates": [
       "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities.",
       "P.G. Instruments: profile service signals narrowed to manufacturer-authorized distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty replacement, and spare-parts availability based on a 2021 signed authorization document.",
@@ -126,7 +126,8 @@
       "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment.",
       "ParteQ: removed unsupported low-competition claim from matching text; official sources describe products and services, not tender competition levels.",
       "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications.",
-      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged."
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged.",
+      "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,

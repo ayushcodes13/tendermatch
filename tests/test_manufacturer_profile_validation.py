@@ -628,7 +628,17 @@ def test_adnanotek_services_are_limited_to_officially_described_support():
     assert "Confirm any requested maintenance, repair, spare parts, installation, commissioning, or calibration scope" in profile["embedding_text"]
     assert "high-end research tenders" not in profile["embedding_text"]
     assert "relevant for tenders involving thin-film growth, semiconductor fabrication, and UHV material processing" in profile["embedding_text"]
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
+
+
+def test_adnanotek_josephson_product_claim_matches_official_product_scope():
+    profile = next(p for p in load_profiles() if p["id"] == "adnanotek")
+
+    assert "Quantum Computing Deposition System for Josephson Junction fabrication" in profile["products"]
+    assert "Josephson Junction Cluster systems" not in profile["products"]
+    assert "The manufacturer lists a Quantum Computing Deposition System for Josephson Junction fabrication." in profile["embedding_text"]
+    assert "specialized cluster tools" not in profile["embedding_text"]
+    assert profile["profile_version"] == "1.8"
 
 
 def test_sald_profile_links_patented_deposition_head_claim_to_official_sources():
@@ -748,7 +758,7 @@ def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources
         "https://adnano-tek.com/magnetron-sputtering-systems/",
     } <= set(profile["source_links"])
     assert "thin film characterization" not in profile["product_categories"]
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
 
 
 def test_empty_source_list_does_not_hide_missing_evidence_warning():

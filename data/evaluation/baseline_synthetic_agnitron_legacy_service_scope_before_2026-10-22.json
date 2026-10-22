@@ -2061,15 +2061,16 @@
   "profile_metadata_refresh": {
     "run_manufacturer_profiles_sha256": "f0f76b9e011c1fb7fc7700a3e33b704bce414f661945beebc02da70c7a01f636",
     "run_ranking_profile_inputs_sha256": "a3d84f4bdcc5c207ace487346bf4e8d33b6c5e48b18cbea97bd6f5deec0a6fc1",
-    "current_manufacturer_profiles_sha256": "0aea9945023b49da1b9ca1dd8dd99d508ec7679b3d8ab7c8ba74607584de95ec",
-    "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
+    "current_manufacturer_profiles_sha256": "a3a374b47374afac97b6645086deb382e2d08b5e8e31cf54c0205bc52c83ee98",
+    "current_ranking_profile_inputs_sha256": "7065d4b70cf49605074b7a59f6bc66959f9e2ab30c32e4aa17c9ebe84b17bc28",
     "rankings_reused": false,
     "rankings_current_for_profile_inputs": false,
     "reason": "The recorded ranking run is retained against its exact profile snapshot; current profile hashes are tracked separately after later profile reviews.",
     "run_generated_at_utc": "2026-10-22T07:58:56+00:00",
     "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
     "metadata_updates": [
-      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged."
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged.",
+      "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed."
     ]
   }
 }

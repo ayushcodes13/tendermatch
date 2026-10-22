@@ -1814,5 +1814,19 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 16,
   "top_k": 5,
-  "unjudged_candidate_count": 60
+  "unjudged_candidate_count": 60,
+  "profile_metadata_refresh": {
+    "run_generated_at_utc": "2026-10-21T21:02:28+00:00",
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "run_manufacturer_profiles_sha256": "92df42e88d0ed4a09af423d0c9c8badb47b8b59fcdfcd5667d8515a793154f4e",
+    "run_ranking_profile_inputs_sha256": null,
+    "current_manufacturer_profiles_sha256": "a3a374b47374afac97b6645086deb382e2d08b5e8e31cf54c0205bc52c83ee98",
+    "current_ranking_profile_inputs_sha256": "7065d4b70cf49605074b7a59f6bc66959f9e2ab30c32e4aa17c9ebe84b17bc28",
+    "rankings_reused": false,
+    "reason": "Historical report snapshot; original run hashes and rankings are preserved.",
+    "metadata_updates": [
+      "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed."
+    ],
+    "rankings_current_for_profile_inputs": false
+  }
 }
