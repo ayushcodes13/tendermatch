@@ -467,7 +467,7 @@
             "photonics and LED production",
             "academic and industrial R&D"
         ],
-        "embedding_text": "Supply, procurement, and installation of industrial-scale PVD coating systems including ion beam deposition, ion beam milling, and magnetron sputtering systems used for semiconductor manufacturing, magnetic sensors, and advanced materials production.\nUsed in production environments for high-volume thin film coating, MRAM devices, and precision surface engineering requiring high uniformity and large-area processing.\nAlso referred to as ion beam deposition system, ion beam sputtering system, industrial PVD coating system, or thin film production equipment.\nSpecialized in large-scale industrial PVD systems and ion beam technologies for semiconductor and manufacturing applications.",
+        "embedding_text": "Supply and procurement of industrial-scale PVD coating systems including ion beam deposition, ion beam milling, and magnetron sputtering systems used for semiconductor manufacturing, magnetic sensors, and advanced materials production.\nUsed in production environments for high-volume thin film coating, MRAM devices, and precision surface engineering requiring high uniformity and large-area processing.\nAlso referred to as ion beam deposition system, ion beam sputtering system, industrial PVD coating system, or thin film production equipment.\nSpecialized in large-scale industrial PVD systems and ion beam technologies for semiconductor and manufacturing applications.",
         "keywords": [
             "ion beam deposition",
             "ion beam milling",
@@ -494,15 +494,17 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
+            "worldwide ongoing customer support",
+            "preventative maintenance packages tailored to system use",
+            "hourly online service and support",
+            "repair of electrical and electronic components",
+            "replacement unit quoted when repair is not possible",
+            "spare parts and consumables service",
+            "system maintenance and refurbishment",
+            "end-user and maintenance training courses",
+            "hotline technical support",
+            "legacy system upgrades",
+            "production ion beam system upgrades"
         ],
         "website": "https://nordiko-tech.co.uk",
         "source_links": [
@@ -515,9 +517,10 @@
             "https://nordiko-tech.co.uk/nordiko-9000-9550-series",
             "https://nordiko-tech.co.uk/nordiko-n1500",
             "https://nordiko-tech.co.uk/ion-beam-technology",
-            "https://nordiko-tech.co.uk/sputtering-technology"
+            "https://nordiko-tech.co.uk/sputtering-technology",
+            "https://nordiko-tech.co.uk/service-and-support"
         ],
-        "profile_version": "1.3",
+        "profile_version": "1.4",
         "profile_last_updated": "2026-10-22"
     },
     {

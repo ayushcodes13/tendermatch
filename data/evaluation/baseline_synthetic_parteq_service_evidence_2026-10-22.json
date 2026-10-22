@@ -2098,15 +2098,17 @@
   "profile_metadata_refresh": {
     "run_generated_at_utc": "2026-10-22T05:48:57+00:00",
     "run_manufacturer_profiles_sha256": "222a2273bc2fcc597e6f8916f30e25890dc4194c23c82f00df5cfbddd99ee028",
-    "current_manufacturer_profiles_sha256": "b9ebbd739f3653034a133389355ef5fa7317ce206c3301fcab51987ab1fe8787",
-    "current_ranking_profile_inputs_sha256": "7816796c7ae9a8754bc8922caab93a8c01407ba33e2920e19df36578197442d4",
+    "current_manufacturer_profiles_sha256": "97621c5e4ebee42dd3bf4d1efd551c23d488bb44afb0ba5570945812177dcc5b",
+    "current_ranking_profile_inputs_sha256": "0a9dd56952f7cfabdf20a665dc21d570c4a2db29db1c5b38dd2438597dddb2bb",
     "rankings_reused": false,
     "rankings_current_for_profile_inputs": false,
     "metadata_updates": [
       "GeniCore: service signals now reflect documented short-series production, device servicing/support, R&D services, consulting/training, machining, and materials-analysis capabilities.",
       "P.G. Instruments: profile service signals narrowed to manufacturer-authorized distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty replacement, and spare-parts availability based on a 2021 signed authorization document.",
-      "P.G. Instruments: added service-scope evidence from its signed 2021 manufacturer authorization document for distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty defective-part replacement, and spare-parts availability."
+      "P.G. Instruments: added service-scope evidence from its signed 2021 manufacturer authorization document for distributor servicing, installation, IQ/OQ testing, emergency and technical support, warranty defective-part replacement, and spare-parts availability.",
+      "Nordiko: service terms now use official support, preventive maintenance, hourly online help, component repairs, spare parts, refurbishment, training, and upgrades; the unsupported installation claim was removed from embedding text.",
+      "Nordiko: official support-page signals added for preventive maintenance, online support, component repair, spares, refurbishment, training, and system upgrades; unsupported installation wording was removed from the description."
     ],
-    "reason": "Historical report rankings and run hashes preserved; current profile metadata fingerprints refreshed after source audits. The sentence-transformers model was not required, and no historical ranking was rerun for this catalog."
+    "reason": "Historical report ranking snapshot and run hashes are preserved. Current profile fingerprints were refreshed as metadata after later source audits; the sentence-transformers model was not required and rankings were not recomputed."
   }
 }
