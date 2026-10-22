@@ -952,15 +952,18 @@
             "vacuum-based thin film deposition"
         ],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
+            "installation and acceptance testing",
+            "preventive maintenance monitoring",
+            "equipment maintenance services",
+            "equipment repair services",
+            "spare parts",
+            "replacement parts",
+            "hardware upgrades",
+            "software upgrades",
+            "field upgrades",
+            "customer support",
+            "service engineering",
+            "technical troubleshooting support"
         ],
         "website": "https://spatialald.com/",
         "source_links": [
@@ -971,9 +974,11 @@
             "https://spatialald.com/markets/solar-energy/",
             "https://spatialald.com/markets/green-hydrogen/",
             "https://spatialald.com/markets/barriers-and-packaging/",
-            "https://www2.avs.org/symposium2019/Papers/Paper_TF-TuA3.html"
+            "https://www2.avs.org/symposium2019/Papers/Paper_TF-TuA3.html",
+            "https://spatialald.com/terms-conditions/",
+            "https://spatialald.com/careers/service-engineer/"
         ],
-        "profile_version": "1.5",
+        "profile_version": "1.6",
         "profile_last_updated": "2026-10-22"
     },
     {
