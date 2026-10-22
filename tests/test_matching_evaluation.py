@@ -464,13 +464,13 @@ def test_sald_head_scope_evaluation_pair_preserves_before_after_comparison():
     )
 
 
-def test_current_sald_reactor_evaluation_matches_profile_and_ranking_inputs():
+def test_thesix_gas_humidification_evaluation_matches_profile_and_ranking_inputs():
     report = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_sald_reactor_scope_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_thesix_gas_humidification_scope_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     before = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_sald_reactor_scope_before_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_thesix_gas_humidification_scope_before_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     dataset = json.loads(
@@ -497,14 +497,13 @@ def test_current_sald_reactor_evaluation_matches_profile_and_ranking_inputs():
     assert before["input_sha256"]["ranking_profile_inputs"] != (
         report["input_sha256"]["ranking_profile_inputs"]
     )
+    assert before["input_sha256"]["manufacturer_profiles"] != (
+        report["input_sha256"]["manufacturer_profiles"]
+    )
     assert report["candidate_recall_on_labeled_positives"] == 1.0
     assert report["labeled_candidate_precision"] == 8 / 11
     assert report["candidate_recall_on_labeled_positives"] == (
         before["candidate_recall_on_labeled_positives"]
     )
     assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"]
-    assert all(
-        [item["manufacturer_id"] for item in before["rankings"][tender_id]]
-        == [item["manufacturer_id"] for item in report["rankings"][tender_id]]
-        for tender_id in before["rankings"]
-    )
+    assert report["rankings"] == before["rankings"]

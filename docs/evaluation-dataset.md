@@ -27,9 +27,9 @@ Run the current candidate generator with the installed SentenceTransformer depen
 
 ## Current synthetic diagnostic
 
-The repository retains historical profile snapshots in `data/evaluation/`. The current SALD product-scope review has matched before-and-after runs in `data/evaluation/baseline_synthetic_sald_reactor_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_sald_reactor_scope_2026-10-22.json`. Both use the same 18-case synthetic dataset, matcher code, model revision, and top-five setting; only the manufacturer profile snapshot differs.
+The repository retains historical profile snapshots in `data/evaluation/`. The latest Thesix gas-humidification profile review has matched before-and-after runs in `data/evaluation/baseline_synthetic_thesix_gas_humidification_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_thesix_gas_humidification_scope_2026-10-22.json`. Both use the same 18-case synthetic dataset, matcher code, model revision, and top-five setting; only the manufacturer profile snapshot differs. The profile now uses the official product names for fuel-cell gas humidifiers and a heated SS316 gas transfer hose, with direct product-page links.
 
-The paired runs returned identical top-five rankings and metrics: 8/8 labeled relevant pairs retrieved, 8/11 retrieved definitive judgments relevant, and 68 candidates unjudged. SALD no longer lists a generic “Atmospheric Pressure ALD Reactor” as a standalone product. Official sources describe atmospheric operation as a characteristic of its R&D and high-volume systems; the profile keeps atmospheric ALD in product categories, embedding text, and keywords.
+The paired runs returned identical top-five rankings and metrics: 8/8 labeled relevant pairs retrieved, 8/11 retrieved definitive judgments relevant, and 68 candidates unjudged. This is only a regression check: no golden case is labeled for Thesix and the synthetic dataset has zero human-reviewed examples.
 
 The prior SALD deposition-head pair is preserved in `data/evaluation/baseline_synthetic_sald_head_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_sald_head_scope_2026-10-22.json`. It reclassifies patented deposition-head technology as a feature of the R&D system and retains an exact lexical cue; its paired run also left top-five rankings and metrics unchanged.
 
@@ -39,7 +39,7 @@ The ON NANO paired run is preserved in `data/evaluation/baseline_synthetic_on_na
 
 These remain synthetic diagnostics, not ground truth or production-accuracy estimates. There are zero human-reviewed examples and no tender is exhaustively labeled across the active catalog, so precision@K and recall@K remain null. Do not interpret unchanged labeled-pair metrics as a quality improvement.
 
-The current-profile SALD run records a median candidate-generation latency of 14.9 ms and a mean of 15.2 ms over 17 unique synthetic tenders after model loading, using Python 3.12.13, Sentence Transformers 6.2.0, Torch 2.14.1, and model revision `5c38ec7c405ec4b44b94cc5a9bb96e735b38267a`. This local timing is not a service-level measurement. Cost, model-load time, portal time, SMTP time, and full pipeline latency are not measured.
+The latest Thesix profile run records a median candidate-generation latency of 14.0 ms and a mean of 14.6 ms over 17 unique synthetic tenders after model loading, using Python 3.12.13, Sentence Transformers 6.2.0, Torch 2.14.1, and model revision `5c38ec7c405ec4b44b94cc5a9bb96e735b38267a`. This local timing is not a service-level measurement. Cost, model-load time, portal time, SMTP time, and full pipeline latency are not measured.
 
 Run the dataset integrity checks with:
 

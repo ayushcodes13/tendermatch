@@ -343,9 +343,15 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
         "https://thesixtech.com/collections/fuel-cell-production-units",
         "https://thesixtech.com/products/electrolyzer-test-cell",
         "https://thesixtech.com/products/flow-battery-test-cell",
+        "https://thesixtech.com/products/gas-humidifier-cabinet",
+        "https://thesixtech.com/products/anode-cathode-gas-humidifier",
+        "https://thesixtech.com/products/heated-ss316-flexible-gas-transfer-hose",
     } <= set(profile["source_links"])
     assert "flow battery test cells" in profile["products"]
-    assert profile["profile_version"] == "1.2"
+    assert "Gas Humidifier for Fuel Cells" in profile["products"]
+    assert "Anode & Cathode Gas Humidifier for Fuel Cells" in profile["products"]
+    assert "Heated SS316 Gas Transfer Hose for Fuel Cells" in profile["products"]
+    assert profile["profile_version"] == "1.3"
 
 
 def test_sald_profile_links_patented_deposition_head_claim_to_official_sources():
