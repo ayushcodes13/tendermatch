@@ -96,7 +96,7 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "3a1686dfae493fbc8a378b44a207257eef200a8db0a9ea34f411db82a49e3a8a",
+    "current_manufacturer_profiles_sha256": "2d59b822377755bd2a91587e8d0e95a171ba47e4dd79073e4dda27efa0d07f2d",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -119,7 +119,8 @@
       "Agnitron: added the official Custom Systems page as direct provenance for the Agilis GOX300 large-production Gallium Oxide MOCVD system.",
       "AdNaNoTek: added dedicated official pages for RIE, ICP, and ECR plasma etching systems as direct provenance for the RIE/ICP-RIE/ECR-RIE profile claim.",
       "AdNaNoTek: added dedicated UHV component, manipulator, and transfer-arm pages as direct provenance for transfer robots and manipulators.",
-      "GeniCore: added the dedicated Pulse Plasma Compaction product page as direct provenance for its PPC system capability."
+      "GeniCore: added the dedicated Pulse Plasma Compaction product page as direct provenance for its PPC system capability.",
+      "GeniCore: added the dedicated Diamond Enhanced Cemented Carbide material page as direct provenance for its DEC product claim."
     ],
     "rankings_reused": false,
     "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results.",
