@@ -103,7 +103,7 @@
             "materials science",
             "energy storage and batteries",
             "catalysis",
-            "environmental monitoring",
+            "air quality and fine-dust monitoring",
             "advanced academic R&D"
         ],
         "embedding_text": "ParteQ GmbH develops advanced particle engineering systems including nanoparticle synthesis units, aerosol measurement instruments, and powder functionalization technologies using processes like flame spray pyrolysis and chemical vapor deposition. Their systems enable precise control over nano- and micro-scale particle structures and are used in advanced materials research, energy storage, catalysis, and nanotechnology labs. These solutions are highly relevant for tenders involving nanomaterial synthesis, aerosol science, and pilot-scale material development infrastructure where specialized expertise and low competition environments are typical.",
@@ -145,11 +145,13 @@
             "https://parteq.net/en/products/nanopowder-synthesis/",
             "https://parteq.net/en/products/aerosolmesstechnik/",
             "https://parteq.net/en/products/aerosolmesstechnik/nanoparticle-measurement-systems/",
+            "https://parteq.net/en/products/aerosolmesstechnik/fine-dust-monitoring/",
+            "https://parteq.net/en/products/aerosolmesstechnik/fine-dust-monitoring/aq-guard.html",
             "https://parteq.net/en/services-in-aerosol-technology/forschungsdienstleistungen.html",
             "https://parteq.net/produkte/partikelstrukturierung-und-funktionalisierung/",
             "https://parteq.net/en/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {
