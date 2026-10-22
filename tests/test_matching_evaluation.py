@@ -464,13 +464,13 @@ def test_sald_head_scope_evaluation_pair_preserves_before_after_comparison():
     )
 
 
-def test_thesix_service_signals_evaluation_matches_profile_and_ranking_inputs():
+def test_staton_service_evidence_evaluation_matches_profile_and_ranking_inputs():
     report = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_thesix_service_signals_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_staton_service_evidence_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     before = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_thesix_service_signals_before_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_staton_service_evidence_before_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     dataset = json.loads(
