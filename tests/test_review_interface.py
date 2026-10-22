@@ -440,3 +440,25 @@ def test_feedback_to_adjudication_pipeline_integration(review_server):
         assert case["provenance"]["feedback_reviewer"] == PRIMARY_REVIEWER
     finally:
         conn.close()
+
+
+def test_review_ui_calibrated_decision_labels(review_server):
+    """Verify salesperson review UI serves calibrated screening labels instead of uncalibrated probabilities."""
+    base = review_server["base_url"]
+
+    with _request(f"{base}/app.js") as resp:
+        assert resp.status == 200
+        js = resp.read().decode("utf-8")
+
+        # Must NOT contain misleading uncalibrated percentage probabilities
+        assert "High probability fit" not in js
+        assert "Semantic score: " not in js
+
+        # Must contain calibrated screening labels
+        assert "Strong screening signal" in js
+        assert "Potential fit" in js
+        assert "Needs technical verification" in js
+        assert "Unsupported" in js
+        assert "Explicit technical conflict" in js
+        assert "uncalibrated signal; not a probability" in js
+

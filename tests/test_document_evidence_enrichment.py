@@ -105,7 +105,15 @@ def test_enrich_tender_with_extracted_requirements_matches_capabilities():
     }
     enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG)
     evidence = enriched["document_evidence"]
-    assert evidence["completeness"] == "verified"
+    assert evidence["completeness"] == "coverage_not_assessed"
+    assert "requirement coverage not assessed" in evidence["summary"]
+    lifecycle = evidence["extraction_lifecycle"]
+    assert lifecycle["pdf_downloaded"] is True
+    assert lifecycle["native_text_extracted"] is True
+    assert lifecycle["ocr_required"] is False
+    assert lifecycle["extraction_truncated"] is False
+    assert lifecycle["requirement_coverage_evaluated"] is False
+    assert lifecycle["technical_compatibility_evaluated"] is True
     assert evidence["pages_reviewed"] == 3
     assert len(evidence["verified_requirements"]) >= 1
 
@@ -157,8 +165,8 @@ def test_format_email_renders_document_review_and_conflict_disclosure():
         "title": "Deposition system tender",
         "organization": "National Laboratory",
         "document_evidence": {
-            "completeness": "verified",
-            "summary": "Official PDF verified natively across 4 page(s).",
+            "completeness": "coverage_not_assessed",
+            "summary": "Official PDF native text extracted across 4 page(s); requirement coverage not assessed.",
             "conflicts": [
                 {
                     "requirement": "Sterilization autoclave requirement",
@@ -186,7 +194,7 @@ def test_format_email_renders_document_review_and_conflict_disclosure():
     }
 
     subject, body = format_email([tender], [], {})
-    assert "Document review: Official PDF verified natively across 4 page(s)." in body
+    assert "Document review: Official PDF native text extracted across 4 page(s); requirement coverage not assessed." in body
     assert "⚠️ Document conflicts detected:" in body
     assert "Sterilization autoclave requirement (p. 3)" in body
     assert "Verified document requirements:" in body
@@ -273,7 +281,7 @@ def test_pipeline_executes_document_enrichment_end_to_end(monkeypatch, tmp_path)
 
     assert len(sent) == 1
     subject, body, recipient = sent[0]
-    assert "Document review: Official PDF verified natively across 1 page(s)." in body
+    assert "Document review: Official PDF native text extracted across 1 page(s); requirement coverage not assessed." in body
 
 
 # ==============================================================================
