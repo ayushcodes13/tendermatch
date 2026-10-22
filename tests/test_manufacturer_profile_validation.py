@@ -285,10 +285,13 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
     assert profile["profile_version"] == "1.2"
 
 
-def test_sald_profile_links_official_technology_and_market_sources():
+def test_sald_profile_links_patented_deposition_head_claim_to_official_sources():
     profile = next(p for p in load_profiles() if p["id"] == "sald")
 
+    assert "Patented Spatial ALD Deposition Head" in profile["products"]
     assert {
+        "https://spatialald.com/solutions/rd-system/",
+        "https://spatialald.com/solutions/high-volume-production-systems/",
         "https://spatialald.com/technology/atomic-layer-deposition/",
         "https://spatialald.com/markets/battery-technology/",
         "https://spatialald.com/markets/solar-energy/",
