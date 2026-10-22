@@ -701,8 +701,7 @@
             "MARC1 Arc Cathodes",
             "fsARC Cathodes",
             "PLASMAgTECHNOLOGY Plasma Sources",
-            "HIPIMS and HITUS Deposition Modules",
-            "Precision Cutting and Forming Tools"
+            "HIPIMS and HITUS Deposition Modules"
         ],
         "industries_served": [
             "tool manufacturing and metalworking",
@@ -750,16 +749,19 @@
             "installation",
             "commissioning",
             "calibration",
-            "replacement"
+            "replacement",
+            "tool production",
+            "tool reconditioning"
         ],
         "website": "https://www.staton.sk/en/home/",
         "source_links": [
             "https://statoncoating.com/products/",
             "https://statoncoating.com/products/octoarc-series/",
             "https://statoncoating.com/products/octomag-series/",
-            "https://statoncoating.com/research/"
+            "https://statoncoating.com/research/",
+            "https://statoncoating.com/contact/"
         ],
-        "profile_version": "1.1",
+        "profile_version": "1.2",
         "profile_last_updated": "2026-10-22"
     },
     {
