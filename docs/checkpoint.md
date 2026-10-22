@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `b146a99` after checkpoint PR #67; this branch starts directly from that commit.
+- Current base: `main` at `2dca513` after Thesix provenance PR #68; this branch starts directly from that commit.
 - Pre-existing draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”. Its runtime guidance is now incorporated in README; the draft remains open and redundant.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -51,7 +51,7 @@ Update this file through the same focused PR as each implementation where practi
 | Task | Status | Branch / PR | Verification and merge | Remaining blocker |
 | --- | --- | --- | --- | --- |
 | P4.1 Selective official-document retrieval | Complete | `codex/feat-selective-tender-document-retrieval`; [PR #23](https://github.com/ayushcodes13/tendermatch/pull/23) | 10 focused tests; 124 full tests; compile and diff checks passed. GitHub's then-current selected suite passed but did not include the new document tests; this is corrected in the P4.2 CI update. Merged as `e29e1c6`. | No portal host enabled by default; no blanket rights finding. Actions needs a durable protected mount before document storage can be enabled. |
-| P4.2 Technical extraction with provenance | Complete | `codex/feat-source-grounded-document-extraction`; [PR #24](https://github.com/ayushcodes13/tendermatch/pull/24) | 7 extraction tests, 10 retrieval tests, and 131 full tests passed; GitHub CI ran the new document modules (105 selected tests passed). Compile and diff checks passed. Merged as `3d99dae`. Synthetic PDF fixtures only. | No human-reviewed real tender PDFs; no OCR; labelled-line extraction does not interpret unlabeled prose. Parser memory isolation remains for hardening. |
+| P4.2 Technical extraction with provenance | Complete | `codex/feat-source-grounded-document-extraction`; [PR #24](https://github.com/ayushcodes13/tendermatch/pull/24) | 7 extraction tests, 10 retrieval tests, and 131 full tests passed; GitHub CI ran the new document modules (105 selected tests passed). Compile and diff checks passed. Merged as `3d99dae`. Synthetic PDF fixtures only. | No human-reviewed real tender PDFs; no OCR; labelled-line extraction does not interpret unlabeled prose. The current hardening change isolates extraction in a bounded worker; host storage and permitted real-PDF evaluation remain outstanding. |
 | P4.3 Selective LLM verification | Deferred pending evidence | — | — | Current golden set has no human-reviewed labels or permitted real-document evaluation set; establish value, cost, latency, and safety evidence first. No LLM stage is implemented. |
 
 ## Phase 5 — Usability and feedback
