@@ -121,7 +121,7 @@ def test_cppp_and_iitm_source_filters_keep_unknown_and_open_opportunities(monkey
         {"published_date": "21-Oct-2026 05:00 PM", "closing_date": "20-Oct-2026"}
     )
     assert iitm.is_recent_tender("not a date")
-    assert iitm.is_recent_tender("2026-10-01", closing_date="2026-10-22")
+    assert iitm.is_recent_tender("2026-10-01", closing_date="2026-10-22", now=NOW)
 
 
 def test_iisc_date_roles_do_not_turn_corrigendum_only_listing_into_new_publication():

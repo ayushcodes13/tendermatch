@@ -272,7 +272,8 @@ def record_extraction_result(conn: sqlite3.Connection, extraction: dict) -> None
         (
             extraction["source_url"], extraction["content_fingerprint"],
             extraction["status"], json.dumps(extraction, sort_keys=True),
-            extraction.get("error_type"), extraction["extracted_at"],
+            extraction.get("error_type"),
+            extraction.get("extracted_at") or datetime.now(timezone.utc).isoformat(),
         ),
     )
     conn.commit()

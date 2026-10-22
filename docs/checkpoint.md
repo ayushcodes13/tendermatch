@@ -161,3 +161,12 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
 - **P2.4 Digest, Terminal, and Ledger Reconciliation**: Built `test_reconcile_email_terminal_and_database_run_ledger` in `tests/test_pipeline_digest.py` verifying full consistency across email digest overview, terminal stdout, and SQLite `pipeline_runs.summary_json` across scraped, fresh, expired, stale, duplicate, previously notified, high-signal, exploration, and email delivery status.
 - **Verification**: 300 tests passed locally (`pytest -q`); 14 profiles validated with 0 errors and 0 warnings.
 
+## Phase 4 — Complete Document Evidence Integration (P4.1 – P4.4)
+
+- **P4.1 Document Access & Storage Review**: Enforced explicit host allowlists (`DOCUMENT_ALLOWED_HOSTS`) and restricted storage directories (`DOCUMENT_STORAGE_DIR`) without CAPTCHA/auth bypass.
+- **P4.2 Source-Grounded Native Text Extraction**: Conservative native parser detects labelled fields (`equipment_type`, `technical_specifications`, `mandatory_requirements`, `optional_requirements`, `delivery_requirements`) with exact page citations and verbatim quotes, reporting scanned documents as `needs_ocr` and truncated text as `partial`.
+- **P4.3 Connecting Extracted Evidence to Matching**: Created `matching/document_enrichment.py` (`enrich_tender_with_document_evidence`) to validate extracted technical requirements against manufacturer capabilities, identify explicit conflicts with manufacturer limitations, preserve unverified unknowns, and automatically demote conflicted candidates to `explore` for human review.
+- **P4.4 Document Completeness Disclosure**: Updated `digest/formatter.py` to disclose document verification status (verified, partial, needs_ocr, unavailable, no_document), page-cited verified capabilities, and explicit conflict alerts.
+- **Verification**: 306 tests passed locally (`pytest -q`); 14 profiles validated with 0 errors and 0 warnings.
+
+

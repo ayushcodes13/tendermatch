@@ -133,6 +133,22 @@ def _render_opportunity(lines, tender, *, kind, heading):
     else:
         lines.append("   Manufacturer/product fit: No manufacturer match details attached; review the source manually.")
 
+    doc_evidence = tender.get("document_evidence") or explanation.get("document_evidence")
+    if doc_evidence:
+        lines.append(f"   Document review: {doc_evidence.get('summary')}")
+        conflicts = doc_evidence.get("conflicts", [])
+        if conflicts:
+            lines.append("   ⚠️ Document conflicts detected:")
+            for c in conflicts[:2]:
+                page_str = f" (p. {c['page']})" if c.get("page") else ""
+                lines.append(f"   - {c.get('requirement')}{page_str}: {c.get('conflict_reason')}")
+        verified = doc_evidence.get("verified_requirements", [])
+        if verified:
+            lines.append("   Verified document requirements:")
+            for v in verified[:2]:
+                page_str = f" (p. {v['page']})" if v.get("page") else ""
+                lines.append(f"   - {v.get('requirement')}{page_str}")
+
     unverified = _items(explanation.get("unverified_requirements"))
     if unverified:
         lines.append("   Unverified requirements:")

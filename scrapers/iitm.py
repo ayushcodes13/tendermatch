@@ -24,7 +24,7 @@ from pipeline.freshness import should_process_tender
 API_URL = "https://tenders.iitm.ac.in/tenderapi/listtender"
 
 
-def is_recent_tender(opening_date, cutoff_hours=24, closing_date=None):
+def is_recent_tender(opening_date, cutoff_hours=24, closing_date=None, *, now=None):
     """
     Checks if an IITM tender is within the freshness cutoff.
 
@@ -33,11 +33,12 @@ def is_recent_tender(opening_date, cutoff_hours=24, closing_date=None):
         cutoff_hours (int): Sliding window duration in hours.
 
     Returns:
-        bool: True if newer than the cutoff.
+        bool: True if newer than the cutoff or closing in the future.
     """
     return should_process_tender(
         {"published_date": opening_date, "closing_date": closing_date},
         max_age_hours=cutoff_hours,
+        now=now,
     )
 
 

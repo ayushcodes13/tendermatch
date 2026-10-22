@@ -53,6 +53,7 @@ from data.run_ledger import complete_run, fail_run, start_run
 
 from matching.filter import classify_tender
 from matching.embedder import build_matcher
+from matching.document_enrichment import enrich_tender_with_document_evidence
 
 from digest.formatter import format_email
 from digest.sender import send_email
@@ -344,9 +345,16 @@ def _execute_pipeline(conn, run_id, started_clock, source_results):
             max_candidates=10,
             max_documents_per_candidate=2,
         )
+        extractions_by_url = {}
         extracted_count = 0
         for document in retrievals:
             if document.status != "downloaded" or not document.storage_path:
+                extractions_by_url[document.source_url] = {
+                    "status": document.status,
+                    "error_type": document.error_type,
+                    "pages": [],
+                    "fields": {},
+                }
                 continue
             extraction = extract_pdf_requirements(
                 document.storage_path,
@@ -354,7 +362,33 @@ def _execute_pipeline(conn, run_id, started_clock, source_results):
                 content_fingerprint=document.content_fingerprint,
             )
             record_extraction_result(conn, extraction)
+            extractions_by_url[document.source_url] = extraction
             extracted_count += extraction["status"] == "extracted"
+
+        # Connect extracted PDF evidence directly to matching candidate validation and review output
+        for candidate in document_candidates:
+            matched_extraction = None
+            for link in candidate.get("document_links", []):
+                if link in extractions_by_url:
+                    matched_extraction = extractions_by_url[link]
+                    break
+            if not matched_extraction and candidate.get("source_url") in extractions_by_url:
+                matched_extraction = extractions_by_url[candidate.get("source_url")]
+
+            enrich_tender_with_document_evidence(candidate, matched_extraction)
+
+            # If an explicit conflict with manufacturer capabilities was detected, demote
+            if candidate.get("has_document_conflicts") and candidate in high_tenders:
+                high_tenders.remove(candidate)
+                explore_tenders.append(candidate)
+                high_signal -= 1
+                explore_count += 1
+                needs_review_count += 1
+                print(
+                    f"[DOCUMENT ENRICHMENT] Conflict detected in {candidate.get('title')}; "
+                    f"demoted to explore for review."
+                )
+
         print(
             f"[DOCUMENT RETRIEVAL] {len(retrievals)} linked files attempted; "
             f"{extracted_count} native-text extractions completed"
