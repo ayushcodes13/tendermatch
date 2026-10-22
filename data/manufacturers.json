@@ -391,6 +391,7 @@
         ],
         "website": "https://genicore.eu",
         "source_links": [
+            "https://genicore.eu/",
             "https://genicore.eu/products/",
             "https://genicore.eu/products/devices/",
             "https://genicore.eu/products/devices/flash/",
@@ -399,7 +400,7 @@
             "https://genicore.eu/applications/",
             "https://genicore.eu/products/graphite-dies-for-spark-plasma-sintering-systems/"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {

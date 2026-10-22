@@ -22,7 +22,7 @@
       "matching/evaluation.py": "c06a1572b9c979cce11237dc10fbec51f9ec1a989a83fb985cfa4d5c6aeefc1b",
       "matching/matcher.py": "ce1c7ba8b9511d6b5f40f836f75462e1ac794ddd8c3610529acb95282a42840a"
     },
-    "manufacturer_profiles": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
+    "manufacturer_profiles": "6f67799f2350e9559d104d76d6251a0592ec034bc10ec49848e3b95b2b002b28"
   },
   "label_counts": {
     "insufficient_information": 2,
@@ -93,6 +93,11 @@
     "SYN-PVD-001": 32.14033400581684,
     "SYN-UPDATED-014": 15.54575000773184,
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
+  },
+  "profile_metadata_refresh": {
+    "previous_report_generated_at_utc": "2026-10-22T03:35:12+00:00",
+    "rankings_reused": true,
+    "reason": "source_links and profile_version only; these fields do not affect embeddings or ranking. The local matcher could not be rerun because sentence-transformers is unavailable."
   },
   "ranking_metrics": {
     "1": {
