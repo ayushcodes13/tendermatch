@@ -245,13 +245,34 @@ def test_staton_profile_does_not_list_tool_reconditioning_as_equipment():
     assert "medical and biocompatible devices" not in profile["industries_served"]
 
 
-def test_genicore_toll_sintering_is_a_service_not_a_product():
+def test_genicore_service_terms_match_official_services_page():
     profile = next(p for p in load_profiles() if p["id"] == "genicore")
 
-    assert "Toll Sintering Services" not in profile["products"]
-    assert "Toll Sintering Services" in profile["service_keywords"]
+    assert set(profile["service_keywords"]) == {
+        "short-series production using U-FAST technology",
+        "guarantee and post-guarantee device servicing",
+        "online device service",
+        "tele-service contracts",
+        "online operational support",
+        "technical support through partner network",
+        "feasibility studies",
+        "proof-of-concept sample production",
+        "research and development services",
+        "consulting and training on SPS and FAST sintering",
+        "graphite machining",
+        "graphite mold design",
+        "grinding services",
+        "microstructure and composition analysis",
+        "microscope observation",
+        "precision cutting",
+        "hot mounting",
+        "surface roughness measurement",
+        "hardness testing",
+    }
+    assert "Toll Sintering Services" not in profile["service_keywords"]
+    assert not {"AMC", "annual maintenance", "maintenance", "repair", "spares", "installation", "commissioning", "calibration", "replacement"} & set(profile["service_keywords"])
     assert "https://genicore.eu/products/services/" in profile["source_links"]
-    assert profile["profile_version"] == "1.8"
+    assert profile["profile_version"] == "1.9"
 
 
 def test_genicore_profile_includes_documented_u_fast_flash_platform():
@@ -277,7 +298,7 @@ def test_genicore_material_and_application_claims_link_to_official_sources():
     assert "CUBNEC" in profile["keywords"]
     assert "Cubic Boron Nitride Enhanced Cemented Carbide" in profile["keywords"]
     assert "aerospace and defense materials" in profile["industries_served"]
-    assert profile["profile_version"] == "1.8"
+    assert profile["profile_version"] == "1.9"
 
 
 def test_korvus_profile_links_named_deposition_sources():

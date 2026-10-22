@@ -518,13 +518,39 @@ def test_agnitron_service_evidence_evaluation_preserves_historical_profile_input
     assert before["labeled_candidate_precision"] == report["labeled_candidate_precision"]
 
 
-def test_parteq_service_evidence_evaluation_matches_profile_and_ranking_inputs():
+def test_parteq_service_evidence_evaluation_preserves_historical_profile_inputs():
     report = json.loads(
         (ROOT / "data/evaluation/baseline_synthetic_parteq_service_evidence_2026-10-22.json").read_text(encoding="utf-8")
     )
     before = json.loads(
         (ROOT / "data/evaluation/baseline_synthetic_parteq_service_evidence_before_2026-10-22.json").read_text(encoding="utf-8")
     )
+    dataset = json.loads((ROOT / "data/evaluation/golden_tender_cases.json").read_text(encoding="utf-8"))
+    profiles_path = ROOT / "data/manufacturers.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+    dataset_bytes = json.dumps(dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+    assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
+    assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
+    assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
+    assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
+    assert before["input_sha256"]["evaluation_and_matching_code"] == report["input_sha256"]["evaluation_and_matching_code"]
+    assert before["model_revision"] == report["model_revision"]
+    assert before["input_sha256"]["ranking_profile_inputs"] != report["input_sha256"]["ranking_profile_inputs"]
+    assert before["input_sha256"]["manufacturer_profiles"] != report["input_sha256"]["manufacturer_profiles"]
+    assert report["candidate_recall_on_labeled_positives"] == before["candidate_recall_on_labeled_positives"] == 1.0
+    assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"] == 8 / 11
+    assert all(
+        [item["manufacturer_id"] for item in before["rankings"][tender_id]]
+        == [item["manufacturer_id"] for item in report["rankings"][tender_id]]
+        for tender_id in before["rankings"]
+    )
+
+
+def test_genicore_service_evidence_evaluation_matches_profile_and_ranking_inputs():
+    report = json.loads((ROOT / "data/evaluation/baseline_synthetic_genicore_service_evidence_2026-10-22.json").read_text(encoding="utf-8"))
+    before = json.loads((ROOT / "data/evaluation/baseline_synthetic_genicore_service_evidence_before_2026-10-22.json").read_text(encoding="utf-8"))
     dataset = json.loads((ROOT / "data/evaluation/golden_tender_cases.json").read_text(encoding="utf-8"))
     profiles_path = ROOT / "data/manufacturers.json"
     profiles = json.loads(profiles_path.read_text(encoding="utf-8"))

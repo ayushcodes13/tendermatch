@@ -234,13 +234,13 @@ def test_staton_tool_reconditioning_is_recorded_as_service_evidence():
     assert match["service_hits"] == ["tool reconditioning"]
 
 
-def test_genicore_toll_sintering_matches_service_not_product():
+def test_genicore_short_series_sintering_matches_service_not_product():
     root = Path(__file__).resolve().parents[1]
     manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
     genicore = next(profile for profile in manufacturers if profile["id"] == "genicore")
     matcher = make_matcher([genicore], [[1.0]], [1.0])
 
-    match = matcher.match_topk({"title": "Toll sintering services for ceramic powders"})[0]
+    match = matcher.match_topk({"title": "Short-series production using U-FAST technology for ceramic powders"})[0]
 
     assert match["product_hits"] == []
-    assert "Toll Sintering Services" in match["service_hits"]
+    assert "short-series production using U-FAST technology" in match["service_hits"]
