@@ -21,3 +21,32 @@ The official [Nordiko N1500 page](https://nordiko-tech.co.uk/nordiko-n1500) iden
 ## TheSix TIC-95 conductivity product scope
 
 The official [TIC-95 product page](https://thesixtech.com/products/ionic-conductivity-cell) describes one Ionic Conductivity Cell for membrane testing, including membrane conductivity and resistance measurements. The profile now names that specific cell rather than a generic plural family of conductivity measurement systems. The revised product text affects ranking inputs; a paired matcher run was not available because `sentence_transformers` is missing locally. Historical evaluation reports retain their original run hashes and rankings and are marked as historical for the new profile fingerprint.
+
+## Claim-level provenance and validation
+
+In addition to profile-level metadata, claim-level provenance is tracked in `data/manufacturer_claims.json` under the schema `data/claim-provenance.schema.json`. Run the claim validator with:
+
+```bash
+python -m matching.claim_provenance
+```
+
+Each claim record tracks:
+- **`claim_id`**: Deterministic uppercase identifier (e.g. `KORVUS-PVD-001`).
+- **`manufacturer_id`**: Foreign key to `data/manufacturers.json`.
+- **`claim_type`**: `product`, `capability`, `industry`, `service`, or `configuration`.
+- **`claim_text`**: Exact description of the claimed capability.
+- **`source_url`**: Direct official URL from the profile's verified `source_links`.
+- **`source_locator`**: Specific heading, section, or page.
+- **`supporting_quote`**: Verbatim quote from official documentation.
+- **`validation_state`**: One of:
+  - `validated_capability`: Direct official documentation substantiating the capability.
+  - `product_specific`: Capability supported only for a specific model or configuration (e.g. Agilis GOX300 wafer carrier).
+  - `conditional_service`: Service offered conditionally (e.g. customer training with active warranty).
+  - `region_specific`: Service or distributorship restricted to specific territories.
+  - `historical`: Capability documented historically but not verified current.
+  - `unverified`: Asserted claim lacking direct official source citation.
+  - `unsupported`: Capability contradicted or unsubstantiated by official sources.
+- **`known_limitations`**: Explicit operational boundaries (e.g. maximum substrate size, required consumables).
+
+In the matching engine, candidates whose evidence relies on `conditional_service` or `unverified` claims produce human-readable warnings under `claim_warnings`. Candidates with `unsupported` claim conflicts are automatically routed to `agent_review` (`UNSUPPORTED_MANUFACTURER_CLAIM_CONFLICT`) in `matching/decision.py`, preventing unverified claims from inflating automated recommendations into `high_signal` opportunities.
+

@@ -23,6 +23,7 @@ import numpy as np
 
 from matching.domain_keywords import company_keywords
 from matching.candidate_compatibility import detect_candidate_contextual_negatives
+from matching.claim_provenance import assess_candidate_claims, load_claims
 
 
 class TenderMatcher:
@@ -34,14 +35,16 @@ class TenderMatcher:
     4. concept evidence
     5. service compatibility
     6. negative keyword penalties
+    7. claim-level provenance verification
 
     match_topk() should be used by the new pipeline.
     match() is kept for legacy compatibility.
     """
 
-    def __init__(self, embedder, k=5):
+    def __init__(self, embedder, k=5, claims=None):
         self.embedder = embedder
         self.k = k
+        self.claims = load_claims() if claims is None else claims
 
         self.manufacturers = embedder.get_manufacturers()
         self.mfr_embeddings = embedder.get_embeddings()
@@ -113,7 +116,7 @@ class TenderMatcher:
             base_score = float(candidate["base_semantic_score"])
             final_score = float(final_scores[idx])
             evidence = candidate["evidence"]
-            results.append({
+            result_entry = {
                 "manufacturer_id": manufacturer.get("id"),
                 "manufacturer_name": manufacturer.get("name"),
                 "manufacturer_source_links": manufacturer.get("source_links", []) or [],
@@ -147,7 +150,18 @@ class TenderMatcher:
                     score=final_score,
                     evidence=evidence,
                 ),
-            })
+            }
+
+            # Evaluate claim-level provenance
+            claim_assessment = assess_candidate_claims(result_entry, self.claims)
+            result_entry["claim_provenance"] = claim_assessment
+            if claim_assessment.get("claim_warnings"):
+                result_entry["profile_warnings"] = (
+                    list(result_entry.get("profile_warnings", []))
+                    + claim_assessment["claim_warnings"]
+                )
+
+            results.append(result_entry)
 
         return results
 

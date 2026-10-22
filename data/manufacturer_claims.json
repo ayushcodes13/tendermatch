@@ -1,0 +1,278 @@
+[
+  {
+    "claim_id": "KORVUS-PVD-001",
+    "manufacturer_id": "korvus_technology",
+    "claim_type": "product",
+    "claim_text": "HEX Series modular benchtop and research PVD platforms supporting sputtering and evaporation.",
+    "claim_term": "HEX Series PVD systems",
+    "source_url": "https://korvustech.com/pvd-systems/",
+    "source_locator": "Overview Section: HEX Series",
+    "supporting_quote": "The HEX Series is a modular PVD system designed for research and educational applications, supporting magnetron sputtering, electron beam evaporation, and thermal evaporation.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Modular components must be configured specifically for the target deposition technique (e.g. sputtering vs thermal boat).",
+      "Vacuum levels dependent on installed turbo-molecular pumping package."
+    ]
+  },
+  {
+    "claim_id": "KORVUS-SERVICE-001",
+    "manufacturer_id": "korvus_technology",
+    "claim_type": "service",
+    "claim_text": "Thin-film and PVD training and remote customer support.",
+    "claim_term": "thin-film training",
+    "source_url": "https://korvustech.com/pvd-teaching-and-training/",
+    "source_locator": "Teaching and Training Section",
+    "supporting_quote": "Korvus Technology publishes teaching and training resources for thin-film research and provides direct customer support for HEX users.",
+    "validation_state": "conditional_service",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "On-site installation and field service require explicit regional quotation.",
+      "Customer support requires active warranty or service agreement."
+    ]
+  },
+  {
+    "claim_id": "PARTEQ-SPARK-001",
+    "manufacturer_id": "parteq",
+    "claim_type": "product",
+    "claim_text": "Spark-discharge synthesis systems for metallic and graphitic nanoparticles.",
+    "claim_term": "spark-discharge synthesis systems",
+    "source_url": "https://parteq.net/en/products/",
+    "source_locator": "Nanoparticle Synthesis Systems Heading",
+    "supporting_quote": "ParteQ offers spark discharge generators and synthesis systems for the continuous generation of metallic, bimetallic, and carbon nanoparticles in gas phase.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Precursor rods and carrier gas purity determine particle size distribution and output rate."
+    ]
+  },
+  {
+    "claim_id": "PARTEQ-CVD-001",
+    "manufacturer_id": "parteq",
+    "claim_type": "capability",
+    "claim_text": "CVD-based powder functionalization and surface modification systems.",
+    "claim_term": "CVD-based powder functionalization systems",
+    "source_url": "https://parteq.net/en/products/",
+    "source_locator": "Powder Functionalization Section",
+    "supporting_quote": "Fluidized-bed and aerosol-assisted CVD systems for continuous coating and functionalization of micro- and nano-powders.",
+    "validation_state": "product_specific",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Limited to powder and particulate substrates; cannot be used for planar wafer CVD deposition."
+    ]
+  },
+  {
+    "claim_id": "PG-SPECTRO-001",
+    "manufacturer_id": "pg_instruments",
+    "claim_type": "product",
+    "claim_text": "Atomic Absorption Spectrometers (AAS) and ICP-OES analytical instrumentation.",
+    "claim_term": "atomic absorption spectrometers (AAS)",
+    "source_url": "https://www.pginstruments.com/products/",
+    "source_locator": "Spectroscopy Product Catalog",
+    "supporting_quote": "PG Instruments supplies Atomic Absorption Spectrophotometers (flame and graphite furnace) and Inductively Coupled Plasma Optical Emission Spectrometers for analytical laboratories.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Consumable hollow cathode lamps and certified calibration standards required for target elements."
+    ]
+  },
+  {
+    "claim_id": "PG-DISTRIB-001",
+    "manufacturer_id": "pg_instruments",
+    "claim_type": "service",
+    "claim_text": "Territory-specific distributor authorization and localized warranty support.",
+    "claim_term": "customer support",
+    "source_url": "https://www.pginstruments.com/industries/",
+    "source_locator": "Global Support and Distribution",
+    "supporting_quote": "Instruments are distributed through authorized territorial partners who provide commissioning and technical maintenance.",
+    "validation_state": "region_specific",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Distributor authorization letters are country- and tender-specific.",
+      "Historical authorization records for specific territories (e.g. Moldova) do not extend globally."
+    ]
+  },
+  {
+    "claim_id": "THESIX-CELL-001",
+    "manufacturer_id": "thesix_solutions",
+    "claim_type": "product",
+    "claim_text": "Flow Battery Test Cells and PEM Electrolyzer Test Cells.",
+    "claim_term": "PEM Electrolyzer Test Cell",
+    "source_url": "https://thesixtech.com/collections/fuel-cell-test-systems",
+    "source_locator": "Electrolyzer & Flow Battery Cells",
+    "supporting_quote": "Precision test fixtures including Flow Battery Test Cells and PEM Water Electrolysis single cells for electrochemical research and membrane characterization.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Fixtures designed for laboratory cell testing; not megawatt-scale industrial stack deployments.",
+      "Conductivity measurements require TIC-95 membrane test fixture."
+    ]
+  },
+  {
+    "claim_id": "GENICORE-SPS-001",
+    "manufacturer_id": "genicore",
+    "claim_type": "product",
+    "claim_text": "U-FAST Field-Assisted Spark Plasma Sintering (SPS/FAST) furnace systems.",
+    "claim_term": "U-FAST (SPS) COMPACT",
+    "source_url": "https://genicore.eu/products/",
+    "source_locator": "U-FAST Product Family",
+    "supporting_quote": "U-FAST advanced Spark Plasma Sintering equipment utilizing very short, high-density current pulses for rapid densification of nano-materials, ceramics, and intermetallics.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Requires high-power 3-phase electrical supply and chilled cooling water.",
+      "Graphite die tooling sizes determine maximum sample diameter."
+    ]
+  },
+  {
+    "claim_id": "NORDIKO-IBD-001",
+    "manufacturer_id": "nordiko",
+    "claim_type": "product",
+    "claim_text": "Broad Ion Beam Deposition (IBD) and Ion Beam Etching (IBE) processing systems.",
+    "claim_term": "Mnem-iX Broad Ion Beam System",
+    "source_url": "https://nordiko-tech.co.uk/products",
+    "source_locator": "Ion Beam Systems",
+    "supporting_quote": "Nordiko designs and builds broad ion beam systems for spintronics, magnetic sensor fabrication, and optical thin film coatings.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Substrate diameter is bounded by model (e.g. N1500-600 accommodates up to 500 mm substrate diameter).",
+      "Process gases require calibrated MFC delivery."
+    ]
+  },
+  {
+    "claim_id": "NIC-MERCURY-001",
+    "manufacturer_id": "nippon_instruments",
+    "claim_type": "product",
+    "claim_text": "Direct thermal decomposition and cold vapor atomic absorption/fluorescence mercury analyzers.",
+    "claim_term": "MA Series direct mercury analyzers",
+    "source_url": "https://www.hg-nic.com/products/",
+    "source_locator": "Direct Mercury Analyzers",
+    "supporting_quote": "Nippon Instruments Corporation specializes exclusively in mercury measurement instrumentation, including direct thermal evaporation and reduction vaporization analyzers.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Instrumentation is strictly dedicated to mercury analysis; does not analyze general heavy metals (lead, cadmium, arsenic) without specialized digestion/detection."
+    ]
+  },
+  {
+    "claim_id": "NIC-FERTILIZER-001",
+    "manufacturer_id": "nippon_instruments",
+    "claim_type": "industry",
+    "claim_text": "Mercury measurement in fertilizer raw materials, rock phosphate, and chemical processing.",
+    "claim_term": "fertilizer mercury analysis",
+    "source_url": "https://www.hg-nic.com/industries-application/",
+    "source_locator": "Chemical & Agricultural Applications",
+    "supporting_quote": "Determination of trace mercury in fertilizers, agricultural soils, and chemical raw materials compliant with international environmental standards.",
+    "validation_state": "product_specific",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Valid for mercury detection in fertilizer products; does not supply fertilizer commodities, urea, or bulk chemicals."
+    ]
+  },
+  {
+    "claim_id": "SPINFLEX-EPR-001",
+    "manufacturer_id": "spinflex",
+    "claim_type": "product",
+    "claim_text": "Continuous wave and pulsed Electron Paramagnetic Resonance (EPR/ESR) spectrometers.",
+    "claim_term": "spinUP pulse EPR/ESR systems",
+    "source_url": "https://spin-flex.com/products/",
+    "source_locator": "EPR Spectrometer Lineup",
+    "supporting_quote": "SpinFlex manufactures benchtop and research-grade pulse and CW Electron Paramagnetic Resonance spectrometers covering X-band and Q-band frequencies.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Magnetic field swept electromagnet and microwave bridge required; cryogenic sample temperatures require liquid helium/nitrogen cryostat option."
+    ]
+  },
+  {
+    "claim_id": "STATON-PVD-001",
+    "manufacturer_id": "staton",
+    "claim_type": "product",
+    "claim_text": "Industrial cathodic arc and magnetron sputtering PVD hard-coating systems.",
+    "claim_term": "OCTOARC Series (PD300-G2, PD500-G2, PD700-G2, PD1000-G2)",
+    "source_url": "https://statoncoating.com/products/",
+    "source_locator": "PVD Coating Equipment",
+    "supporting_quote": "STATON produces industrial PVD coating equipment with cathodic vacuum arc and pulsed magnetron technology for cutting tools, forming tools, and wear parts.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Industrial coating chambers requiring rotary substrate carousel and multi-target arc evaporation configurations."
+    ]
+  },
+  {
+    "claim_id": "TEER-SPUTTER-001",
+    "manufacturer_id": "teer_coatings",
+    "claim_type": "product",
+    "claim_text": "Closed Field Unbalanced Magnetron Sputter Ion Plating (CFUBMSIP) systems.",
+    "claim_term": "UDP 4 Magnetron Sputtering Systems",
+    "source_url": "https://www.teercoatings.co.uk/standard-systems",
+    "source_locator": "Standard PVD Coating Systems",
+    "supporting_quote": "Teer Coatings patented Closed Field Unbalanced Magnetron Sputter Ion Plating systems provide high ion current density for dense, adherent coatings.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Optimized for tribological, optical, and biomedical coatings; does not manufacture semiconductor fab front-end wafer track systems."
+    ]
+  },
+  {
+    "claim_id": "SALD-SPATIAL-001",
+    "manufacturer_id": "sald",
+    "claim_type": "product",
+    "claim_text": "Spatial Atomic Layer Deposition (SALD) equipment operating at atmospheric pressure.",
+    "claim_term": "SALD R&D Tool (Compact Lab System)",
+    "source_url": "https://spatialald.com/solutions/rd-system/",
+    "source_locator": "R&D Tool Specifications",
+    "supporting_quote": "SALD R&D tool enables spatial atomic layer deposition at atmospheric conditions with deposition rates orders of magnitude faster than conventional temporal ALD.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Substrate must be planar or flexible web; high-aspect-ratio trench step coverage requires specific precursor head clearance."
+    ]
+  },
+  {
+    "claim_id": "AGNITRON-MOCVD-001",
+    "manufacturer_id": "agnitron",
+    "claim_type": "product",
+    "claim_text": "Agilis Series MOCVD reactors for wide-bandgap semiconductors (Ga2O3, GaN, AlN).",
+    "claim_term": "Agilis GOX300 Gallium Oxide MOCVD system",
+    "source_url": "https://agnitron.com/products/mocvd/",
+    "source_locator": "Agilis MOCVD Systems",
+    "supporting_quote": "Agnitron designs and manufactures specialized MOCVD reactors, including the Agilis GOX300 Gallium Oxide system equipped with a 305 mm wafer carrier.",
+    "validation_state": "product_specific",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Configured for 305 mm wafer carrier plate; production wafer count and throughput scale must be confirmed against customer specification."
+    ]
+  },
+  {
+    "claim_id": "ADNANOTEK-DEP-001",
+    "manufacturer_id": "adnanotek",
+    "claim_type": "product",
+    "claim_text": "Ultra-high vacuum E-beam evaporators, MBE, and sputtering systems.",
+    "claim_term": "E-beam evaporator (EBS and JEB series)",
+    "source_url": "https://adnano-tek.com/deposition-system/",
+    "source_locator": "Deposition Systems Catalog",
+    "supporting_quote": "AdNaNoTek provides customized high-vacuum thin-film deposition equipment including electron beam evaporators, magnetron sputtering, and molecular beam epitaxy.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Josephson Junction fabrication capability is specifically tied to the Quantum Computing Deposition System model."
+    ]
+  },
+  {
+    "claim_id": "ONNANO-COAT-001",
+    "manufacturer_id": "on_nano",
+    "claim_type": "product",
+    "claim_text": "Large-substrate precision spin coaters and matrix spray coating systems.",
+    "claim_term": "C3+ Large-Substrate Spin Coater",
+    "source_url": "https://on-nano.com/products/",
+    "source_locator": "Large Substrate Spin Coating",
+    "supporting_quote": "ON Nano supplies automated high-uniformity spin coating systems for large glass panels, semiconductor substrates, and advanced packaging.",
+    "validation_state": "validated_capability",
+    "last_verified_date": "2026-10-22",
+    "known_limitations": [
+      "Chamber dimensions restrict maximum substrate dimensions to model envelope (e.g. 300x300 mm)."
+    ]
+  }
+]

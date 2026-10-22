@@ -75,6 +75,13 @@ def build_explanation(tender, signals, concepts, scoring, decision, manufacturer
             "negative_evidence": candidate.get("negative_hits", []) or [],
             "reason_codes": candidate.get("reason_codes", []) or [],
             "manufacturer_source_links": candidate.get("manufacturer_source_links", []) or [],
+            "claim_provenance": candidate.get("claim_provenance") or {
+                "claim_status": "unassessed",
+                "verified_claims": [],
+                "uncertain_claims": [],
+                "unsupported_claims": [],
+                "claim_warnings": [],
+            },
         })
 
     concepts_found = concepts.get("matched_concepts", []) or []

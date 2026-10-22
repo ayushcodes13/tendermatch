@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TenderMatch manufacturer claim provenance record",
+  "description": "Schema for claim-level provenance mapping specific products, capabilities, and service claims to official source locators and validation states.",
+  "type": "object",
+  "required": [
+    "claim_id",
+    "manufacturer_id",
+    "claim_type",
+    "claim_text",
+    "source_url",
+    "source_locator",
+    "supporting_quote",
+    "validation_state",
+    "last_verified_date",
+    "known_limitations"
+  ],
+  "properties": {
+    "claim_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_-]+$",
+      "description": "Unique identifier for the claim (e.g., KORVUS-PVD-001)."
+    },
+    "manufacturer_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier of the manufacturer profile."
+    },
+    "claim_type": {
+      "type": "string",
+      "enum": ["product", "capability", "industry", "service", "configuration"]
+    },
+    "claim_text": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable description of the claim."
+    },
+    "claim_term": {
+      "type": "string",
+      "description": "The normalized product or keyword term associated with the claim."
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Direct official URL from the manufacturer's verified source links."
+    },
+    "source_locator": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Section, heading, or page locator within the source document."
+    },
+    "supporting_quote": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Verbatim quote from official documentation substantiating the claim."
+    },
+    "validation_state": {
+      "type": "string",
+      "enum": [
+        "validated_capability",
+        "product_specific",
+        "historical",
+        "region_specific",
+        "conditional_service",
+        "unverified",
+        "unsupported"
+      ]
+    },
+    "last_verified_date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": false
+}
