@@ -210,7 +210,7 @@ def run_current_matcher(dataset, *, top_k=5):
         evidence_fields = (
             "manufacturer_id", "manufacturer_name", "rank", "base_semantic_score",
             "score", "keyword_hits", "product_hits", "category_hits", "alias_hits",
-            "concept_hits", "service_hits", "negative_hits", "reason_codes",
+            "concept_hits", "service_hits", "negative_hits", "contextual_negative_hits", "reason_codes",
         )
         rankings[tender_id] = [
             {key: candidate[key] for key in evidence_fields if key in candidate}
@@ -275,6 +275,7 @@ def main(argv=None):
         Path(__file__),
         root / "matching" / "embedder.py",
         root / "matching" / "matcher.py",
+        root / "matching" / "candidate_compatibility.py",
         root / "matching" / "domain_keywords.py",
     )
     report["input_sha256"] = {

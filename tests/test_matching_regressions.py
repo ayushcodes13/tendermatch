@@ -160,6 +160,32 @@ def test_nippon_profile_matches_mercury_analysis_but_not_generic_aas():
     assert other_aas_match["concept_hits"] == []
 
 
+def test_nippon_fertilizer_commodity_candidate_gets_contextual_penalty_not_hard_exclusion():
+    root = Path(__file__).resolve().parents[1]
+    manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
+    nippon = next(profile for profile in manufacturers if profile["id"] == "nippon_instruments")
+    other = {"id": "other", "name": "Other Manufacturer"}
+    matcher = make_matcher([nippon, other], [[0.72, 0.0], [0.70, 0.0]], [1.0, 0.0])
+
+    commodity = matcher.match_topk({
+        "title": "Supply of bulk urea and phosphate fertilizer for seasonal agricultural distribution; "
+        "no mercury analysis or measurement equipment is requested."
+    }, top_k=2)
+    fertilizer_analyzer = matcher.match_topk({
+        "title": "Supply of a mercury analyzer for fertilizer-plant natural gas and finished fertilizer samples."
+    }, top_k=2)
+
+    nippon_commodity = next(x for x in commodity if x["manufacturer_id"] == "nippon_instruments")
+    assert commodity[0]["manufacturer_id"] == "other"
+    assert "MANUFACTURER_CONTEXTUAL_DOMAIN_CONFLICT" in nippon_commodity["reason_codes"]
+    assert nippon_commodity["contextual_negative_hits"][0]["rule_id"] == (
+        "FERTILIZER_COMMODITY_WITHOUT_MERCURY_INSTRUMENT"
+    )
+    assert any(x["manufacturer_id"] == "nippon_instruments" for x in commodity)
+    assert fertilizer_analyzer[0]["manufacturer_id"] == "nippon_instruments"
+    assert fertilizer_analyzer[0]["contextual_negative_hits"] == []
+
+
 def test_teer_profile_does_not_match_nordiko_only_product_names():
     root = Path(__file__).resolve().parents[1]
     manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))
