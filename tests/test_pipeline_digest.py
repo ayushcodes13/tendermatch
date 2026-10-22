@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+import json
 import sqlite3
 import sys
 from types import ModuleType
@@ -66,6 +67,49 @@ def test_pipeline_generates_digest_with_its_statistics_schema(monkeypatch):
     assert "Total scraped: 1" in sent["body"]
     assert "Fresh tenders processed: 1" in sent["body"]
     assert "High-signal opportunities: 1" in sent["body"]
+
+
+def test_pipeline_reports_missing_recipient_without_attempting_email(
+    monkeypatch, tmp_path, capsys
+):
+    database_path = tmp_path / "missing-recipient.sqlite3"
+    today = date.today().isoformat()
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [{
+        "tender_id": "REF-MISSING-RECIPIENT",
+        "title": "Relevant procurement",
+        "organization": "Research Institute",
+        "published_date": today,
+        "source_portal": "cppp",
+        "raw_text": "New procurement",
+    }])
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(pipeline, "is_recent_tender", lambda *args, **kwargs: True)
+    monkeypatch.setattr(pipeline, "classify_tender", lambda *args, **kwargs: {
+        "is_blocked": False,
+        "has_signal": True,
+        "category": "high_signal",
+        "decision": "high_signal",
+        "score": 80,
+        "reason": "controlled missing-recipient fixture",
+    })
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "")
+    monkeypatch.setattr(
+        pipeline,
+        "send_email",
+        lambda *args: (_ for _ in ()).throw(AssertionError("email must not be sent")),
+    )
+
+    pipeline.run_pipeline()
+
+    output = capsys.readouterr().out
+    assert "Cannot queue a new digest: RECEIVER_EMAIL is missing." in output
+    conn = sqlite3.connect(database_path)
+    summary_json = conn.execute(
+        "SELECT summary_json FROM pipeline_runs"
+    ).fetchone()[0]
+    conn.close()
+    assert json.loads(summary_json)["email_delivery"] == "skipped_missing_recipient"
 
 
 def test_pipeline_digest_reports_counts_for_mixed_tender_outcomes(monkeypatch, tmp_path):
