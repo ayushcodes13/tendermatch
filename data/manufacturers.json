@@ -619,7 +619,7 @@
             "continuous-wave ESR spectrometers",
             "ESR/EPR probes and resonators",
             "ESR/EPR magnets and magnetic-field mapping systems",
-            "microwave amplifiers for ESR/EPR systems",
+            "solid-state X-band and Q-band pulsed microwave amplifiers",
             "quantum education platforms"
         ],
         "products": [
@@ -633,7 +633,7 @@
             "spinMAG ESR/EPR magnet",
             "Bmapper 3D magnetic-field mapping system",
             "spinEDU quantum education platform",
-            "X-band and Q-band microwave amplifiers for ESR/EPR systems"
+            "spinAMP solid-state X-band and Q-band pulsed microwave amplifiers"
         ],
         "industries_served": [
             "chemistry research",
@@ -641,7 +641,7 @@
             "biomedical research",
             "structural biology research"
         ],
-        "embedding_text": "Spinflex Instruments offers electron paramagnetic resonance (EPR) and electron spin resonance (ESR) spectroscopy equipment, including pulse EPR/ESR systems and continuous-wave ESR spectrometers. The official product range includes modular spinUP systems, the spinPRO Q-band pulsed ESR/EPR spectrometer, ESR spectrometers, probes and resonators, magnets, microwave amplifiers, magnetic-field mapping equipment, and quantum education hardware. Its application information includes chemistry, physics and quantum technology, biomedical research, and structural biology. Specific configuration, frequency band, compatibility, eligibility, and service support must be checked against the tender and product evidence.",
+        "embedding_text": "Spinflex Instruments offers electron paramagnetic resonance (EPR) and electron spin resonance (ESR) spectroscopy equipment, including pulse EPR/ESR systems and continuous-wave ESR spectrometers. The official product range includes modular spinUP systems, the spinPRO Q-band pulsed ESR/EPR spectrometer, ESR spectrometers, probes and resonators, magnets, spinAMP solid-state X-band and Q-band pulsed microwave amplifiers, magnetic-field mapping equipment, and quantum education hardware. Its application information includes chemistry, physics and quantum technology, biomedical research, and structural biology. Telecommunications, aerospace, radar, and scientific-research applications are listed for its spinAMP amplifiers. Specific configuration, frequency band, compatibility, eligibility, and service support must be checked against the tender and product evidence.",
         "keywords": [
             "EPR",
             "ESR",
@@ -685,9 +685,10 @@
             "https://spin-flex.com/products/",
             "https://spin-flex.com/pulse-epr-system/",
             "https://spin-flex.com/pulse-epr-structural-biology/",
-            "https://spin-flex.com/applications/"
+            "https://spin-flex.com/applications/",
+            "https://spin-flex.com/spinamp/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {
