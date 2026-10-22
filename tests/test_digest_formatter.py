@@ -7,6 +7,7 @@ def test_format_email_uses_pipeline_stats_and_reports_all_skip_counts():
         "fresh_processed": 7,
         "duplicates_skipped": 1,
         "stale_skipped": 2,
+        "expired_skipped": 3,
         "already_emailed_skipped": 1,
         "high": 1,
         "explore": 2,
@@ -37,6 +38,7 @@ def test_format_email_uses_pipeline_stats_and_reports_all_skip_counts():
     assert "Low-signal tenders: 2" in body
     assert "Blocked tenders: 2" in body
     assert "Stale tenders skipped: 2" in body
+    assert "Expired tenders skipped: 3" in body
     assert "Duplicates skipped: 1" in body
     assert "Previously emailed skipped: 1" in body
     assert "CONFIDENCE" not in body
@@ -47,6 +49,7 @@ def test_format_email_handles_empty_digest_and_missing_optional_stats():
 
     assert subject == "Tender Intelligence Report | 0 High-Signal Opportunities"
     assert "Total scraped: 0" in body
+    assert "Expired tenders skipped: 0" in body
     assert "No high-signal opportunities identified." in body
     assert "EXPLORATION (REQUIRES REVIEW)" in body
     assert "No exploration candidates require review." in body
