@@ -1158,14 +1158,14 @@
             "semiconductor manufacturing",
             "AI and microchip production",
             "advanced packaging",
-            "GPS (Glass Panel Substrates) and glass core substrates",
+            "GPS (Glass Panel Substrates)",
             "organic panels",
             "OLED and micro OLED manufacturing",
             "sensor production",
             "defense and security manufacturing",
             "scientific R&D"
         ],
-        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm.\nFeatured technology includes the C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput.\nOffers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production Matrix systems.\nKey applications include GPTG projects, high-density packaging, and glass core substrate processing.\nSystems are designed with a compact footprint, SECS/GEM compatibility, and gas phase cleaning processes that reduce chemical usage by over 90%.",
+        "embedding_text": "Manufacturer of advanced semiconductor equipment specializing in coating, developing, and cleaning systems for substrates of any size, including ultra-large glass panels up to 1100 mm x 1100 mm.\nFeatured technology includes the C3+ process (Cover Chuck Coating) combined with thermal processing for improved layer distribution, edge control, and throughput.\nOffers a range of solutions from bench-top manual/semi-automated equipment to fully automated, high-volume production Matrix systems.\nThe products page identifies its C3+ large-substrate coater with a GPTG advanced-package project for AI and microchip applications, and describes handling glass-panel substrates up to 1.1 m x 1.1 m.\nSystems include compact Matrix modules, SECS/GEM-compatible 300 mm coater/developer equipment, and gas-phase cleaning processes that the manufacturer says reduce chemical usage by over 90%.",
         "keywords": [
             "C3+ technology",
             "spin coater",
@@ -1211,7 +1211,7 @@
             "https://on-nano.com/sub-systems/",
             "https://on-nano.com/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     }
 ]

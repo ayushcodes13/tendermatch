@@ -338,3 +338,53 @@ def test_synthetic_baseline_preserves_run_catalog_hash_and_tracks_ranking_inputs
         "FERTILIZER_COMMODITY_WITHOUT_MERCURY_INSTRUMENT"
     )
     assert "syn-fertilizer-commodity-018" in report["false_positive_case_ids"]
+
+
+def test_current_on_nano_profile_evaluation_snapshot_matches_rank_inputs():
+    report = json.loads(
+        (ROOT / "data/evaluation/baseline_synthetic_on_nano_glass_panel_scope_2026-10-22.json")
+        .read_text(encoding="utf-8")
+    )
+    before = json.loads(
+        (ROOT / "data/evaluation/baseline_synthetic_on_nano_glass_panel_scope_before_2026-10-22.json")
+        .read_text(encoding="utf-8")
+    )
+    dataset = json.loads(
+        (ROOT / "data/evaluation/golden_tender_cases.json").read_text(encoding="utf-8")
+    )
+    profiles_path = ROOT / "data/manufacturers.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+    dataset_bytes = json.dumps(
+        dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+
+    assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
+    assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(
+        profiles_path.read_bytes()
+    ).hexdigest()
+    assert report["input_sha256"]["ranking_profile_inputs"] == hash_ranking_profile_inputs(
+        profiles
+    )
+    assert report["dataset_case_count"] == 18
+    assert report["synthetic_case_count"] == 18
+    assert report["human_reviewed_case_count"] == 0
+    assert report["candidate_recall_on_labeled_positives"] == 1.0
+    assert report["labeled_candidate_precision"] == 8 / 11
+    assert report["rankings"]["SYN-VACUUM-CLEANER-010"][4]["manufacturer_id"] == "sald"
+    assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
+    assert before["input_sha256"]["evaluation_and_matching_code"] == (
+        report["input_sha256"]["evaluation_and_matching_code"]
+    )
+    assert before["model_revision"] == report["model_revision"]
+    assert before["candidate_recall_on_labeled_positives"] == (
+        report["candidate_recall_on_labeled_positives"]
+    )
+    assert before["labeled_candidate_precision"] == report["labeled_candidate_precision"]
+    changed_tenders = {
+        tender_id
+        for tender_id in before["rankings"]
+        if [item["manufacturer_id"] for item in before["rankings"][tender_id]]
+        != [item["manufacturer_id"] for item in report["rankings"][tender_id]]
+    }
+    assert changed_tenders == {"SYN-VACUUM-CLEANER-010"}
+    assert before["rankings"]["SYN-VACUUM-CLEANER-010"][4]["manufacturer_id"] == "on_nano"
