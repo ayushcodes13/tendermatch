@@ -569,6 +569,21 @@ def test_thesix_profile_links_fuel_cell_and_electrolyzer_test_sources():
     assert profile["profile_version"] == "1.6"
 
 
+def test_adnanotek_services_are_limited_to_officially_described_support():
+    profile = next(p for p in load_profiles() if p["id"] == "adnanotek")
+
+    assert set(profile["service_keywords"]) == {
+        "in-depth theoretical and hands-on training",
+        "professional technology consultation",
+        "technical support",
+        "customer and technical services",
+        "customer support",
+    }
+    assert not {"AMC", "annual maintenance", "maintenance", "repair", "spares", "installation", "commissioning", "calibration", "replacement"} & set(profile["service_keywords"])
+    assert "https://adnano-tek.com/about-adnanotek/" in profile["source_links"]
+    assert profile["profile_version"] == "1.5"
+
+
 def test_sald_profile_links_patented_deposition_head_claim_to_official_sources():
     profile = next(p for p in load_profiles() if p["id"] == "sald")
 
@@ -668,7 +683,7 @@ def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources
         "https://adnano-tek.com/pulsed-laser-deposition-pld/",
         "https://adnano-tek.com/magnetron-sputtering-systems/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.4"
+    assert profile["profile_version"] == "1.5"
 
 
 def test_empty_source_list_does_not_hide_missing_evidence_warning():

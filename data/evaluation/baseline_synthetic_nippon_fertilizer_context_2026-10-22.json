@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "aa3977caa0174e08723a05f1cabbeeacbf6bf8c396fdcb73a5d958d1cd235594",
-    "current_ranking_profile_inputs_sha256": "6ee0ffef3d7dc5ff463cc3e02459235aa35ce748c3d87f0cf401d681f862bc74",
+    "current_manufacturer_profiles_sha256": "761afbf76d2ee88bbabcbf9d756eb1bbfb458291a001aa6767d3156ee1d0e0f3",
+    "current_ranking_profile_inputs_sha256": "0fb497ecef074e591a3ce646eb9d3bd3228d990298a9e55d93f27b0964780209",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -143,11 +143,14 @@
       "Spinflex: generic service keywords cleared because service scope could not be verified in the reviewed official pages; official product and application pages returned HTTP 403 during this audit.",
       "Spinflex: cleared service keywords because no service scope could be verified in the reviewed official sources; the listed official pages returned HTTP 403 during this audit.",
       "SALD: service signals now reflect its official terms and conditions and service-engineer description, including installation, acceptance testing, maintenance, repair, parts, support, and upgrades.",
-      "SALD: service keywords revised to match the manufacturer terms and service-engineer description, including installation, acceptance testing, maintenance, repairs, parts, support, and upgrades."
+      "SALD: service keywords revised to match the manufacturer terms and service-engineer description, including installation, acceptance testing, maintenance, repairs, parts, support, and upgrades.",
+      "AdNaNoTek: generic equipment-service claims were removed; retained only documented customer support, technical support, training, and technology consultation from its official About page.",
+      "AdNaNoTek: generic service signals removed, retaining official-about-page customer/technical support, training, and technology consultation.",
+      "AdNaNoTek: generic equipment-service signals were removed; retained official customer/technical services, support, training, and technology consultation."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
-    "reason": "Historical run hashes and ranking snapshot preserved. Current profile fingerprints are refreshed as metadata after official-source audits; no historical ranking was rerun for the current catalog. sentence-transformers was not needed for this metadata-only refresh.",
+    "reason": "Historical report ranking and original run hashes are preserved. Current profile fingerprints were refreshed as metadata after official-source audit; historical rankings were not rerun. sentence-transformers was not required for the metadata refresh.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
   },

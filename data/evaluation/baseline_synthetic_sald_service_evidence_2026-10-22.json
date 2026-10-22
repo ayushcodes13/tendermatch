@@ -2083,5 +2083,17 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 68
+  "unjudged_candidate_count": 68,
+  "profile_metadata_refresh": {
+    "run_generated_at_utc": "2026-10-22T06:01:38+00:00",
+    "run_manufacturer_profiles_sha256": "aa3977caa0174e08723a05f1cabbeeacbf6bf8c396fdcb73a5d958d1cd235594",
+    "current_manufacturer_profiles_sha256": "761afbf76d2ee88bbabcbf9d756eb1bbfb458291a001aa6767d3156ee1d0e0f3",
+    "current_ranking_profile_inputs_sha256": "0fb497ecef074e591a3ce646eb9d3bd3228d990298a9e55d93f27b0964780209",
+    "rankings_reused": false,
+    "rankings_current_for_profile_inputs": false,
+    "metadata_updates": [
+      "AdNaNoTek: generic equipment-service signals were removed; retained official customer/technical services, support, training, and technology consultation."
+    ],
+    "reason": "Historical report ranking and original run hashes preserved; current profile fingerprints refreshed as metadata after official-source audit. Historical rankings were not rerun."
+  }
 }

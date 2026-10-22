@@ -1119,15 +1119,11 @@
         ],
         "negative_keywords": [],
         "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
+            "customer and technical services",
+            "in-depth theoretical and hands-on training",
+            "professional technology consultation",
+            "technical support",
+            "customer support"
         ],
         "website": "https://adnano-tek.com/",
         "source_links": [
@@ -1151,7 +1147,7 @@
             "https://adnano-tek.com/manipulators/",
             "https://adnano-tek.com/uhv-design-components/transfer-arms/"
         ],
-        "profile_version": "1.4",
+        "profile_version": "1.5",
         "profile_last_updated": "2026-10-22"
     },
     {
