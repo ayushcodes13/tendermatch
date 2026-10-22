@@ -180,7 +180,19 @@ def test_nordiko_profile_links_official_model_and_process_sources():
         "https://nordiko-tech.co.uk/ion-beam-technology",
         "https://nordiko-tech.co.uk/sputtering-technology",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
+
+
+def test_nordiko_profile_omits_unsupported_reactive_ion_etching_claims():
+    profile = next(p for p in load_profiles() if p["id"] == "nordiko")
+
+    assert "RIE" not in profile["keywords"]
+    assert "rie" not in profile["concepts"]
+    assert "plasma etching and deposition" not in profile["product_categories"]
+    assert "aerospace and telecommunications" not in profile["industries_served"]
+    assert "ion beam milling systems" in profile["product_categories"]
+    assert "N1500-600 Large-area PECVD reactor" in profile["products"]
+    assert profile["profile_version"] == "1.3"
 
 
 def test_nordiko_n1500_is_classified_as_pecvd_not_sputtering():
@@ -189,7 +201,7 @@ def test_nordiko_n1500_is_classified_as_pecvd_not_sputtering():
     assert "N1500-600 Large-area PECVD reactor" in profile["products"]
     assert "N1500 Sputtering System" not in profile["products"]
     assert "plasma-enhanced chemical vapour deposition systems" in profile["product_categories"]
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
 
 
 def test_agnitron_profile_links_official_products_software_and_service_sources():
