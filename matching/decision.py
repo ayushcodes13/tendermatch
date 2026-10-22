@@ -103,7 +103,19 @@ def decide_tender(signals, concepts, scoring, manufacturer_candidates=None, thre
     # --------------------------------------------------
     # 4. Clean high-signal gate
     # --------------------------------------------------
+    top_candidate = manufacturer_candidates[0] if manufacturer_candidates else None
+    top_claim_status = (
+        top_candidate.get("claim_provenance", {}).get("claim_status")
+        if top_candidate else None
+    )
+
     if score >= thresholds["high_signal"] and (has_rescue_concept or has_mfr_evidence):
+        if top_claim_status == "has_conflicts":
+            return {
+                "decision": "agent_review",
+                "reason_codes": reason_codes + ["UNSUPPORTED_MANUFACTURER_CLAIM_CONFLICT"],
+                "agent_review_required": True,
+            }
         return {
             "decision": "high_signal",
             "reason_codes": reason_codes + ["SCORE_HIGH_SIGNAL"],
