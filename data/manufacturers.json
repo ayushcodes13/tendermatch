@@ -696,17 +696,7 @@
             "quantum_education"
         ],
         "negative_keywords": [],
-        "service_keywords": [
-            "AMC",
-            "annual maintenance",
-            "maintenance",
-            "repair",
-            "spares",
-            "installation",
-            "commissioning",
-            "calibration",
-            "replacement"
-        ],
+        "service_keywords": [],
         "website": "https://spin-flex.com/",
         "source_links": [
             "https://spin-flex.com/products/",
@@ -715,7 +705,7 @@
             "https://spin-flex.com/applications/",
             "https://spin-flex.com/spinamp/"
         ],
-        "profile_version": "1.3",
+        "profile_version": "1.4",
         "profile_last_updated": "2026-10-22"
     },
     {
