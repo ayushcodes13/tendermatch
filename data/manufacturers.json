@@ -536,9 +536,10 @@
             "artisanal and small-scale gold mining",
             "mining and smelting",
             "cement production",
+            "fertilizer production mercury analysis",
             "environmental mercury monitoring in air and water"
         ],
-        "embedding_text": "Nippon Instruments Corporation specializes in mercury analyzers and monitors. Its official catalog includes direct total-mercury analyzers for solid, liquid, and gaseous samples; ultra-trace mercury analyzers for aqueous samples; petroleum mercury analyzers; gaseous-matrix mercury analyzers; portable gaseous elemental mercury analyzers; stack-gas mercury monitors; and continuous ambient-air mercury monitors. Published methods include direct thermal decomposition, gold amalgamation, cold vapor atomic absorption spectroscopy (CVAAS), and cold vapor atomic fluorescence spectroscopy (CVAFS). Listed applications include coal, oil and gas, chemical production, waste processing, industrial discharge, mining and smelting, and cement. This profile is for mercury measurement; it does not establish general non-mercury trace-metal analysis or generic atomic-absorption capability. Confirm sample matrix, method, product model, and required service against official product evidence.",
+        "embedding_text": "Nippon Instruments Corporation specializes in mercury analyzers and monitors. Its official catalog includes direct total-mercury analyzers for solid, liquid, and gaseous samples; ultra-trace mercury analyzers for aqueous samples; petroleum mercury analyzers; gaseous-matrix mercury analyzers; portable gaseous elemental mercury analyzers; stack-gas mercury monitors; and continuous ambient-air mercury monitors. Published methods include direct thermal decomposition, gold amalgamation, cold vapor atomic absorption spectroscopy (CVAAS), and cold vapor atomic fluorescence spectroscopy (CVAFS). Listed applications include coal, oil and gas, chemical production, waste processing, industrial discharge, mining and smelting, cement, and fertilizer production. NIC identifies WA-, RA-, EMP-, and MA-series analyzers for mercury analysis in fertilizer-production natural gas, water, workplace air, and fertilizer products. This profile is for mercury measurement; it does not establish general non-mercury trace-metal analysis or generic atomic-absorption capability. Confirm sample matrix, method, product model, and required service against official product evidence.",
         "keywords": [
             "mercury analyzer",
             "direct mercury analyzer",
@@ -590,9 +591,10 @@
         "source_links": [
             "https://www.hg-nic.com/products/",
             "https://www.hg-nic.com/industries-application/",
-            "https://www.hg-nic.com/product-brochure/"
+            "https://www.hg-nic.com/product-brochure/",
+            "https://www.hg-nic.com/fertilizer-production/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {
