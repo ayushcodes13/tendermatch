@@ -6,7 +6,7 @@ Profiles are stored in `data/manufacturers.json`. The structural contract is in 
 python -m matching.profile_validation
 ```
 
-The validator checks required identity and matching fields, types, non-empty values, duplicate IDs and names, repeated values within a list, exact positive/negative keyword conflicts, absolute HTTP(S) URLs, and optional metadata formats. Errors return a non-zero exit status. Warnings are visible but do not prevent use of existing profiles.
+The validator checks required identity and matching fields, types, non-empty values, duplicate IDs and names, repeated values within a list, aliases that collide across manufacturers, exact positive/negative keyword or exclusion conflicts, absolute HTTP(S) URLs, and optional metadata formats. Errors return a non-zero exit status. Warnings are visible but do not prevent use of existing profiles.
 
 Optional fields include `aliases`, `exclusions`, `supported_services`, `source_links`, `profile_version`, and `profile_last_updated`. A profile's `website` identifies the organization; it does not establish that every product or capability claim has been verified. `source_links` are profile-level evidence pointers, not a claim-by-claim mapping. A linked page supports only the product or category details visible on that page; other profile claims remain unverified until mapped and reviewed.
 

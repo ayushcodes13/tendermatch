@@ -27,6 +27,7 @@ REQUIRED_LISTS = (
     "service_keywords",
 )
 OPTIONAL_LISTS = ("aliases", "source_links", "exclusions", "supported_services")
+NEGATIVE_LISTS = ("negative_keywords", "exclusions")
 POSITIVE_LISTS = (
     "products",
     "product_categories",
@@ -60,6 +61,7 @@ def validate_profiles(profiles):
 
     seen_ids = {}
     seen_names = {}
+    identity_mentions = {}
     for index, profile in enumerate(profiles):
         base = f"$[{index}]"
         if not isinstance(profile, dict):
@@ -85,10 +87,21 @@ def validate_profiles(profiles):
         name = profile.get("name")
         if isinstance(name, str) and name.strip():
             normalized_name = name.strip().casefold()
+            identity_mentions.setdefault(normalized_name, []).append(
+                (index, "name", f"{base}.name")
+            )
             if normalized_name in seen_names:
                 issues.append(_issue("error", "duplicate_name", f"{base}.name", f"Duplicates profile at index {seen_names[normalized_name]}."))
             else:
                 seen_names[normalized_name] = index
+
+        aliases = profile.get("aliases", [])
+        if isinstance(aliases, list):
+            for alias_index, alias in enumerate(aliases):
+                if isinstance(alias, str) and alias.strip():
+                    identity_mentions.setdefault(alias.strip().casefold(), []).append(
+                        (index, "alias", f"{base}.aliases[{alias_index}]")
+                    )
 
         website = profile.get("website")
         if isinstance(website, str) and website.strip() and not _valid_http_url(website.strip()):
@@ -111,8 +124,7 @@ def validate_profiles(profiles):
             if len(set(normalized)) != len(normalized):
                 issues.append(_issue("error", "duplicate_term", f"{base}.{field}", "Contains repeated values after case and whitespace normalization."))
 
-        negatives = profile.get("negative_keywords", [])
-        if isinstance(negatives, list):
+        if any(isinstance(profile.get(field, []), list) for field in NEGATIVE_LISTS):
             positive_terms = set()
             for field in POSITIVE_LISTS:
                 values = profile.get(field, [])
@@ -122,12 +134,16 @@ def validate_profiles(profiles):
                         for value in values
                         if isinstance(value, str) and value.strip()
                     )
-            for neg_index, value in enumerate(negatives):
-                if isinstance(value, str) and value.strip() and value.strip().casefold() in positive_terms:
-                    issues.append(_issue(
-                        "error", "positive_negative_conflict", f"{base}.negative_keywords[{neg_index}]",
-                        "The same normalized term appears in a positive capability or service field.",
-                    ))
+            for field in NEGATIVE_LISTS:
+                negatives = profile.get(field, [])
+                if not isinstance(negatives, list):
+                    continue
+                for neg_index, value in enumerate(negatives):
+                    if isinstance(value, str) and value.strip() and value.strip().casefold() in positive_terms:
+                        issues.append(_issue(
+                            "error", "positive_negative_conflict", f"{base}.{field}[{neg_index}]",
+                            "The same normalized term appears in a positive capability or service field and a negative matching field.",
+                        ))
 
         source_links = profile.get("source_links")
         if source_links is None or source_links == []:
@@ -150,6 +166,21 @@ def validate_profiles(profiles):
             issues.append(_issue("error", "invalid_profile_last_updated", f"{base}.profile_last_updated", "Expected an ISO date in YYYY-MM-DD form."))
         elif not _is_valid_iso_date(updated):
             issues.append(_issue("error", "invalid_profile_last_updated", f"{base}.profile_last_updated", "Date is not a valid calendar date."))
+
+    for token, mentions in identity_mentions.items():
+        owner_indexes = {mention[0] for mention in mentions}
+        if len(owner_indexes) < 2:
+            continue
+        for owner_index, kind, path in mentions:
+            if kind != "alias":
+                continue
+            conflicts = sorted(index for index in owner_indexes if index != owner_index)
+            issues.append(_issue(
+                "error",
+                "ambiguous_manufacturer_alias",
+                path,
+                f"Alias also identifies a different manufacturer at index {conflicts[0]}.",
+            ))
 
     return issues
 

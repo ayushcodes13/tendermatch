@@ -53,6 +53,23 @@ def test_duplicate_identity_duplicate_terms_and_positive_negative_conflicts_fail
     assert {"duplicate_id", "duplicate_name", "duplicate_term", "positive_negative_conflict"} <= codes
 
 
+def test_cross_profile_alias_collision_and_exclusion_positive_conflicts_fail():
+    profiles = load_profiles()[:2]
+    profiles[0]["exclusions"] = [profiles[0]["products"][0].upper()]
+    profiles[1]["aliases"] = [profiles[0]["aliases"][0]]
+
+    issues = validate_profiles(profiles)
+    conflicts = [issue for issue in issues if issue["code"] in {
+        "ambiguous_manufacturer_alias", "positive_negative_conflict"
+    }]
+
+    assert {issue["code"] for issue in conflicts} == {
+        "ambiguous_manufacturer_alias", "positive_negative_conflict"
+    }
+    assert any(issue["path"] == "$[0].exclusions[0]" for issue in conflicts)
+    assert any(issue["path"] == "$[1].aliases[0]" for issue in conflicts)
+
+
 def test_metadata_and_urls_are_validated_without_being_fabricated():
     profile = load_profiles()[0]
     profile["source_links"] = ["not a URL"]
