@@ -9,7 +9,7 @@ Matches are screening suggestions. Similarity and decision scores are heuristic,
 - Scrapes selected CPPP listings and tender pages from IIT Madras, IIT Palakkad, IIT Goa, and IISc.
 - Stores tender identity, content versions, amendments, manufacturer matches, notification state, feedback, and pipeline run summaries in SQLite.
 - Uses the `BAAI/bge-small-en-v1.5` SentenceTransformer with lexical and manufacturer-profile evidence. The current catalog contains 14 profiles in `data/manufacturers.json`.
-- Profile validation checks structure; capability claims do not yet have claim-level source links, versions, or review dates, so treat them as unverified inputs.
+- Profile validation checks structure. Each profile includes a shared source-link list, profile version, and last-updated date, but capability claims are not individually mapped to sources; verify each product, industry, and service claim before relying on it.
 - Classifies results into blocked, low-signal, high-signal, exploratory, and review-required outcomes. Thresholds are configurable in `data/matching_thresholds.json`; they are not calibrated confidence levels.
 - Produces a plaintext digest with source links, product-family evidence, concerns, unverified requirements, and suggested next actions.
 - Supports bounded official PDF retrieval and labelled-field text extraction only when an operator explicitly configures an approved host list and protected storage directory. Both are disabled by default.
@@ -64,7 +64,7 @@ For persistent recurring operation, use a supervised Python VM or container with
 
 ## Evaluation and evidence limits
 
-`data/evaluation/golden_tender_cases.json` contains 16 synthetic adversarial examples. Human-reviewed examples are maintained separately when explicitly adjudicated. The recorded baseline and threshold sensitivity report are synthetic diagnostics, not accuracy claims. No live end-to-end portal-to-email run has been performed as part of the deterministic test suite.
+`data/evaluation/golden_tender_cases.json` contains 18 synthetic adversarial examples. Human-reviewed examples are maintained separately when explicitly adjudicated. The recorded baseline and threshold sensitivity report are synthetic diagnostics, not accuracy claims. No live end-to-end portal-to-email run has been performed as part of the deterministic test suite.
 
 Manufacturer profiles currently lack claim-level source links, profile versions, and last-updated dates. Profile validation checks structure, not the truth of product or capability claims. A profile website alone is not proof of every listed capability.
 
