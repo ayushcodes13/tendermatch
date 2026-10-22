@@ -93,6 +93,26 @@
     "SYN-UPDATED-014": 14.99733301170636,
     "SYN-VACUUM-CLEANER-010": 15.598582991515286
   },
+  "profile_metadata_refresh": {
+    "current_manufacturer_profiles_sha256": "80e7dd553f0d69d254754e25ac03ac12155fe546720f0d5ab5b80221fec51e6d",
+    "current_ranking_profile_inputs_sha256": "e449846f6e37316d9c51a3abbd786a56a82d95815eddeaad10a8426267e2966a",
+    "metadata_updates": [
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged.",
+      "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed.",
+      "TheSix: narrowed generic battery-testing and battery-industry language to the documented flow-battery test cell and PEM electrolyzer test cell.",
+      "Nordiko: the N1500-600 product entry now records the official maximum substrate diameter of 500 mm; historical rankings remain tied to their recorded profile snapshots because a paired rerun was unavailable.",
+      "TheSix: the generic conductivity measurement systems product label is replaced by the vendor-named TIC-95 Ionic Conductivity Cell for Membrane Conductivity Testing; no paired ranking rerun was available.",
+      "ParteQ: narrowed the service keyword to particle and powder functionalization by CVD; the official source does not document custom-to-specification service. Historical rankings were preserved because a paired rerun was unavailable.",
+      "Agnitron: removed unsupported GOX300 large-production scale claim; profile now records the documented 305 mm wafer carrier and requires confirmation of wafer count, throughput, and production scale. Historical rankings were not rerun."
+    ],
+    "rankings_current_for_profile_inputs": false,
+    "rankings_reused": false,
+    "reason": "The recorded ranking run is retained against its exact profile snapshot; current profile hashes are tracked separately after later profile reviews.",
+    "run_generated_at_utc": "2026-10-22T07:54:13+00:00",
+    "run_manufacturer_profiles_sha256": "7adfea94a1318d3f5a4b1c837cc36c0c6c6c74fd598a838070ddd20dcb433b5c",
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "run_ranking_profile_inputs_sha256": "98ce2dc2a1cb247680b2d407899e8aa51a46aa4e83540675f12b8eee1e7c63ad"
+  },
   "ranking_metrics": {
     "1": {
       "eligible_tender_count": 0,
@@ -2058,24 +2078,5 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 70,
-  "profile_metadata_refresh": {
-    "run_manufacturer_profiles_sha256": "7adfea94a1318d3f5a4b1c837cc36c0c6c6c74fd598a838070ddd20dcb433b5c",
-    "run_ranking_profile_inputs_sha256": "98ce2dc2a1cb247680b2d407899e8aa51a46aa4e83540675f12b8eee1e7c63ad",
-    "current_manufacturer_profiles_sha256": "243dccbe6685a24c8a996ccde344fc2f9fc6fd20eb07588aeee98ba88c477780",
-    "current_ranking_profile_inputs_sha256": "7cc4739e9b7880ccb7644fcac425fdb195864e17433d41301eaba57ed16569d1",
-    "rankings_reused": false,
-    "rankings_current_for_profile_inputs": false,
-    "reason": "The recorded ranking run is retained against its exact profile snapshot; current profile hashes are tracked separately after later profile reviews.",
-    "run_generated_at_utc": "2026-10-22T07:54:13+00:00",
-    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
-    "metadata_updates": [
-      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged.",
-      "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed.",
-      "TheSix: narrowed generic battery-testing and battery-industry language to the documented flow-battery test cell and PEM electrolyzer test cell.",
-      "Nordiko: the N1500-600 product entry now records the official maximum substrate diameter of 500 mm; historical rankings remain tied to their recorded profile snapshots because a paired rerun was unavailable.",
-      "TheSix: the generic conductivity measurement systems product label is replaced by the vendor-named TIC-95 Ionic Conductivity Cell for Membrane Conductivity Testing; no paired ranking rerun was available.",
-      "ParteQ: narrowed the service keyword to particle and powder functionalization by CVD; the official source does not document custom-to-specification service. Historical rankings were preserved because a paired rerun was unavailable."
-    ]
-  }
+  "unjudged_candidate_count": 70
 }

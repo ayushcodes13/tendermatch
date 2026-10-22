@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 12.53912498941645
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "243dccbe6685a24c8a996ccde344fc2f9fc6fd20eb07588aeee98ba88c477780",
-    "current_ranking_profile_inputs_sha256": "7cc4739e9b7880ccb7644fcac425fdb195864e17433d41301eaba57ed16569d1",
+    "current_manufacturer_profiles_sha256": "80e7dd553f0d69d254754e25ac03ac12155fe546720f0d5ab5b80221fec51e6d",
+    "current_ranking_profile_inputs_sha256": "e449846f6e37316d9c51a3abbd786a56a82d95815eddeaad10a8426267e2966a",
     "metadata_updates": [
       "Nippon Instruments: replaced generic service keywords with official servicing, product support, mercury measurement, training, demonstration, and application-development evidence; noted model- and region-dependent availability and discontinued-product parts limitations.",
       "Teer Coatings: removed the semiconductor coating systems industry claim because the reviewed official pages described PVD generally and did not substantiate Teer-specific semiconductor systems or deployments.",
@@ -116,15 +116,16 @@
       "TheSix: narrowed generic battery-testing and battery-industry language to the documented flow-battery test cell and PEM electrolyzer test cell.",
       "Nordiko: the N1500-600 product entry now records the official maximum substrate diameter of 500 mm; historical rankings remain tied to their recorded profile snapshots because a paired rerun was unavailable.",
       "TheSix: the generic conductivity measurement systems product label is replaced by the vendor-named TIC-95 Ionic Conductivity Cell for Membrane Conductivity Testing; no paired ranking rerun was available.",
-      "ParteQ: narrowed the service keyword to particle and powder functionalization by CVD; the official source does not document custom-to-specification service. Historical rankings were preserved because a paired rerun was unavailable."
+      "ParteQ: narrowed the service keyword to particle and powder functionalization by CVD; the official source does not document custom-to-specification service. Historical rankings were preserved because a paired rerun was unavailable.",
+      "Agnitron: removed unsupported GOX300 large-production scale claim; profile now records the documented 305 mm wafer carrier and requires confirmation of wafer count, throughput, and production scale. Historical rankings were not rerun."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
     "reason": "Historical sentence-transformers ranking snapshot and original run hashes are preserved; current profile fingerprints refreshed as metadata after the later Nippon Instruments service-scope audit. Rankings not recomputed.",
     "run_generated_at_utc": "2026-10-22T06:10:53+00:00",
     "run_manufacturer_profiles_sha256": "e704d94884322e8e6c7c436df8443b706b7d97c0803f32cad122f11e5351fd1c",
-    "run_ranking_profile_inputs_sha256": "96a82f1087a6d1a7c1d3563a627846f7e3a590ae4e573c8ee04d11f42c59d418",
-    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "run_ranking_profile_inputs_sha256": "96a82f1087a6d1a7c1d3563a627846f7e3a590ae4e573c8ee04d11f42c59d418"
   },
   "ranking_metrics": {
     "1": {
