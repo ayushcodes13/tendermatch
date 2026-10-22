@@ -96,8 +96,8 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "c1a79864fba723aafbd1d4382334194358da52743e4472d818ea04fc8fe39602",
-    "current_ranking_profile_inputs_sha256": "0624bb5fbcca6f190b4ca861bd38b1ef6df445e9d3b18554bd9d07d032b83afd",
+    "current_manufacturer_profiles_sha256": "aaf63dad764ed419b575bcdf15c6f7a48a8b8c7527330a1c517883306543188d",
+    "current_ranking_profile_inputs_sha256": "bad66e74cf632ebcdeb94d88cfa9a18631e46086d8cbf0f9c022f19967fed2db",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
       "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
@@ -124,11 +124,12 @@
       "GeniCore: added the dedicated Diamond Enhanced Cemented Carbide material page as direct provenance for its DEC product claim.",
       "ON NANO: removed unsupported glass-core-substrate and high-density-packaging wording; retained glass-panel and advanced-packaging descriptions present on its official products page.",
       "GeniCore: corrected CUBNEC to the official expansion “Cubic Boron Nitride Enhanced Cemented Carbide” and added exact phrase keywords from the official applications page.",
-      "SALD: reclassified patented deposition-head technology from a standalone product to a sourced system capability and retained it as a specific lexical signal."
+      "SALD: reclassified patented deposition-head technology from a standalone product to a sourced system capability and retained it as a specific lexical signal.",
+      "SALD: removed the generic “Atmospheric Pressure ALD Reactor” from standalone products because official sources describe atmospheric pressure as a property of its R&D and high-volume systems; the category and lexical terms remain."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
-    "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results. ON NANO also removed unsupported glass-core-substrate and high-density-packaging claims; this stored ranking predates that profile correction. GeniCore corrected the CUBNEC expansion and exact lexical terms based on its official applications page; the paired current-model evaluation showed no top-five ranking changes. SALD now classifies the patented deposition head as a feature of its R&D system rather than a standalone product; its paired evaluation showed no top-five ranking changes.",
+    "reason": "The stored rankings are historical and correspond to the ranking-input hash recorded at matcher runtime. P.G. Instruments changed a score-affecting product term after official catalog review found no listed products in its GC 650 category. Spinflex removed an unsupported ESR/EPR-only qualifier from its spinAMP amplifier description and aligned the capability wording with its official product page. The current ranking-input hash is recorded separately. The local environment lacks sentence-transformers, so no fresh matcher run was possible; do not interpret these historical rankings as current-profile evaluation results. ON NANO also removed unsupported glass-core-substrate and high-density-packaging claims; this stored ranking predates that profile correction. GeniCore corrected the CUBNEC expansion and exact lexical terms based on its official applications page; the paired current-model evaluation showed no top-five ranking changes. SALD now classifies the patented deposition head as a feature of its R&D system rather than a standalone product; its paired evaluation showed no top-five ranking changes. SALD removed a generic reactor-like process label from standalone products while retaining atmospheric pressure ALD as a supported system capability; paired rankings were unchanged.",
     "run_generated_at_utc": "2026-10-22T03:35:12+00:00",
     "run_manufacturer_profiles_sha256": "72aa40cc0f28f25afaac1d0a6e525f5548ec342933117dabbc4d6bc27c55c374"
   },

@@ -27,17 +27,19 @@ Run the current candidate generator with the installed SentenceTransformer depen
 
 ## Current synthetic diagnostic
 
-The repository retains historical profile snapshots in `data/evaluation/`. The current SALD deposition-head scope review has paired runs in `data/evaluation/baseline_synthetic_sald_head_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_sald_head_scope_2026-10-22.json`. Both use the same 18-case synthetic dataset, matcher code, model revision, and top-five setting; only the manufacturer profile snapshot differs.
+The repository retains historical profile snapshots in `data/evaluation/`. The current SALD product-scope review has matched before-and-after runs in `data/evaluation/baseline_synthetic_sald_reactor_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_sald_reactor_scope_2026-10-22.json`. Both use the same 18-case synthetic dataset, matcher code, model revision, and top-five setting; only the manufacturer profile snapshot differs.
 
-Both SALD runs return identical top-five rankings and metrics: 8/8 labeled relevant pairs retrieved, 8/11 retrieved definitive judgments relevant, and 68 candidates unjudged. The profile now treats patented deposition-head technology as a feature of the R&D system and keeps its exact phrase as a lexical cue. The profile keeps the patented-head wording as a specific keyword rather than placing it in general semantic text, preserving the evidence without broadening unrelated semantic matches.
+The paired runs returned identical top-five rankings and metrics: 8/8 labeled relevant pairs retrieved, 8/11 retrieved definitive judgments relevant, and 68 candidates unjudged. SALD no longer lists a generic “Atmospheric Pressure ALD Reactor” as a standalone product. Official sources describe atmospheric operation as a characteristic of its R&D and high-volume systems; the profile keeps atmospheric ALD in product categories, embedding text, and keywords.
 
-The earlier GeniCore CUBNEC pair is preserved in `data/evaluation/baseline_synthetic_genicore_cubnec_name_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_genicore_cubnec_name_2026-10-22.json`. It corrects the expansion to “Cubic Boron Nitride Enhanced Cemented Carbide” and adds exact lexical terms; it left all rankings and the same synthetic metrics unchanged.
+The prior SALD deposition-head pair is preserved in `data/evaluation/baseline_synthetic_sald_head_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_sald_head_scope_2026-10-22.json`. It reclassifies patented deposition-head technology as a feature of the R&D system and retains an exact lexical cue; its paired run also left top-five rankings and metrics unchanged.
+
+The GeniCore CUBNEC pair is preserved in `data/evaluation/baseline_synthetic_genicore_cubnec_name_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_genicore_cubnec_name_2026-10-22.json`. It corrects the expansion to “Cubic Boron Nitride Enhanced Cemented Carbide” and adds exact lexical terms; it left all rankings and synthetic metrics unchanged.
 
 The ON NANO paired run is preserved in `data/evaluation/baseline_synthetic_on_nano_glass_panel_scope_before_2026-10-22.json` and `data/evaluation/baseline_synthetic_on_nano_glass_panel_scope_2026-10-22.json`. It changed one unjudged top-five candidate on `SYN-VACUUM-CLEANER-010`; the case is judged only against Korvus, so no false-positive reduction is established.
 
 These remain synthetic diagnostics, not ground truth or production-accuracy estimates. There are zero human-reviewed examples and no tender is exhaustively labeled across the active catalog, so precision@K and recall@K remain null. Do not interpret unchanged labeled-pair metrics as a quality improvement.
 
-The current-profile SALD run records a median candidate-generation latency of 16.0 ms and a mean of 16.2 ms over 17 unique synthetic tenders after model loading, using Python 3.12.13, Sentence Transformers 6.2.0, Torch 2.14.1, and model revision `5c38ec7c405ec4b44b94cc5a9bb96e735b38267a`. This local timing is not a service-level measurement. Cost, model-load time, portal time, SMTP time, and full pipeline latency are not measured.
+The current-profile SALD run records a median candidate-generation latency of 14.9 ms and a mean of 15.2 ms over 17 unique synthetic tenders after model loading, using Python 3.12.13, Sentence Transformers 6.2.0, Torch 2.14.1, and model revision `5c38ec7c405ec4b44b94cc5a9bb96e735b38267a`. This local timing is not a service-level measurement. Cost, model-load time, portal time, SMTP time, and full pipeline latency are not measured.
 
 Run the dataset integrity checks with:
 
