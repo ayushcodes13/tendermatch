@@ -95,7 +95,7 @@
     "SYN-VACUUM-CLEANER-010": 14.620582995121367
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "28bb812ee3a18a5cfce26b3fbe257b5caf095dfaf5796b57addefd8fc062da32",
+    "current_manufacturer_profiles_sha256": "0aea9945023b49da1b9ca1dd8dd99d508ec7679b3d8ab7c8ba74607584de95ec",
     "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
     "metadata_updates": [
       "TheSix soft medical-infusion negative signals added; original historical run hashes and rankings preserved.",
@@ -105,13 +105,16 @@
       "GeniCore: removed generalized installation language from matching text; official installation and commissioning evidence is scoped to U-FAST FLASH.",
       "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment.",
       "ParteQ: removed unsupported low-competition claim from matching text; official sources describe products and services, not tender competition levels.",
-      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications."
+      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications.",
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": false,
     "reason": "Historical Korvus service pair retains its original run inputs and rankings. The current ranking profile differs because of a later TheSix negative-signal change.",
     "run_generated_at_utc": "2026-10-22T07:29:58+00:00",
-    "run_manufacturer_profiles_sha256": "d5023adeed45e38ccf0a3ca34f789a623b48fb3ff09b4e85a7e2a42f67676807"
+    "run_manufacturer_profiles_sha256": "d5023adeed45e38ccf0a3ca34f789a623b48fb3ff09b4e85a7e2a42f67676807",
+    "run_ranking_profile_inputs_sha256": "f902a97b5fe1d7aa5f845fbb9341c7f9f7b76681efd38800ce070752b7008104",
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
   },
   "ranking_metrics": {
     "1": {

@@ -26,7 +26,7 @@ REQUIRED_LISTS = (
     "negative_keywords",
     "service_keywords",
 )
-OPTIONAL_LISTS = ("aliases", "source_links", "exclusions", "supported_services")
+OPTIONAL_LISTS = ("aliases", "source_links", "exclusions", "supported_services", "profile_warnings")
 NEGATIVE_LISTS = ("negative_keywords", "exclusions")
 POSITIVE_LISTS = (
     "products",

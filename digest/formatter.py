@@ -112,6 +112,9 @@ def _render_opportunity(lines, tender, *, kind, heading):
             families = _items(match.get("product_hits")) + _items(match.get("category_hits")) + _items(match.get("alias_hits"))
             families = list(dict.fromkeys(families))
             lines.append(f"     Product family: {', '.join(families[:4]) or 'Not identified'}")
+            profile_warnings = _items(match.get("profile_warnings"))
+            if profile_warnings:
+                lines.append(f"     Evidence to confirm: {'; '.join(profile_warnings[:2])}")
             reasons = _items(match.get("concept_hits")) + _items(match.get("keyword_hits")) + _items(match.get("service_hits"))
             reasons = list(dict.fromkeys(reasons))
             lines.append(f"     Why it matched: {', '.join(reasons[:4]) or 'No specific profile evidence recorded'}")

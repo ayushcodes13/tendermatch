@@ -2108,5 +2108,19 @@
   "score_interpretation": "Heuristic ranking score, not a calibrated probability",
   "synthetic_case_count": 18,
   "top_k": 5,
-  "unjudged_candidate_count": 68
+  "unjudged_candidate_count": 68,
+  "profile_metadata_refresh": {
+    "run_manufacturer_profiles_sha256": "b8aa72469a0ed18c96d15129655d43805e7bb93fa99505917b5e64e50abe6861",
+    "run_ranking_profile_inputs_sha256": "39cfdf944936af0154536bfcea4eb57f6cf07207141dd71d913d74890cdfbd54",
+    "current_manufacturer_profiles_sha256": "0aea9945023b49da1b9ca1dd8dd99d508ec7679b3d8ab7c8ba74607584de95ec",
+    "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
+    "rankings_reused": false,
+    "rankings_current_for_profile_inputs": false,
+    "reason": "The recorded ranking run is retained against its exact profile snapshot; current profile hashes are tracked separately after later profile reviews.",
+    "run_generated_at_utc": "2026-10-22T05:22:51+00:00",
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "metadata_updates": [
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged."
+    ]
+  }
 }

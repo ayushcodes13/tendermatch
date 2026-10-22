@@ -115,6 +115,23 @@ def test_candidate_generation_keeps_semantic_and_lexical_candidates_before_top_k
         matcher.rank_candidates(pool, top_k=-1)
 
 
+def test_match_exposes_profile_warnings_without_treating_them_as_ranking_evidence():
+    manufacturers = [
+        {
+            "id": "dated-authorization",
+            "name": "Instrument Supplier",
+            "profile_warnings": ["Verify the dated local authorization."],
+        },
+        {"id": "plain", "name": "Plain Supplier"},
+    ]
+    matcher = make_matcher(manufacturers, [[1.0, 0.0], [1.0, 0.0]], [1.0, 0.0])
+
+    result = next(item for item in matcher.match_topk({"title": "laboratory instrument"}, top_k=2) if item["manufacturer_id"] == "dated-authorization")
+
+    assert result["profile_warnings"] == ["Verify the dated local authorization."]
+    assert result["score"] == result["base_semantic_score"]
+
+
 def test_spinflex_profile_has_epr_evidence_but_no_nmr_lexical_evidence():
     root = Path(__file__).resolve().parents[1]
     manufacturers = json.loads((root / "data" / "manufacturers.json").read_text(encoding="utf-8"))

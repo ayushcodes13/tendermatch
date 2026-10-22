@@ -216,6 +216,9 @@
             "warranty replacement of defective parts",
             "spare parts availability"
         ],
+        "profile_warnings": [
+            "A manufacturer-signed 2021 authorization documents a Moldova-specific distributor appointment; verify current authorization and requested service scope before relying on it."
+        ],
         "website": "https://www.pginstruments.com/",
         "source_links": [
             "https://www.pginstruments.com/products/",
@@ -227,7 +230,7 @@
             "https://www.pginstruments.com/product-category/atomic_fluorescence/",
             "https://storage.mtender.gov.md/get/b70ad211-467f-476d-a519-99540a51cd56-1637088115424"
         ],
-        "profile_version": "1.3",
+        "profile_version": "1.4",
         "profile_last_updated": "2026-10-22"
     },
     {

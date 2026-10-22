@@ -94,21 +94,23 @@
     "SYN-VACUUM-CLEANER-010": 13.453250008751638
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "28bb812ee3a18a5cfce26b3fbe257b5caf095dfaf5796b57addefd8fc062da32",
+    "current_manufacturer_profiles_sha256": "0aea9945023b49da1b9ca1dd8dd99d508ec7679b3d8ab7c8ba74607584de95ec",
     "current_ranking_profile_inputs_sha256": "2cfcd27f501822d60c1a02c6291c9d5d5a050dbb72b56858b0a7fd24d2237c95",
     "metadata_updates": [
       "Agnitron: qualified parts, customization, hardware/software upgrades, service plans, preventive maintenance, startup, refurbishment, and process-development service signals to documented legacy/refurbished MOCVD systems and advanced support.",
       "GeniCore: removed generalized installation language from matching text; official installation and commissioning evidence is scoped to U-FAST FLASH.",
       "AdNaNoTek: removed unsupported thin-film-characterization product category; official catalog lists deposition, etching, and UHV system equipment.",
       "ParteQ: removed unsupported low-competition claim from matching text; official sources describe products and services, not tender competition levels.",
-      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications."
+      "AdNaNoTek: removed unsupported high-end tender-tier wording while retaining documented thin-film, semiconductor, and UHV applications.",
+      "Added a P.G. Instruments profile warning for the dated, Moldova-specific distributor authorization; ranking inputs and scores are unchanged."
     ],
     "rankings_current_for_profile_inputs": false,
     "rankings_reused": true,
     "reason": "Evaluation rankings are retained from their exact profile snapshot; current hashes are tracked separately after later manufacturer profile reviews.",
     "run_generated_at_utc": "2026-10-22T07:59:16+00:00",
     "run_manufacturer_profiles_sha256": "ebdc0bf7a01b11ebff09b002f49b8713c33708d65a359a518853c8f3ef4b2c48",
-    "run_ranking_profile_inputs_sha256": "0caf63a857cf111097a996636dd450161267242f8ddaafd30a21a09d8a19d6ea"
+    "run_ranking_profile_inputs_sha256": "0caf63a857cf111097a996636dd450161267242f8ddaafd30a21a09d8a19d6ea",
+    "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a"
   },
   "ranking_metrics": {
     "1": {
