@@ -1009,7 +1009,7 @@
             "academic and industrial research labs",
             "material science"
         ],
-        "embedding_text": "Agnitron Technology specializes in custom Metal Organic Chemical Vapor Deposition (MOCVD) systems and advanced process control solutions for the semiconductor industry. Its product line includes Agilis MOCVD reactors and the Agilis GOX300 large-production reactor for Gallium Oxide (Ga2O3) epitaxial film growth, along with systems for III-Nitrides and 2D materials. It offers Imperium-MOCVD SCADA software for upgrading legacy systems from manufacturers like Veeco and Aixtron, and AgniTemp pyrometry for high-speed in-situ thermal monitoring. These solutions are relevant for tenders involving epitaxial growth, wide-bandgap semiconductor research, and MOCVD equipment. Parts, service plans, customization, and hardware/software upgrades are documented for Emcore/Veeco, Discovery, and Enterprise legacy MOCVD systems. Refurbished legacy MOCVD packages can include preventive-maintenance plans, field startup, parts support, and process-development services; confirm support for the specific system model.",
+        "embedding_text": "Agnitron Technology specializes in custom metal-organic chemical vapor deposition (MOCVD) and CVD systems, process-control software, and in-situ monitoring. Its Agilis systems are presented for research and development across multiple material families. Agnitron describes the GOX Series for gallium-oxide and aluminum gallium oxide epitaxial-film growth; the GOX300 supports a 305 mm wafer carrier with multiple wafer configurations. Confirm wafer count, throughput, and intended production scale for the requested configuration. Other products include Imperium MOCVD process-control software for extending or upgrading legacy CVD systems and AgniTemp multiwavelength pyrometry for in-situ wafer temperature monitoring and control. Agnitron lists parts, customization, upgrades, and service plans for Emcore/Veeco, Discovery, and Enterprise MOCVD systems. Refurbished legacy systems may include site startup, growth demonstrations, parts support, preventive-maintenance plans, and process-development services; confirm support for the specific system model.",
         "keywords": [
             "MOCVD",
             "Gallium Oxide",
@@ -1060,7 +1060,7 @@
             "https://agnitron.com/products/mocvd/custom-systems/",
             "https://agnitron.com/services-and-support/parts-and-services/"
         ],
-        "profile_version": "1.8",
+        "profile_version": "1.9",
         "profile_last_updated": "2026-10-22"
     },
     {
