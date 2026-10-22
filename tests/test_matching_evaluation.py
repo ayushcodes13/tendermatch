@@ -174,7 +174,7 @@ def test_missing_and_invalid_datasets_return_concise_cli_errors(tmp_path, capsys
 
 def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
     report = json.loads(
-        (ROOT / "data/evaluation/baseline_synthetic_nordiko_scope_2026-10-22.json")
+        (ROOT / "data/evaluation/baseline_synthetic_genicore_graphite_dies_2026-10-22.json")
         .read_text(encoding="utf-8")
     )
     dataset = json.loads(
