@@ -187,6 +187,11 @@ def test_refreshed_synthetic_baseline_fingerprints_current_inputs():
     assert report["input_sha256"]["manufacturer_profiles"] == hashlib.sha256(
         (ROOT / "data/manufacturers.json").read_bytes()
     ).hexdigest()
+    assert report["profile_metadata_refresh"]["rankings_reused"] is True
+    assert report["profile_metadata_refresh"]["previous_report_generated_at_utc"] == report[
+        "generated_at_utc"
+    ]
+    assert "source_links and profile_version only" in report["profile_metadata_refresh"]["reason"]
     assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
     assert report["candidate_recall_on_labeled_positives"] == 1.0
     assert report["human_reviewed_case_count"] == 0

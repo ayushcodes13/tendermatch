@@ -69,7 +69,7 @@ Follow the objective's dependency order and use one focused PR per logical chang
 
 ## Dependencies and risks
 
-- P0.2 requires a user-provided `RECEIVER_EMAIL` GitHub Actions secret before scheduled emails can be delivered. No live SMTP test is authorized by the objective.
+- P0.2's `RECEIVER_EMAIL` GitHub Actions secret is configured using the user-provided recipient. No live SMTP test is authorized by the objective.
 - P0.5 deployment selection requires review of costs, credentials, and authorization before external infrastructure is deployed.
 - Existing SQLite files need backward-compatible schema migration and must not lose history.
 - Scraper IDs and date fields vary by source. Fixtures are needed before asserting source-specific parsing behavior.
