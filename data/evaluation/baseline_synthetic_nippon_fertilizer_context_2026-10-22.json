@@ -96,10 +96,11 @@
     "SYN-VACUUM-CLEANER-010": 14.276041998527944
   },
   "profile_metadata_refresh": {
-    "current_manufacturer_profiles_sha256": "469329f97956230171e208afb6c640afe9ce47c103af65a19339729c1f30c4ca",
+    "current_manufacturer_profiles_sha256": "dcf5484bdf082f454f071f096af1fb6c61354899aa0199cfbd1d472278b732f6",
     "metadata_updates": [
       "GeniCore: added the official homepage as source provenance.",
-      "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance."
+      "Agnitron: added the official AgniTemp in-situ monitoring product page as direct source provenance.",
+      "P.G. Instruments: added the dedicated WP750 Series water purifier product page as source provenance."
     ],
     "rankings_reused": true,
     "reason": "Only source_links and profile_version changed after this matcher run. The original run profile hash and rankings are preserved; ranking_profile_inputs confirms score-affecting fields are unchanged. No fresh matcher run was possible because sentence-transformers is unavailable locally.",

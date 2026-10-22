@@ -72,9 +72,12 @@ def test_pg_instruments_profile_has_official_product_and_application_sources():
 
     assert "https://www.pginstruments.com/products/" in profile["source_links"]
     assert "https://www.pginstruments.com/industries/" in profile["source_links"]
+    assert "https://www.pginstruments.com/product/wp750-series/" in profile["source_links"]
     assert "ICP-OES spectrometers" in profile["product_categories"]
+    assert "laboratory water purification systems" in profile["product_categories"]
     assert "atomic fluorescence spectrometers" in profile["products"]
     assert "food and beverage quality control and monitoring" in profile["industries_served"]
+    assert profile["profile_version"] == "1.1"
 
 
 def test_nippon_profile_sources_and_capabilities_are_specific_to_mercury_analysis():

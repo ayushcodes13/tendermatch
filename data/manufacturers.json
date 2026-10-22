@@ -227,12 +227,13 @@
         "source_links": [
             "https://www.pginstruments.com/products/",
             "https://www.pginstruments.com/industries/",
+            "https://www.pginstruments.com/product/wp750-series/",
             "https://www.pginstruments.com/product/aa500f/",
             "https://www.pginstruments.com/product/fp910-flame-photometer/",
             "https://www.pginstruments.com/product/t65-uv-visible-spectrophotometer/",
             "https://www.pginstruments.com/product-category/atomic_fluorescence/"
         ],
-        "profile_version": "1.0",
+        "profile_version": "1.1",
         "profile_last_updated": "2026-10-22"
     },
     {
