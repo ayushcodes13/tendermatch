@@ -16,7 +16,10 @@
     "keywords",
     "concepts",
     "negative_keywords",
-    "service_keywords"
+    "service_keywords",
+    "source_links",
+    "profile_version",
+    "profile_last_updated"
   ],
   "properties": {
     "id": { "type": "string", "minLength": 1 },
