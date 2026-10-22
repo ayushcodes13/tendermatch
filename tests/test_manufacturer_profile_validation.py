@@ -386,12 +386,15 @@ def test_adnanotek_profile_links_official_deposition_quantum_and_etching_sources
         "https://adnano-tek.com/ion-beam-etching/",
         "https://adnano-tek.com/ion-beam-sputter-deposition/",
         "https://adnano-tek.com/plasma-system/",
+        "https://adnano-tek.com/reactive-ion-etching-rie/",
+        "https://adnano-tek.com/inductively-coupled-plasma-icp/",
+        "https://adnano-tek.com/electron-cyclotron-resonance-ecr/",
         "https://adnano-tek.com/thermo-evaporator-system/",
         "https://adnano-tek.com/molecular-beam-epitaxy-mbe/",
         "https://adnano-tek.com/pulsed-laser-deposition-pld/",
         "https://adnano-tek.com/magnetron-sputtering-systems/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.2"
+    assert profile["profile_version"] == "1.3"
 
 
 def test_empty_source_list_does_not_hide_missing_evidence_warning():

@@ -1110,9 +1110,12 @@
             "https://adnano-tek.com/molecular-beam-epitaxy-mbe/",
             "https://adnano-tek.com/pulsed-laser-deposition-pld/",
             "https://adnano-tek.com/magnetron-sputtering-systems/",
-            "https://adnano-tek.com/"
+            "https://adnano-tek.com/",
+            "https://adnano-tek.com/reactive-ion-etching-rie/",
+            "https://adnano-tek.com/inductively-coupled-plasma-icp/",
+            "https://adnano-tek.com/electron-cyclotron-resonance-ecr/"
         ],
-        "profile_version": "1.2",
+        "profile_version": "1.3",
         "profile_last_updated": "2026-10-22"
     },
     {
