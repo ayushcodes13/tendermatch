@@ -148,3 +148,104 @@ def test_recent_amendment_after_scraped_deadline_is_retained_for_review():
     }
     assert assess_tender_freshness(tender, now=NOW) == "recently_updated"
     assert should_process_tender(tender, now=NOW)
+
+
+def test_classify_tender_lifecycle_differentiates_all_eight_categories():
+    from pipeline.freshness import classify_tender_lifecycle, is_withdrawn_tender
+
+    # 1. newly_published (within 24h)
+    pub = classify_tender_lifecycle(
+        {"published_date": "2026-10-21T10:00:00Z", "closing_date": "2026-11-01"},
+        now=NOW,
+    )
+    assert pub["category"] == "newly_published"
+    assert pub["is_eligible"] is True
+
+    # 2. newly_discovered (published 5 days ago, discovered today for the first time)
+    disc = classify_tender_lifecycle(
+        {"published_date": "2026-10-16", "closing_date": "2026-11-01"},
+        now=NOW,
+        is_new=True,
+    )
+    assert disc["category"] == "newly_discovered"
+    assert disc["is_eligible"] is True
+
+    # 3. recently_amended (notification_type == amendment_update)
+    amend = classify_tender_lifecycle(
+        {
+            "published_date": "2026-10-01",
+            "closing_date": "2026-11-01",
+            "notification_type": "amendment_update",
+        },
+        now=NOW,
+        is_new=False,
+    )
+    assert amend["category"] == "recently_amended"
+    assert amend["is_eligible"] is True
+
+    # 4. still_open (closing in the future, existing tender)
+    open_tender = classify_tender_lifecycle(
+        {"published_date": "2026-10-01", "closing_date": "2026-11-01"},
+        now=NOW,
+        is_new=False,
+    )
+    assert open_tender["category"] == "still_open"
+    assert open_tender["is_eligible"] is True
+
+    # 5. expired (closing date in the past)
+    exp = classify_tender_lifecycle(
+        {"published_date": "2026-10-01", "closing_date": "2026-10-15"},
+        now=NOW,
+        is_new=True,
+    )
+    assert exp["category"] == "expired"
+    assert exp["is_eligible"] is False
+
+    # 6. withdrawn / cancelled
+    withdrawn = classify_tender_lifecycle(
+        {"published_date": "2026-10-21", "title": "Tender cancelled by authority"},
+        now=NOW,
+    )
+    assert withdrawn["category"] == "withdrawn"
+    assert withdrawn["is_eligible"] is False
+    assert is_withdrawn_tender({"title": "Tender cancelled by authority"}) is True
+
+    # 7. previously_notified
+    prev = classify_tender_lifecycle(
+        {"published_date": "2026-10-21", "closing_date": "2026-11-01"},
+        now=NOW,
+        already_notified=True,
+    )
+    assert prev["category"] == "previously_notified"
+    assert prev["is_eligible"] is False
+
+    # 8. date_unknown (dates missing or unparseable, newly discovered)
+    unknown = classify_tender_lifecycle(
+        {"published_date": "unknown", "closing_date": None},
+        now=NOW,
+        is_new=True,
+    )
+    assert unknown["category"] == "date_unknown"
+    assert unknown["is_eligible"] is True
+
+
+def test_still_open_tender_published_days_earlier_discovered_today_is_processed():
+    tender = {
+        "tender_id": "T-OLDER-OPEN",
+        "published_date": "2026-10-15",
+        "closing_date": "2026-11-15",
+        "is_new": True,
+    }
+    assert should_process_tender(tender, now=NOW, is_new=True) is True
+    assert assess_tender_freshness(tender, now=NOW, is_new=True) == "newly_discovered"
+
+
+def test_unchanged_existing_tender_without_deadline_is_rejected_as_stale():
+    tender = {
+        "tender_id": "T-OLD-UNCHANGED",
+        "published_date": "2026-10-01",
+        "closing_date": None,
+        "is_new": False,
+    }
+    assert should_process_tender(tender, now=NOW, is_new=False) is False
+    assert assess_tender_freshness(tender, now=NOW, is_new=False) == "stale"

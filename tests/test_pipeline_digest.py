@@ -553,3 +553,46 @@ def test_pipeline_does_not_resend_formatting_only_content_change(monkeypatch, tm
     conn = sqlite3.connect(database_path)
     assert conn.execute("SELECT COUNT(*) FROM email_notifications").fetchone()[0] == 1
     conn.close()
+
+
+def test_pipeline_processes_still_open_tender_published_days_earlier_discovered_today(monkeypatch, tmp_path):
+    database_path = tmp_path / "older-open.sqlite3"
+    sent = []
+    monkeypatch.setattr(pipeline, "get_connection", lambda: sqlite3.connect(database_path))
+    monkeypatch.setattr(pipeline, "build_matcher", lambda: EmptyMatcher())
+    monkeypatch.setattr(pipeline, "classify_tender", lambda tender, *args, **kwargs: {
+        "is_blocked": False,
+        "has_signal": True,
+        "category": "high_signal",
+        "decision": "high_signal",
+        "score": 85,
+        "reason": "older still-open match",
+    })
+    monkeypatch.setattr(pipeline, "RECEIVER_EMAIL", "sales@example.com")
+    monkeypatch.setattr(
+        pipeline, "send_email",
+        lambda subject, body, recipient: sent.append((subject, body, recipient)),
+    )
+
+    tender = {
+        "tender_id": "REF-OLDER-OPEN-1",
+        "title": "Specialized Lab Spectrometer",
+        "organization": "National Research Center",
+        "published_date": (date.today() - timedelta(days=5)).isoformat(),
+        "closing_date": (date.today() + timedelta(days=15)).isoformat(),
+        "source_portal": "cppp",
+        "source_url": "https://eprocure.gov.in/tenders/REF-OLDER-OPEN-1",
+        "raw_text": "Supply of high resolution spectrometer",
+    }
+    monkeypatch.setattr(pipeline, "collect_all_tenders", lambda: [tender])
+
+    # Run 1: Discovered today for the first time -> must be processed and emailed
+    pipeline.run_pipeline()
+    assert len(sent) == 1
+    subject, body, recipient = sent[0]
+    assert "High-Signal Opportunity" in subject
+    assert "REF-OLDER-OPEN-1" in body
+
+    # Run 2: Next run, tender is unchanged and already notified -> must NOT be re-emailed
+    pipeline.run_pipeline()
+    assert len(sent) == 1  # No duplicate notification sent

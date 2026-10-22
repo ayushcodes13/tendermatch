@@ -80,16 +80,145 @@ def _is_date_only(text):
     return not re.search(r"\d{1,2}:\d{2}", text)
 
 
-def assess_tender_freshness(tender, max_age_hours=24, *, now=None):
-    """Classify dates without treating unknown values as proof of staleness.
+_WITHDRAWN_CUES = re.compile(
+    r"\b(cancel(?:led|ed|lation)?|withdraw(?:n|al)?|annul(?:led|ment)?)\b",
+    re.I,
+)
 
-    Returns a stable status string: ``recently_published``, ``recently_updated``,
-    ``still_open``, ``expired``, ``stale``, or ``unknown``.
+
+def is_withdrawn_tender(tender):
+    """Check if tender title, status, or text explicitly indicates cancellation or withdrawal."""
+    if not isinstance(tender, dict):
+        return False
+    status = str(tender.get("status") or "").lower()
+    if any(cue in status for cue in ("cancel", "withdraw", "annul")):
+        return True
+    amendment = tender.get("amendment") or {}
+    if "cancellation_or_withdrawal" in amendment.get("change_types", []):
+        return True
+    title = str(tender.get("title") or "")
+    if re.search(r"\b(tender\s+cancelled|tender\s+withdrawn|tender\s+annulled)\b", title, re.I):
+        return True
+    return False
+
+
+def classify_tender_lifecycle(
+    tender, max_age_hours=24, *, now=None, is_new=None, already_notified=False
+):
+    """Explicitly distinguish the 8 lifecycle categories:
+    - newly_published: published within max_age_hours and not expired.
+    - newly_discovered: first time ingested (is_new=True), not expired.
+    - recently_amended: valid amendment (AMENDMENT_UPDATE) detected, not expired.
+    - still_open: deadline is in the future.
+    - expired: deadline has passed.
+    - withdrawn: cancellation or withdrawal identified.
+    - previously_notified: already sent to this recipient without a new amendment.
+    - date_unknown: no parseable publication or closing dates.
     """
     now = now or datetime.now(timezone.utc)
     if now.tzinfo is None:
         now = now.replace(tzinfo=SOURCE_TIMEZONE)
     now = now.astimezone(timezone.utc)
+
+    if is_new is None:
+        is_new = bool(tender.get("is_new"))
+
+    if already_notified or tender.get("already_notified"):
+        return {
+            "category": "previously_notified",
+            "is_eligible": False,
+            "reason": "already notified to recipient",
+            "lifecycle": "previously_notified",
+        }
+
+    if is_withdrawn_tender(tender):
+        return {
+            "category": "withdrawn",
+            "is_eligible": False,
+            "reason": "tender cancelled or withdrawn",
+            "lifecycle": "withdrawn",
+        }
+
+    date_status = get_tender_date_status(tender, max_age_hours, now=now)
+    lifecycle = date_status["lifecycle"]
+    activity = date_status["activity"]
+
+    if lifecycle == "expired":
+        return {
+            "category": "expired",
+            "is_eligible": False,
+            "reason": "tender closing date has passed",
+            "lifecycle": "expired",
+            "date_status": date_status,
+        }
+
+    notification_type = tender.get("notification_type")
+    if notification_type == "amendment_update" or activity == "recently_updated":
+        return {
+            "category": "recently_amended",
+            "is_eligible": True,
+            "reason": "tender has a recent substantive amendment",
+            "lifecycle": lifecycle,
+            "date_status": date_status,
+        }
+
+    if activity == "recently_published":
+        return {
+            "category": "newly_published",
+            "is_eligible": True,
+            "reason": "published within recency window",
+            "lifecycle": lifecycle,
+            "date_status": date_status,
+        }
+
+    if activity == "unknown" and lifecycle == "unknown":
+        return {
+            "category": "date_unknown",
+            "is_eligible": True,
+            "reason": "dates are missing or unparseable",
+            "lifecycle": "unknown",
+            "date_status": date_status,
+        }
+
+    if is_new:
+        return {
+            "category": "newly_discovered",
+            "is_eligible": True,
+            "reason": "discovered for the first time by TenderMatch and not expired",
+            "lifecycle": lifecycle,
+            "date_status": date_status,
+        }
+
+    if lifecycle == "still_open":
+        return {
+            "category": "still_open",
+            "is_eligible": True,
+            "reason": "closing date is in the future",
+            "lifecycle": "still_open",
+            "date_status": date_status,
+        }
+
+    return {
+        "category": "stale",
+        "is_eligible": False,
+        "reason": "existing tender older than recency window with no active deadline",
+        "lifecycle": lifecycle,
+        "date_status": date_status,
+    }
+
+
+def assess_tender_freshness(tender, max_age_hours=24, *, now=None, is_new=None):
+    """Classify dates without treating unknown values as proof of staleness.
+
+    Returns a stable status string: ``recently_published``, ``recently_updated``,
+    ``newly_discovered``, ``still_open``, ``expired``, ``withdrawn``, ``stale``, or ``unknown``.
+    """
+    now = now or datetime.now(timezone.utc)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=SOURCE_TIMEZONE)
+    now = now.astimezone(timezone.utc)
+    if is_withdrawn_tender(tender):
+        return "withdrawn"
     details = get_tender_date_status(tender, max_age_hours, now=now)
     lifecycle = details["lifecycle"]
     activity = details["activity"]
@@ -97,6 +226,10 @@ def assess_tender_freshness(tender, max_age_hours=24, *, now=None):
         return "expired"
     if activity in {"recently_published", "recently_updated"}:
         return activity
+    if activity == "unknown" and lifecycle == "unknown":
+        return "unknown"
+    if is_new or (is_new is None and tender.get("is_new")):
+        return "newly_discovered"
     if lifecycle == "still_open":
         return "still_open"
     return activity
@@ -153,16 +286,17 @@ def get_tender_date_status(tender, max_age_hours=24, *, now=None):
     return {"activity": activity, "lifecycle": lifecycle}
 
 
-def should_process_tender(tender, max_age_hours=24, *, now=None):
-    """Keep new, updated, open, and date-unknown tenders; exclude definite stale/expired."""
-    return assess_tender_freshness(tender, max_age_hours, now=now) not in {
-        "stale", "expired"
-    }
+def should_process_tender(tender, max_age_hours=24, *, now=None, is_new=None):
+    """Keep new, updated, open, and date-unknown tenders; exclude definite stale/expired/withdrawn."""
+    classification = classify_tender_lifecycle(
+        tender, max_age_hours=max_age_hours, now=now, is_new=is_new
+    )
+    return classification["is_eligible"]
 
 
-def is_recent_tender(tender, max_age_hours=24):
-    """Backward-compatible conservative predicate used by the pipeline."""
-    return should_process_tender(tender, max_age_hours)
+def is_recent_tender(tender, max_age_hours=24, *, is_new=None, now=None):
+    """Backward-compatible predicate used by the pipeline."""
+    return should_process_tender(tender, max_age_hours=max_age_hours, is_new=is_new, now=now)
 
 
 def get_latest_tender_datetime(tender):
