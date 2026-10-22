@@ -15,6 +15,8 @@ Labels describe the authored synthetic scenario, not eligibility, product certif
 
 Every case records whether it is synthetic or human reviewed, a case-specific rationale, technical evidence, known exclusions, and provenance. The current dataset has zero human-reviewed cases. Synthetic examples can support deterministic regression tests and expose failure patterns, but they must not be reported as ground truth or used to claim production accuracy.
 
+Both ranking and threshold evaluation validate each case's provenance before producing a report. Declared category totals must match the case-level records; human-reviewed cases require a reviewer or adjudicator, a timezone-aware review timestamp, and an HTTP(S) source URL. Reported human/synthetic totals are derived from those validated records rather than trusted as free-form dataset metadata.
+
 Before reporting evaluation metrics, add a separately identified set of human-reviewed cases with reviewer and source provenance, preserve disputed labels for adjudication, and report synthetic and human-reviewed results separately. Do not convert a synthetic case to human-reviewed without recording the review provenance and date.
 
 ## Evaluation runner

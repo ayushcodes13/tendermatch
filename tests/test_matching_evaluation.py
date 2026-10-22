@@ -4,10 +4,22 @@ from pathlib import Path
 
 import pytest
 
-from matching.evaluation import evaluate_rankings, hash_ranking_profile_inputs
+from matching.evaluation import evaluate_rankings as _evaluate_rankings, hash_ranking_profile_inputs
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def evaluate_rankings(dataset, *args, **kwargs):
+    """Give ad hoc metric fixtures explicit synthetic provenance."""
+    for case in dataset.get("cases", []):
+        case.setdefault("provenance", {
+            "type": "synthetic", "review_status": "not_human_reviewed",
+            "source": "unit-test fixture",
+        })
+    dataset.setdefault("synthetic_case_count", len(dataset.get("cases", [])))
+    dataset.setdefault("human_reviewed_case_count", 0)
+    return _evaluate_rankings(dataset, *args, **kwargs)
 
 
 def test_metrics_ignore_unjudged_candidates_and_exclude_incomplete_rankings():

@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from matching.filter import classify_tender
+from matching.evaluation import validate_dataset_provenance
 from matching.thresholds import resolve_thresholds
 
 
@@ -44,6 +45,7 @@ def _matches_shown_in_digest(candidates):
 
 def evaluate_threshold_scenarios(dataset, matcher, scenarios, *, classifier=classify_tender):
     """Run each threshold profile over the same deterministic matcher outputs."""
+    provenance_counts = validate_dataset_provenance(dataset)
     if not isinstance(scenarios, dict) or not scenarios:
         raise ValueError("At least one named threshold scenario is required")
     cases = dataset["cases"]
@@ -139,8 +141,8 @@ def evaluate_threshold_scenarios(dataset, matcher, scenarios, *, classifier=clas
     return {
         "dataset_id": dataset.get("dataset_id"),
         "dataset_case_count": len(cases),
-        "synthetic_case_count": dataset.get("synthetic_case_count", 0),
-        "human_reviewed_case_count": dataset.get("human_reviewed_case_count", 0),
+        "synthetic_case_count": provenance_counts["synthetic_case_count"],
+        "human_reviewed_case_count": provenance_counts["human_reviewed_case_count"],
         "label_counts": {
             label: sum(case["label"] == label for case in cases)
             for label in sorted({case["label"] for case in cases})
