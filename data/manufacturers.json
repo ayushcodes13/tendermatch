@@ -357,7 +357,7 @@
             "mining and road milling",
             "electronics and thermoelectrics"
         ],
-        "embedding_text": "Supply and installation of spark plasma sintering (SPS) systems and field assisted sintering technology (FAST) equipment used for powder metallurgy and advanced material consolidation.\nUsed in research and industrial environments for producing high-density ceramics, composites, and advanced materials through rapid thermal processing.\nAlso referred to as SPS system, spark plasma sintering machine, field assisted sintering equipment, or powder consolidation furnace.\nSpecialized in sintering and powder processing technologies.",
+        "embedding_text": "Spark plasma sintering (SPS) systems and field assisted sintering technology (FAST) equipment used for powder metallurgy and advanced material consolidation.\nUsed in research and industrial environments for producing high-density ceramics, composites, and advanced materials through rapid thermal processing.\nAlso referred to as SPS system, spark plasma sintering machine, field assisted sintering equipment, or powder consolidation furnace.\nSpecialized in sintering and powder processing technologies.",
         "keywords": [
             "U-FAST",
             "Spark Plasma Sintering",
@@ -423,7 +423,7 @@
             "https://genicore.eu/products/devices/pulse-plasma-compaction-ppc/",
             "https://genicore.eu/materials/dec/"
         ],
-        "profile_version": "1.9",
+        "profile_version": "2.0",
         "profile_last_updated": "2026-10-22"
     },
     {
