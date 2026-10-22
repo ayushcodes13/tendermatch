@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `33f0a69` after PR #180 made expired-tender counts visible in the digest and run summary; deterministic CI passed.
+- Current base: `main` at `f1ec7e4` after PR #181 recorded the repository-wide implementation audit; its deterministic CI passed. PR #180 (`33f0a69`) separately made expired-tender counts visible in the digest and run summary.
 - Pre-existing draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”. Its runtime guidance is now incorporated in README; the draft remains open and redundant.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -128,7 +128,11 @@ Current checkpoint (2026-10-22; refreshed after PR #178): PR #127 (`codex/audit-
 - Local profile validation reports 14 profiles with 0 errors and 0 warnings. The full deterministic CI-equivalent suite passed 238 tests with one existing macOS LibreSSL/urllib3 warning; `git diff --check` passed. GitHub Actions `deterministic-tests` passed before merge. PR #167 merged as `072d581` and `main` is aligned with `origin/main`.
 
 
-Phase Zero re-audit confirmed the original P0.1 statistics-key contract and controlled pipeline digest path are in place. PR #180 closes the remaining visibility gap: expired tenders were counted separately but their count was absent from digest and run summaries. The mixed synthetic test now verifies the email, console summary, and SQLite run record. P0.2 configuration/credential behavior and the Actions persistence boundary are under active audit; no live email or portal run is performed during tests.
+Phase Zero re-audit confirmed the P0.1 statistics-key contract, controlled pipeline-to-digest path, and P0.2 configuration contract. PR #180 closes the remaining expired-count visibility gap; its mixed synthetic test verifies email, console summary, and SQLite run record. P0.2 uses `SENDER_EMAIL`, `SENDER_PASSWORD`, and `RECEIVER_EMAIL` at runtime, with `EMAIL_USER`, `EMAIL_PASS`, and `RECEIVER_EMAIL` mapped from GitHub secrets. Secret names are present; values were not read, and no live SMTP message or portal run was sent. P0.5 remains partially verified because Actions cache is not durable; the user selected Actions temporarily and has no always-on private runner or available free private store.
+
+The current evaluation dataset contains 18 explicitly synthetic cases and zero human-reviewed cases. It covers industrial versus medical pumps, generic laboratory procurement, service-only tenders, acronym expansion, product aliases, conflicting requirements, missing capabilities, negative terms, overlapping profiles, and amendments. The labels support deterministic regression diagnostics only; human-reviewed data is still required for ground-truth metrics or calibration. The user confirmed no such examples are currently available.
+
+PR #181 merged as `f1ec7e4` and its deterministic CI passed. Continue the remaining source-backed P2.1 manufacturer profile review. P0.5 durable persistence, human-reviewed P1.1/P1.2 labels, and P4.3 evidence that LLM verification adds value remain incomplete.
 
 
 ## P2.1 profile metadata contract ([PR #171](https://github.com/ayushcodes13/tendermatch/pull/171), merged `71e42ed`)
