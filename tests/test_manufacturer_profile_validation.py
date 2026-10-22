@@ -687,7 +687,7 @@ def test_sald_profile_links_patented_deposition_head_claim_to_official_sources()
         "https://spatialald.com/terms-conditions/",
         "https://spatialald.com/careers/service-engineer/",
     } <= set(profile["source_links"])
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
 
 
 def test_sald_service_terms_are_grounded_in_terms_and_service_role():
@@ -708,7 +708,7 @@ def test_sald_service_terms_are_grounded_in_terms_and_service_role():
     assert not {"spare parts", "replacement parts", "hardware upgrades", "software upgrades"} & set(profile["service_keywords"])
     assert "https://spatialald.com/terms-conditions/" in profile["source_links"]
     assert "https://spatialald.com/careers/service-engineer/" in profile["source_links"]
-    assert profile["profile_version"] == "1.7"
+    assert profile["profile_version"] == "1.8"
 
 
 def test_spinflex_industries_limit_health_claim_to_biomedical_research():
@@ -725,8 +725,11 @@ def test_sald_industries_do_not_overclaim_textiles_or_medical_packaging():
     profile = next(p for p in load_profiles() if p["id"] == "sald")
 
     assert "textiles and medical packaging" not in profile["industries_served"]
+    assert "flexible electronics and OLED displays" not in profile["industries_served"]
+    assert "printed electronics and flexible substrates" in profile["industries_served"]
     assert "sustainable packaging and barrier films" in profile["industries_served"]
     assert "membranes and porous materials" in profile["industries_served"]
+    assert "https://spatialald.com/markets/barriers-and-packaging/" in profile["source_links"]
 
 
 def test_on_nano_profile_links_official_products_and_subsystems():

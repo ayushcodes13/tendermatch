@@ -925,7 +925,7 @@
             "perovskite and silicon solar cells",
             "green hydrogen (electrolyzers and fuel cells)",
             "sustainable packaging and barrier films",
-            "flexible electronics and OLED displays",
+            "printed electronics and flexible substrates",
             "membranes and porous materials"
         ],
         "embedding_text": "Supply and installation of spatial atomic layer deposition (ALD) systems for high-throughput, atmospheric pressure thin film coating applications.\nUsed for conformal coating of materials, catalysts, and flexible substrates in energy systems, batteries, and industrial coating processes, especially where uniform coating on complex or porous surfaces is required.\nAlso referred to as spatial ALD system, atmospheric pressure deposition system, roll-to-roll ALD coater, or conformal coating system.\nSpecialized in atomic layer deposition (ALD) for large-area and industrial applications.",
@@ -982,7 +982,7 @@
             "https://spatialald.com/terms-conditions/",
             "https://spatialald.com/careers/service-engineer/"
         ],
-        "profile_version": "1.7",
+        "profile_version": "1.8",
         "profile_last_updated": "2026-10-22"
     },
     {

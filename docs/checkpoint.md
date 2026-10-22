@@ -4,7 +4,7 @@ Update this file through the same focused PR as each implementation where practi
 
 ## Current repository state
 
-- Current base: `main` at `f1ec7e4` after PR #181 recorded the repository-wide implementation audit; its deterministic CI passed. PR #180 (`33f0a69`) separately made expired-tender counts visible in the digest and run summary.
+- Current base: `main` at `f59ea46` after PR #182 synchronized the checkpoint with the audit and current constraints; its deterministic CI passed. PR #181 (`f1ec7e4`) records the repository-wide implementation audit. PR #180 (`33f0a69`) made expired-tender counts visible in the digest and run summary.
 - Pre-existing draft: [PR #1](https://github.com/ayushcodes13/tendermatch/pull/1), “Document TenderMatch hosting and runtime needs”. Its runtime guidance is now incorporated in README; the draft remains open and redundant.
 - `main` is not branch-protected. PR CI now runs the deterministic regression workflow; no checks are marked as required by branch protection.
 - No live scraper or SMTP delivery has been run. The current matcher was downloaded and evaluated in an isolated temporary environment for the synthetic baseline; no model dependency was added to the project or run in CI.
@@ -132,7 +132,7 @@ Phase Zero re-audit confirmed the P0.1 statistics-key contract, controlled pipel
 
 The current evaluation dataset contains 18 explicitly synthetic cases and zero human-reviewed cases. It covers industrial versus medical pumps, generic laboratory procurement, service-only tenders, acronym expansion, product aliases, conflicting requirements, missing capabilities, negative terms, overlapping profiles, and amendments. The labels support deterministic regression diagnostics only; human-reviewed data is still required for ground-truth metrics or calibration. The user confirmed no such examples are currently available.
 
-PR #181 merged as `f1ec7e4` and its deterministic CI passed. Continue the remaining source-backed P2.1 manufacturer profile review. P0.5 durable persistence, human-reviewed P1.1/P1.2 labels, and P4.3 evidence that LLM verification adds value remain incomplete.
+PR #181 merged as `f1ec7e4` and PR #182 as `f59ea46`; both deterministic CI runs passed. A source-backed SALD market-scope correction is under review: the current profile removes an unsupported OLED market phrase and narrows to printed electronics and flexible substrates documented by the official source. Its matcher dependencies are unavailable locally, so no paired ranking run is claimed. P0.5 durable persistence, human-reviewed P1.1/P1.2 labels, and P4.3 evidence that LLM verification adds value remain incomplete.
 
 
 ## P2.1 profile metadata contract ([PR #171](https://github.com/ayushcodes13/tendermatch/pull/171), merged `71e42ed`)
