@@ -859,6 +859,38 @@ def test_adnanotek_characterization_category_pair_preserves_synthetic_results():
     )
 
 
+def test_thesix_flow_battery_scope_evaluation_matches_profile_and_ranking_inputs():
+    report = json.loads((ROOT / "data/evaluation/baseline_synthetic_thesix_flow_battery_scope_2026-10-22.json").read_text(encoding="utf-8"))
+    before = json.loads((ROOT / "data/evaluation/baseline_synthetic_thesix_flow_battery_scope_before_2026-10-22.json").read_text(encoding="utf-8"))
+    dataset = json.loads((ROOT / "data/evaluation/golden_tender_cases.json").read_text(encoding="utf-8"))
+    profiles_path = ROOT / "data/manufacturers.json"
+    profiles = json.loads(profiles_path.read_text(encoding="utf-8"))
+    dataset_bytes = json.dumps(dataset, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+    assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
+    assert report["profile_metadata_refresh"]["current_manufacturer_profiles_sha256"] == hashlib.sha256(profiles_path.read_bytes()).hexdigest()
+    assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
+    assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
+    assert report["input_sha256"]["ranking_profile_inputs"] == report["profile_metadata_refresh"]["run_ranking_profile_inputs_sha256"]
+    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is True
+    assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
+    assert before["input_sha256"]["evaluation_and_matching_code"] == report["input_sha256"]["evaluation_and_matching_code"]
+    assert before["model_revision"] == report["model_revision"]
+    assert before["input_sha256"]["ranking_profile_inputs"] != report["input_sha256"]["ranking_profile_inputs"]
+    assert report["human_reviewed_case_count"] == before["human_reviewed_case_count"] == 0
+    assert report["candidate_recall_on_labeled_positives"] == before["candidate_recall_on_labeled_positives"] == 1.0
+    assert report["labeled_candidate_precision"] == before["labeled_candidate_precision"] == 8 / 9
+    assert report["unjudged_candidate_count"] == before["unjudged_candidate_count"] == 70
+    changed_order_tender_ids = [
+        tender_id for tender_id in before["rankings"]
+        if [item["manufacturer_id"] for item in before["rankings"][tender_id]]
+        != [item["manufacturer_id"] for item in report["rankings"][tender_id]]
+    ]
+    assert set(changed_order_tender_ids) == {
+        "SYN-FERTILIZER-COMMODITY-018", "SYN-LAB-GENERIC-004", "SYN-PUMP-003"
+    }
+
+
 def test_adnanotek_josephson_scope_evaluation_matches_profile_and_ranking_inputs():
     report = json.loads((ROOT / "data/evaluation/baseline_synthetic_adnanotek_josephson_scope_2026-10-22.json").read_text(encoding="utf-8"))
     before = json.loads((ROOT / "data/evaluation/baseline_synthetic_adnanotek_josephson_scope_before_2026-10-22.json").read_text(encoding="utf-8"))
@@ -872,7 +904,7 @@ def test_adnanotek_josephson_scope_evaluation_matches_profile_and_ranking_inputs
     assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
     assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
     assert report["input_sha256"]["ranking_profile_inputs"] == report["profile_metadata_refresh"]["run_ranking_profile_inputs_sha256"]
-    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is True
+    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is False
     assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
     assert before["input_sha256"]["evaluation_and_matching_code"] == report["input_sha256"]["evaluation_and_matching_code"]
     assert before["model_revision"] == report["model_revision"]
