@@ -1820,13 +1820,14 @@
     "run_model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
     "run_manufacturer_profiles_sha256": "9a304d5211f84e81485d8b84d0baaaa15f58279d2bb7443c64f4d944a1679572",
     "run_ranking_profile_inputs_sha256": null,
-    "current_manufacturer_profiles_sha256": "6e4bb60639ab281ba20e52ac4a7dceb3aadb572d67c945686c6c24eba776639d",
-    "current_ranking_profile_inputs_sha256": "9120441c4f6949e35739a53e98d62f98d9ecbede8778a09bab221dc867460caf",
+    "current_manufacturer_profiles_sha256": "5973ac9a3ade853a06c746915c271bf472d2b2d45ea03b942fe0897f8fcafa33",
+    "current_ranking_profile_inputs_sha256": "52702dd20e52804139bff0a3e46c04d327e793ac0422fa655c9e0288a7fc2fa8",
     "rankings_reused": false,
     "reason": "Historical report snapshot; original run hashes and rankings are preserved.",
     "metadata_updates": [
       "AdNaNoTek: scoped the Josephson Junction product claim to its listed Quantum Computing Deposition System; cluster-system and essentiality wording removed.",
-      "TheSix: narrowed generic battery-testing and battery-industry language to the documented flow-battery test cell and PEM electrolyzer test cell."
+      "TheSix: narrowed generic battery-testing and battery-industry language to the documented flow-battery test cell and PEM electrolyzer test cell.",
+      "Nordiko: the N1500-600 product entry now records the official maximum substrate diameter of 500 mm; historical rankings remain tied to their recorded profile snapshots because a paired rerun was unavailable."
     ],
     "rankings_current_for_profile_inputs": false
   }

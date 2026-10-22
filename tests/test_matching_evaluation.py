@@ -325,6 +325,10 @@ def test_synthetic_baseline_preserves_run_catalog_hash_and_tracks_ranking_inputs
         "Spinflex" in update and "spinAMP" in update and "ESR/EPR-only" in update
         for update in report["profile_metadata_refresh"]["metadata_updates"]
     )
+    assert any(
+        "Nordiko" in update and "500 mm" in update
+        for update in report["profile_metadata_refresh"]["metadata_updates"]
+    )
     assert report["input_sha256"]["dataset"] == hashlib.sha256(dataset_bytes).hexdigest()
     assert report["candidate_recall_on_labeled_positives"] == 1.0
     assert report["human_reviewed_case_count"] == 0
@@ -872,7 +876,7 @@ def test_thesix_flow_battery_scope_evaluation_matches_profile_and_ranking_inputs
     assert report["profile_metadata_refresh"]["current_ranking_profile_inputs_sha256"] == hash_ranking_profile_inputs(profiles)
     assert report["input_sha256"]["manufacturer_profiles"] == report["profile_metadata_refresh"]["run_manufacturer_profiles_sha256"]
     assert report["input_sha256"]["ranking_profile_inputs"] == report["profile_metadata_refresh"]["run_ranking_profile_inputs_sha256"]
-    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is True
+    assert report["profile_metadata_refresh"]["rankings_current_for_profile_inputs"] is False
     assert before["input_sha256"]["dataset"] == report["input_sha256"]["dataset"]
     assert before["input_sha256"]["evaluation_and_matching_code"] == report["input_sha256"]["evaluation_and_matching_code"]
     assert before["model_revision"] == report["model_revision"]
