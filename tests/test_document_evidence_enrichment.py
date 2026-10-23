@@ -852,3 +852,258 @@ def test_honest_unknowns_for_unchecked_conditions_route_to_needs_review():
     assert len(evidence["verified_requirements"]) == 0
     assert len(evidence["conflicts"]) == 0
     assert any("laser beam combiner" in item for item in evidence["needs_review"])
+
+
+# ==============================================================================
+# P0 Adversarial Source Quotation Audit Tests
+# ==============================================================================
+
+def test_adversarial_fabricated_source_quotation_triggers_conflict():
+    """P0 Adversarial: Real page number with fabricated quote must trigger citation rejection conflict."""
+    tender = {
+        "title": "Research PVD System",
+        "category": "high_signal",
+        "decision": "high_signal",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1, "status": "text"}, {"page": 2, "status": "text"}],
+        "page_texts": {
+            1: "Tender document for laboratory infrastructure. General terms and conditions.",
+            2: "Standard electrical and building requirements. 230V 50Hz single phase.",
+        },
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Must include HEX Series PVD systems module with vacuum chamber",
+                    "evidence": {
+                        "source_url": "https://gov.in/tender.pdf",
+                        "page": 2,
+                        "quote": "Mandatory: Must include HEX Series PVD systems module with vacuum chamber",
+                    },
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    assert enriched["has_document_conflicts"] is True
+    assert enriched["agent_review_required"] is True
+    assert enriched["category"] == "explore"
+
+    conflicts = enriched["document_evidence"]["conflicts"]
+    assert len(conflicts) == 1
+    assert "fabricated_quotation" in conflicts[0]["conflict_reason"]
+    assert len(enriched["document_evidence"]["verified_requirements"]) == 0
+
+
+def test_adversarial_quotation_on_wrong_page_routes_to_needs_review():
+    """P0 Adversarial: Quote located on another page (p. 2 vs asserted p. 1) routes to needs_review."""
+    tender = {
+        "title": "Modular Deposition Platform",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1, "status": "text"}, {"page": 2, "status": "text"}],
+        "page_texts": {
+            1: "General procurement guidelines and eligibility criteria for bidders.",
+            2: "Mandatory requirement: HEX Series PVD systems module with high vacuum chamber.",
+        },
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "HEX Series PVD systems module with high vacuum chamber",
+                    "evidence": {
+                        "source_url": "https://gov.in/tender.pdf",
+                        "page": 1,  # Cited p. 1, but text is on p. 2!
+                        "quote": "HEX Series PVD systems module with high vacuum chamber",
+                    },
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    evidence = enriched["document_evidence"]
+    assert len(evidence["verified_requirements"]) == 0
+    assert any("quote_page_mismatch" in item or "HEX Series PVD" in item for item in evidence["needs_review"])
+
+
+def test_adversarial_table_parameter_attribution_mismatch_triggers_conflict():
+    """P0 Adversarial: Correct number in wrong row (e.g. chamber height 300 mm vs substrate diameter 300 mm) triggers conflict."""
+    tender = {
+        "title": "Substrate Processing Chamber",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1, "status": "text"}],
+        "page_texts": {
+            1: "Specification Table: Chamber height 300 mm. Maximum substrate diameter 100 mm.",
+        },
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Substrate diameter 300 mm with rotation",
+                    "evidence": {
+                        "source_url": "https://gov.in/spec.pdf",
+                        "page": 1,
+                        "quote": "Chamber height 300 mm",  # Borrowed the 300 mm number from chamber height!
+                    },
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    assert enriched["has_document_conflicts"] is True
+    conflicts = enriched["document_evidence"]["conflicts"]
+    assert len(conflicts) == 1
+    assert "attribution_mismatch" in conflicts[0]["conflict_reason"]
+
+
+def test_adversarial_unit_contradiction_triggers_conflict():
+    """P0 Adversarial: Conflicting units (500 C vs 500 K) triggers citation attribution mismatch."""
+    tender = {
+        "title": "High Temperature Chamber",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1, "status": "text"}],
+        "page_texts": {
+            1: "Operating conditions: Maximum bakeout temperature 500 K under turbo pumping.",
+        },
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Process temperature 500 C heating stage",
+                    "evidence": {
+                        "source_url": "https://gov.in/spec.pdf",
+                        "page": 1,
+                        "quote": "Maximum bakeout temperature 500 K",
+                    },
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    assert enriched["has_document_conflicts"] is True
+    conflicts = enriched["document_evidence"]["conflicts"]
+    assert len(conflicts) == 1
+    assert "attribution_mismatch" in conflicts[0]["conflict_reason"]
+
+
+def test_adversarial_ocr_required_page_routes_to_needs_review():
+    """P0 Adversarial: Asserted citation on an unextracted/scanned page routes to needs_review."""
+    tender = {
+        "title": "Deposition System",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1, "status": "text"}, {"page": 2, "status": "empty"}],
+        "page_texts": {
+            1: "Introduction to tender.",
+            2: "",  # Scanned or empty
+        },
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "Must include HEX Series PVD systems platform",
+                    "evidence": {
+                        "source_url": "https://gov.in/spec.pdf",
+                        "page": 2,
+                        "quote": "Must include HEX Series PVD systems platform",
+                    },
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    evidence = enriched["document_evidence"]
+    assert len(evidence["verified_requirements"]) == 0
+    assert any("source_unverified_needs_ocr" in item or "HEX Series PVD" in item for item in evidence["needs_review"])
+
+
+def test_adversarial_requirement_spanning_pages_verified_across_boundary():
+    """P0 Adversarial: Requirement quotation that crosses page boundary is verified across adjacent pages."""
+    tender = {
+        "title": "Advanced PVD System",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1, "status": "text"}, {"page": 2, "status": "text"}],
+        "page_texts": {
+            1: "Section 4.1: The experimental setup must incorporate the modular HEX Series PVD systems",
+            2: "benchtop platform with high vacuum turbo pumping and multi-source evaporation.",
+        },
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "incorporate the modular HEX Series PVD systems benchtop platform with high vacuum",
+                    "evidence": {
+                        "source_url": "https://gov.in/spec.pdf",
+                        "page": 1,
+                        "quote": "incorporate the modular HEX Series PVD systems benchtop platform with high vacuum",
+                    },
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    evidence = enriched["document_evidence"]
+    assert len(evidence["verified_requirements"]) == 1
+    req = evidence["verified_requirements"][0]
+    assert req["source_extraction_validity"] == "source_verified"
+    assert req["technical_compatibility"] == "technical_match_supported"
+
+
+def test_adversarial_truncated_page_routes_to_needs_review():
+    """P0 Adversarial: Quote on a truncated page is flagged source_partially_verified and routes to needs_review."""
+    tender = {
+        "title": "Deposition Module",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "pages": [{"page": 1, "status": "truncated"}],
+        "page_texts": {
+            1: "System specification: HEX Series PVD systems module with accessories ... [TRUNCATED]",
+        },
+        "fields": {
+            "mandatory_requirements": [
+                {
+                    "value": "HEX Series PVD systems module with accessories",
+                    "evidence": {
+                        "source_url": "https://gov.in/spec.pdf",
+                        "page": 1,
+                        "quote": "HEX Series PVD systems module with accessories",
+                    },
+                }
+            ]
+        },
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    evidence = enriched["document_evidence"]
+    assert len(evidence["verified_requirements"]) == 0
+    assert any("source_partially_verified" in item or "HEX Series PVD" in item for item in evidence["needs_review"])
+
+
+def test_adversarial_omissions_not_assessed_prevents_coverage_verified():
+    """P0 Adversarial: Official PDF extraction without assessed omissions must remain coverage_not_assessed."""
+    tender = {
+        "title": "Procurement of specialized deposition system",
+        "matches": [{"manufacturer_id": "korvus", "manufacturer_name": "Korvus Technology"}],
+    }
+    extraction = {
+        "status": "extracted",
+        "error_type": None,
+        "pages": [{"page": 1, "status": "text"}, {"page": 2, "status": "text"}],
+        "page_texts": {1: "page 1 text", 2: "page 2 text"},
+        "fields": {},
+    }
+    enriched = enrich_tender_with_document_evidence(tender, extraction, SAMPLE_CATALOG, SAMPLE_CLAIMS)
+    assert enriched["document_evidence"]["completeness"] == "coverage_not_assessed"
+    assert "requirement coverage not assessed" in enriched["document_evidence"]["summary"]
+
