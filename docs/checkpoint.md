@@ -200,5 +200,13 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
 - Fixed `_load_default_manufacturers` in `matching/document_enrichment.py` to support list-format JSON catalogs.
 - **Verification**: 9 acceptance journey tests passed; 335 full-suite tests passed in 8.8s; 14 profiles and 18 claims validated with 0 errors and 0 warnings.
 
+## Phase 0 — Hardened Manufacturer Evidence Promotion Semantics
 
-
+- **Defect Addressed**: `evaluate_technical_compatibility()` previously allowed multiword keywords, services, and unverified product entries to set `claim_validity = "capability_evidence_found"`, subsequently promoting lexical overlap into `technical_match_supported` with synthetic evidence text.
+- **Corrected Behavior**:
+  - Requires explicit manufacturer capability claims backed by resolvable official HTTP(S) source URLs.
+  - Multiword profile keywords, offered services, and unverified products remain strictly `lexical_candidate` in claim validity and technical compatibility.
+  - Added `check_claim_limitation_conflicts` to enforce configuration and substrate limitations (e.g. powder CVD vs planar wafer).
+  - Enforced conservative `needs_review` routing for conditional, unverified, or ambiguous claims and unquantified specifications.
+- **Adversarial Regression Coverage**: Added 7 adversarial tests in `tests/test_document_evidence_enrichment.py` covering profile keywords alone, service keywords alone, conditional services, missing source URLs, configuration limitation conflicts, legacy models, and unchecked conditions.
+- **Verification**: 21 targeted tests passed; 9 end-to-end acceptance tests passed; 14 profiles and 18 claims validated with 0 errors and 0 warnings.
