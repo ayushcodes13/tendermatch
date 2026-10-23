@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import sqlite3
 import sys
+import threading
 from urllib.parse import urlparse
 
 from config import FEEDBACK_REVIEWERS
@@ -22,9 +23,12 @@ WEB_DIR = Path(__file__).resolve().parent
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8080
 AUTH_TOKEN_ENV = "TENDERMATCH_REVIEW_AUTH_TOKEN"
+AUTH_REVIEWER_ENV = "TENDERMATCH_REVIEW_REVIEWER"
+AUTH_TOKENS_MAP_ENV = "TENDERMATCH_REVIEW_TOKENS"
 MIN_TOKEN_LENGTH = 16
 MAX_REQUEST_BODY_BYTES = 64 * 1024  # 64 KB limit
 LOOPBACK_HOSTS = frozenset({"127.0.0.1", "localhost", "::1"})
+_DB_WRITE_LOCK = threading.Lock()
 
 logger = logging.getLogger("tendermatch.review")
 
@@ -48,6 +52,42 @@ def get_configured_token() -> str:
     return token
 
 
+def resolve_reviewer_for_token(auth_token: str | None) -> str | None:
+    """Resolve authenticated reviewer identity bound to the given Bearer token.
+
+    Precedence:
+    1. TENDERMATCH_REVIEW_TOKENS: JSON mapping of {token: reviewer_email}.
+    2. TENDERMATCH_REVIEW_REVIEWER: Single designated operator bound to TENDERMATCH_REVIEW_AUTH_TOKEN.
+    3. If trusted reviewers set contains exactly one reviewer, bind to it.
+    """
+    if not auth_token:
+        return None
+
+    # 1. Multi-token JSON mapping
+    tokens_json = os.getenv(AUTH_TOKENS_MAP_ENV, "").strip()
+    if tokens_json:
+        try:
+            mapping = json.loads(tokens_json)
+            if isinstance(mapping, dict):
+                for tok, rev in mapping.items():
+                    if hmac.compare_digest(tok.strip(), auth_token):
+                        return rev.strip()
+        except Exception:
+            pass
+
+    # 2. Single-user designated reviewer
+    designated = os.getenv(AUTH_REVIEWER_ENV, "").strip()
+    if designated:
+        return designated
+
+    # 3. Exactly one reviewer in trusted reviewers
+    trusted = get_trusted_reviewers()
+    if len(trusted) == 1:
+        return next(iter(trusted))
+
+    return None
+
+
 def get_trusted_reviewers() -> frozenset[str]:
     """Retrieve trusted reviewers from environment or config."""
     env_reviewers = os.getenv("TENDERMATCH_FEEDBACK_REVIEWERS", "")
@@ -57,7 +97,7 @@ def get_trusted_reviewers() -> frozenset[str]:
 
 
 class TenderMatchReviewHandler(BaseHTTPRequestHandler):
-    server_version = "TenderMatchReview/1.1"
+    server_version = "TenderMatchReview/1.2"
 
     def log_message(self, format: str, *args):
         """Redact sensitive query parameters and headers from standard logs."""
@@ -71,18 +111,63 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
         Query parameter token authentication is strictly rejected to prevent
         credential leakage in browser history, logs, and Referer headers.
         """
-        try:
-            expected = get_configured_token()
-        except ValueError:
+        auth_header = self.headers.get("Authorization", "")
+        if not auth_header.startswith("Bearer "):
+            return None
+        candidate = auth_header[7:].strip()
+        if not candidate:
             return None
 
-        auth_header = self.headers.get("Authorization", "")
-        if auth_header.startswith("Bearer "):
-            candidate = auth_header[7:].strip()
-            if candidate and hmac.compare_digest(candidate, expected):
+        # Check multi-token map if present
+        tokens_json = os.getenv(AUTH_TOKENS_MAP_ENV, "").strip()
+        if tokens_json:
+            try:
+                mapping = json.loads(tokens_json)
+                if isinstance(mapping, dict):
+                    for tok in mapping.keys():
+                        if hmac.compare_digest(tok.strip(), candidate):
+                            return candidate
+            except Exception:
+                pass
+
+        # Check primary token
+        try:
+            expected = get_configured_token()
+            if hmac.compare_digest(candidate, expected):
                 return candidate
+        except ValueError:
+            pass
 
         return None
+
+    def _check_host_header(self) -> bool:
+        """Validate Host header against loopback to prevent DNS rebinding."""
+        host_header = self.headers.get("Host", "")
+        if host_header:
+            req_host = host_header.split(":")[0].strip().lower()
+            if req_host not in LOOPBACK_HOSTS:
+                self.send_response(403)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(
+                    json.dumps({
+                        "error": "Forbidden",
+                        "message": f"Non-loopback Host '{req_host}' rejected. Single-user loopback model enforced.",
+                    }).encode("utf-8")
+                )
+                return False
+        return True
+
+    def _send_security_headers(self):
+        """Send comprehensive defensive headers on all responses."""
+        self.send_header(
+            "Content-Security-Policy",
+            "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none';",
+        )
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "DENY")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Permissions-Policy", "geolocation=(), camera=(), microphone=()")
 
     def _check_authenticated(self) -> bool:
         if self._get_auth_token() is not None:
@@ -90,6 +175,7 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
         self.send_response(401)
         self.send_header("Content-Type", "application/json")
         self.send_header("WWW-Authenticate", 'Bearer realm="TenderMatch Review"')
+        self._send_security_headers()
         self.end_headers()
         self.wfile.write(
             json.dumps({
@@ -100,6 +186,9 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
         return False
 
     def do_GET(self):
+        if not self._check_host_header():
+            return
+
         parsed = urlparse(self.path)
         path = parsed.path
 
@@ -119,9 +208,14 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
             return
 
         if path == "/api/auth/check":
-            self._send_json({"authenticated": True})
+            token = self._get_auth_token()
+            bound_rev = resolve_reviewer_for_token(token)
+            self._send_json({"authenticated": True, "bound_reviewer": bound_rev})
         elif path == "/api/reviewers":
-            self._send_json({"reviewers": sorted(list(get_trusted_reviewers()))})
+            token = self._get_auth_token()
+            bound_rev = resolve_reviewer_for_token(token)
+            reviewers = [bound_rev] if bound_rev else sorted(list(get_trusted_reviewers()))
+            self._send_json({"reviewers": reviewers, "bound_reviewer": bound_rev})
         elif path == "/api/labels":
             self._send_json({"labels": sorted(list(FEEDBACK_LABELS))})
         elif path == "/api/tenders":
@@ -130,6 +224,8 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
             self.send_error(404, "Not Found")
 
     def do_POST(self):
+        if not self._check_host_header():
+            return
         if not self._check_authenticated():
             return
 
@@ -148,8 +244,7 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(content)))
-            self.send_header("X-Content-Type-Options", "nosniff")
-            self.send_header("X-Frame-Options", "DENY")
+            self._send_security_headers()
             self.end_headers()
             self.wfile.write(content)
         except Exception:
@@ -160,7 +255,7 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("X-Content-Type-Options", "nosniff")
+        self._send_security_headers()
         self.end_headers()
         self.wfile.write(body)
 
@@ -256,6 +351,19 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
             conn.close()
 
     def _handle_post_feedback(self):
+        # 1. CSRF / Cross-Origin check
+        origin = self.headers.get("Origin") or self.headers.get("Referer")
+        if origin:
+            parsed_origin = urlparse(origin)
+            hostname = (parsed_origin.hostname or "").lower()
+            if hostname not in LOOPBACK_HOSTS:
+                self._send_json({"error": "Forbidden: Cross-origin feedback submission rejected"}, 403)
+                return
+        sec_fetch_site = self.headers.get("Sec-Fetch-Site", "").lower()
+        if sec_fetch_site == "cross-site":
+            self._send_json({"error": "Forbidden: Cross-site request rejected"}, 403)
+            return
+
         content_type = self.headers.get("Content-Type", "")
         if not content_type.startswith("application/json"):
             self._send_json({"error": "Unsupported Media Type: application/json required"}, 415)
@@ -292,19 +400,42 @@ class TenderMatchReviewHandler(BaseHTTPRequestHandler):
         reason = payload.get("reason")
         tender_version = payload.get("tender_version")
 
+        # 2. Reviewer Identity Spoofing Protection
+        token = self._get_auth_token()
+        bound_reviewer = resolve_reviewer_for_token(token)
+        if bound_reviewer and reviewer != bound_reviewer:
+            self._send_json({
+                "error": f"Reviewer identity spoofing rejected: token is bound to '{bound_reviewer}', cannot submit as '{reviewer}'"
+            }, 403)
+            return
+
+        # 3. Reason sanitization: reject null bytes and strip non-printable control chars
+        if reason:
+            if "\x00" in reason:
+                self._send_json({"error": "Invalid character in reviewer notes: null bytes are prohibited"}, 400)
+                return
+            reason = "".join(ch for ch in reason if ch.isprintable() or ch in "\n\r\t")
+
         conn = get_connection()
         try:
             init_db(conn)
-            feedback_id = capture_feedback(
-                conn,
-                tender_identity_key=tender_identity_key,
-                manufacturer_id=manufacturer_id,
-                label=label,
-                reviewer=reviewer,
-                trusted_reviewers=get_trusted_reviewers(),
-                reason=reason,
-                tender_version=tender_version,
-            )
+            # Verify tender_identity_key exists
+            row = conn.execute("SELECT id FROM tenders WHERE identity_key = ?", (tender_identity_key,)).fetchone()
+            if not row:
+                self._send_json({"error": f"Tender identity key '{tender_identity_key}' not found in database"}, 404)
+                return
+
+            with _DB_WRITE_LOCK:
+                feedback_id = capture_feedback(
+                    conn,
+                    tender_identity_key=tender_identity_key,
+                    manufacturer_id=manufacturer_id,
+                    label=label,
+                    reviewer=reviewer,
+                    trusted_reviewers=get_trusted_reviewers(),
+                    reason=reason,
+                    tender_version=tender_version,
+                )
             self._send_json({
                 "status": "success",
                 "feedback_id": feedback_id,
@@ -323,20 +454,31 @@ def run_review_server(host: str = DEFAULT_HOST, port: int = DEFAULT_PORT, allow_
     Args:
         host: Host IP or hostname to bind to. Default: 127.0.0.1.
         port: TCP port. Default: 8080.
-        allow_public: If False, binding to non-loopback hosts is rejected for safety.
+        allow_public: If True, rejected with guidance on secure TLS reverse-proxy deployment.
     """
     token = get_configured_token()
 
-    if host not in LOOPBACK_HOSTS and not allow_public:
+    if host not in LOOPBACK_HOSTS:
         raise ValueError(
             f"Insecure public binding to host '{host}' rejected. "
-            "Review server must bind to loopback (127.0.0.1, localhost) unless --allow-public "
-            "is explicitly provided with an established TLS/reverse-proxy boundary."
+            "TenderMatch review server operates under a trusted single-user loopback model "
+            "and must bind to loopback (127.0.0.1, localhost, ::1). "
+            "Public access over unencrypted HTTP without a TLS reverse proxy is strictly prohibited."
+        )
+
+    if allow_public:
+        raise ValueError(
+            "--allow-public is not supported in the single-user prototype model. "
+            "To access the review interface across hosts, terminate TLS using a dedicated reverse proxy "
+            "(e.g. Nginx, Caddy) forwarding to 127.0.0.1 with strong mutual or perimeter authentication."
         )
 
     server = HTTPServer((host, port), TenderMatchReviewHandler)
+    bound_rev = resolve_reviewer_for_token(token)
+    rev_msg = f" (bound operator: {bound_rev})" if bound_rev else " (single-user loopback mode)"
     print(f"🚀 TenderMatch Salesperson Review Interface running at http://{host}:{port}/")
-    print(f"   Security: Bearer authentication enforced ({AUTH_TOKEN_ENV} configured with {len(token)} chars; value redacted)")
+    print(f"   Security: Bearer authentication enforced ({AUTH_TOKEN_ENV} configured with {len(token)} chars; value redacted){rev_msg}")
+    print(f"   Deployment: Trusted single-user loopback model enforced on {host}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

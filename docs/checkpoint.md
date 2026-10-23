@@ -211,7 +211,7 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
 - **Adversarial Regression Coverage**: Added 7 adversarial tests in `tests/test_document_evidence_enrichment.py` covering profile keywords alone, service keywords alone, conditional services, missing source URLs, configuration limitation conflicts, legacy models, and unchecked conditions.
 - **Verification**: 21 targeted tests passed; 9 end-to-end acceptance tests passed; 14 profiles and 18 claims validated with 0 errors and 0 warnings. Merged as `0d57af4`.
 
-## Phase 0 — Adversarial Source Quotation and Citation Integrity Audit
+## Phase 0 — Adversarial Source Quotation and Citation Integrity Audit (PR #203)
 
 - **Defects Addressed**: Source-validity checks previously relied only on metadata presence (a page number and non-empty quote string) without verifying the quote against the actual extracted native PDF text or verifying that the asserted parameter matched the quoted source.
 - **Corrected Behavior**:
@@ -222,5 +222,21 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
     - Hardened compatibility: Fabricated quotations and attribution mismatches trigger `explicit_conflict`, populating `conflicts` and demoting tender to `explore` with `agent_review_required`.
     - Enforced `coverage_not_assessed` unless omissions have been formally evaluated.
 - **Adversarial Regression Coverage**: 8 adversarial tests in `tests/test_document_evidence_enrichment.py` covering fabricated quotations, page mismatches, table parameter attribution mismatches, unit contradictions, scanned/OCR-needed pages, page-boundary spanning, truncated extractions, and omissions assessment checks.
-- **Verification**: 29 targeted tests passed; 272 full-suite deterministic tests passed.
+- **Verification**: 29 targeted tests passed; 272 full-suite deterministic tests passed. Merged as `67878c1`.
+
+## Phase 0 — Review Interface Authorization, Boundary, and Single-User Loopback Hardening
+
+- **Defects Addressed**: The review interface previously permitted arbitrary unencrypted public binding via `--allow-public` without TLS; allowed reviewer identity spoofing (arbitrary `reviewer` string in payload despite bearer token); lacked cross-origin request / CSRF protections; lacked non-loopback Host header verification against DNS rebinding; permitted null bytes in notes; lacked thread locking for concurrent SQLite writes; and rendered unchecked `tender.source_url` attributes.
+- **Corrected Behavior**:
+  - Enforced single-user loopback model: `run_review_server` strictly rejects non-loopback hosts and rejects `--allow-public` with guidance to deploy an operator-managed TLS reverse proxy.
+  - DNS rebinding defense: `_check_host_header` rejects non-loopback `Host` headers with 403 Forbidden.
+  - Defensive security headers: all responses include CSP (`default-src 'self'`), `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`, and `Permissions-Policy`.
+  - CSRF / CORS protection: `_handle_post_feedback` enforces loopback origin/referer and blocks `Sec-Fetch-Site: cross-site` with 403 Forbidden.
+  - Reviewer identity binding: `resolve_reviewer_for_token` binds tokens to specific reviewer identities via `TENDERMATCH_REVIEW_REVIEWER` or multi-token mapping `TENDERMATCH_REVIEW_TOKENS`. Any attempt to submit feedback under a different reviewer than the bound token identity is rejected with 403 Forbidden.
+  - Input sanitization: `reason` rejects `\x00` null bytes with 400 Bad Request and strips non-printable control characters; tender identity key is verified to exist in the database with 404 Not Found.
+  - Concurrency safety: SQLite feedback insertion is serialized under `_DB_WRITE_LOCK` to ensure atomicity and avoid lock contention.
+  - Safe link handling: `web/app.js` enforces `isSafeUrl()` and `rel="noopener noreferrer"`, rejecting `javascript:` and dangerous URI schemes.
+- **Adversarial Regression Coverage**: 10 adversarial tests in `tests/test_review_interface.py` covering public binding rejection, `--allow-public` rejection, DNS rebinding Host header rejection, security headers, cross-origin request rejections, reviewer spoofing rejections, multi-token mapping, token rotation/lifecycle, null byte notes rejection, nonexistent tender rejection, concurrent submission thread safety, and source URL sanitization.
+- **Verification**: 22 targeted tests passed; 282 full-suite deterministic tests passed.
+
 

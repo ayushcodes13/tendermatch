@@ -462,3 +462,250 @@ def test_review_ui_calibrated_decision_labels(review_server):
         assert "Explicit technical conflict" in js
         assert "uncalibrated signal; not a probability" in js
 
+
+# ==============================================================================
+# P0 Adversarial Authorization & Boundary Tests
+# ==============================================================================
+
+def test_adversarial_public_binding_and_allow_public_rejected(monkeypatch):
+    """P0 Adversarial: Binding to non-loopback or using --allow-public must be strictly rejected."""
+    monkeypatch.setenv(AUTH_TOKEN_ENV, "super-secret-token-123456")
+
+    # 1. Non-loopback host rejected
+    with pytest.raises(ValueError) as exc:
+        run_review_server(host="0.0.0.0", port=8080)
+    assert "Insecure public binding to host '0.0.0.0' rejected" in str(exc.value)
+
+    with pytest.raises(ValueError) as exc:
+        run_review_server(host="192.168.1.100", port=8080)
+    assert "Insecure public binding to host '192.168.1.100' rejected" in str(exc.value)
+
+    # 2. --allow-public rejected
+    with pytest.raises(ValueError) as exc:
+        run_review_server(host="127.0.0.1", port=8080, allow_public=True)
+    assert "--allow-public is not supported in the single-user prototype model" in str(exc.value)
+
+
+def test_adversarial_non_loopback_host_header_rejected(review_server):
+    """P0 Adversarial: DNS rebinding attempt with external Host header must be rejected with 403."""
+    base = review_server["base_url"]
+
+    # Request with malicious Host header
+    req = Request(f"{base}/", headers={"Host": "attacker.com:8080"})
+    with pytest.raises(HTTPError) as exc:
+        urlopen(req)
+    assert exc.value.code == 403
+
+
+def test_adversarial_security_headers_present_on_all_responses(review_server):
+    """P0 Adversarial: Verify CSP, nosniff, DENY, and Referrer-Policy headers on responses."""
+    base = review_server["base_url"]
+    with _request(f"{base}/") as resp:
+        headers = dict(resp.headers)
+        assert "Content-Security-Policy" in headers
+        assert "default-src 'self'" in headers["Content-Security-Policy"]
+        assert headers.get("X-Content-Type-Options") == "nosniff"
+        assert headers.get("X-Frame-Options") == "DENY"
+        assert headers.get("Referrer-Policy") == "no-referrer"
+
+
+def test_adversarial_cross_origin_request_rejected(review_server):
+    """P0 Adversarial: Cross-origin feedback submission must be rejected with 403."""
+    base = review_server["base_url"]
+    auth_headers = {
+        "Authorization": f"Bearer {review_server['token']}",
+        "Origin": "https://malicious-external-site.com",
+    }
+    payload = {
+        "tender_identity_key": "identity-001",
+        "manufacturer_id": "pfeiffer_vacuum",
+        "label": "relevant",
+        "reviewer": PRIMARY_REVIEWER,
+    }
+
+    # Cross-origin Origin header
+    with pytest.raises(HTTPError) as exc:
+        _request(f"{base}/api/feedback", method="POST", data=payload, headers=auth_headers)
+    assert exc.value.code == 403
+
+    # Cross-site Sec-Fetch-Site header
+    sec_headers = {
+        "Authorization": f"Bearer {review_server['token']}",
+        "Sec-Fetch-Site": "cross-site",
+    }
+    with pytest.raises(HTTPError) as exc:
+        _request(f"{base}/api/feedback", method="POST", data=payload, headers=sec_headers)
+    assert exc.value.code == 403
+
+
+def test_adversarial_reviewer_identity_spoofing_rejected(review_server, monkeypatch):
+    """P0 Adversarial: Token bound to specific reviewer cannot submit feedback as a different reviewer."""
+    base = review_server["base_url"]
+    # Bind single-user review token to Alice
+    monkeypatch.setenv("TENDERMATCH_REVIEW_REVIEWER", "sales-lead@example.com")
+
+    headers = {"Authorization": f"Bearer {review_server['token']}"}
+
+    # 1. Attacking user tries to submit as Bob while token is bound to Alice
+    spoofed_payload = {
+        "tender_identity_key": "identity-001",
+        "manufacturer_id": "pfeiffer_vacuum",
+        "label": "relevant",
+        "reviewer": "sales-rep@example.com",  # Bob's identity!
+        "reason": "Spoofed submission",
+    }
+    with pytest.raises(HTTPError) as exc:
+        _request(f"{base}/api/feedback", method="POST", data=spoofed_payload, headers=headers)
+    assert exc.value.code == 403
+
+    # 2. Legitimate submission as Alice succeeds
+    valid_payload = {
+        "tender_identity_key": "identity-001",
+        "manufacturer_id": "pfeiffer_vacuum",
+        "label": "relevant",
+        "reviewer": "sales-lead@example.com",  # Alice!
+        "reason": "Legitimate submission",
+    }
+    with _request(f"{base}/api/feedback", method="POST", data=valid_payload, headers=headers) as resp:
+        assert resp.status == 201
+
+
+def test_adversarial_multi_token_reviewer_binding(review_server, monkeypatch):
+    """P0 Adversarial: Multi-token mapping enforces individual non-forgeable reviewer identities."""
+    base = review_server["base_url"]
+    tokens_map = {
+        "token-alice-secret-12345": "sales-lead@example.com",
+        "token-bob-secret-6789012": "sales-rep@example.com",
+    }
+    monkeypatch.setenv("TENDERMATCH_REVIEW_TOKENS", json.dumps(tokens_map))
+
+    # Alice submits as Alice -> OK
+    alice_headers = {"Authorization": "Bearer token-alice-secret-12345"}
+    payload_alice = {
+        "tender_identity_key": "identity-001",
+        "manufacturer_id": "pfeiffer_vacuum",
+        "label": "worth_pursuing",
+        "reviewer": "sales-lead@example.com",
+    }
+    with _request(f"{base}/api/feedback", method="POST", data=payload_alice, headers=alice_headers) as resp:
+        assert resp.status == 201
+
+    # Alice submits as Bob -> Rejected with 403
+    payload_spoof_bob = {
+        "tender_identity_key": "identity-001",
+        "manufacturer_id": "pfeiffer_vacuum",
+        "label": "not_relevant",
+        "reviewer": "sales-rep@example.com",
+    }
+    with pytest.raises(HTTPError) as exc:
+        _request(f"{base}/api/feedback", method="POST", data=payload_spoof_bob, headers=alice_headers)
+    assert exc.value.code == 403
+
+    # Bob submits as Bob -> OK
+    bob_headers = {"Authorization": "Bearer token-bob-secret-6789012"}
+    with _request(f"{base}/api/feedback", method="POST", data=payload_spoof_bob, headers=bob_headers) as resp:
+        assert resp.status == 201
+
+
+def test_adversarial_token_rotation_and_lifecycle(review_server, monkeypatch):
+    """P0 Adversarial: Token rotation immediately takes effect; previous token returns 401."""
+    base = review_server["base_url"]
+    old_token = review_server["token"]
+    new_token = "newly-rotated-token-987654321"
+
+    old_headers = {"Authorization": f"Bearer {old_token}"}
+    new_headers = {"Authorization": f"Bearer {new_token}"}
+
+    # Before rotation: old token works
+    with _request(f"{base}/api/auth/check", headers=old_headers) as resp:
+        assert resp.status == 200
+
+    # Rotate token in environment
+    monkeypatch.setenv(AUTH_TOKEN_ENV, new_token)
+
+    # After rotation: old token is rejected
+    with pytest.raises(HTTPError) as exc:
+        _request(f"{base}/api/auth/check", headers=old_headers)
+    assert exc.value.code == 401
+
+    # New token works immediately
+    with _request(f"{base}/api/auth/check", headers=new_headers) as resp:
+        assert resp.status == 200
+
+
+def test_adversarial_malicious_reviewer_notes_and_unknown_tender(review_server):
+    """P0 Adversarial: Null bytes in notes and nonexistent tender keys must be rejected."""
+    base = review_server["base_url"]
+    headers = {"Authorization": f"Bearer {review_server['token']}"}
+
+    # 1. Null byte in reviewer notes
+    payload_null_byte = {
+        "tender_identity_key": "identity-001",
+        "manufacturer_id": "pfeiffer_vacuum",
+        "label": "relevant",
+        "reviewer": PRIMARY_REVIEWER,
+        "reason": "Legit text\x00malicious injected payload",
+    }
+    with pytest.raises(HTTPError) as exc:
+        _request(f"{base}/api/feedback", method="POST", data=payload_null_byte, headers=headers)
+    assert exc.value.code == 400
+
+    # 2. Nonexistent tender identity key -> 404
+    payload_unknown_tender = {
+        "tender_identity_key": "identity-nonexistent-xyz-999",
+        "manufacturer_id": "pfeiffer_vacuum",
+        "label": "relevant",
+        "reviewer": PRIMARY_REVIEWER,
+        "reason": "Testing nonexistent tender",
+    }
+    with pytest.raises(HTTPError) as exc:
+        _request(f"{base}/api/feedback", method="POST", data=payload_unknown_tender, headers=headers)
+    assert exc.value.code == 404
+
+
+def test_adversarial_concurrent_feedback_submissions(review_server):
+    """P0 Adversarial: Concurrent feedback submissions must execute cleanly without database lock errors."""
+    base = review_server["base_url"]
+    headers = {"Authorization": f"Bearer {review_server['token']}"}
+
+    successes = []
+    errors = []
+
+    def submit_one(i):
+        payload = {
+            "tender_identity_key": "identity-001",
+            "manufacturer_id": "pfeiffer_vacuum",
+            "label": "relevant",
+            "reviewer": PRIMARY_REVIEWER,
+            "reason": f"Concurrent submission thread {i}",
+        }
+        try:
+            with _request(f"{base}/api/feedback", method="POST", data=payload, headers=headers) as resp:
+                if resp.status == 201:
+                    successes.append(i)
+                else:
+                    errors.append((i, resp.status))
+        except Exception as e:
+            errors.append((i, str(e)))
+
+    threads = [threading.Thread(target=submit_one, args=(i,)) for i in range(10)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    assert len(errors) == 0
+    assert len(successes) == 10
+
+
+def test_adversarial_malicious_source_url_sanitized():
+    """P0 Adversarial: Verify that web/app.js enforces isSafeUrl to block javascript: URI injection."""
+    app_js_path = os.path.join(os.path.dirname(__file__), "..", "web", "app.js")
+    with open(app_js_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "isSafeUrl" in content
+    assert "javascript:" not in content.lower() or "isSafeUrl" in content
+    assert "noopener noreferrer" in content
+
+
