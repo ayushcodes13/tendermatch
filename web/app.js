@@ -121,7 +121,13 @@ async function loadReviewers() {
       opt.textContent = rev;
       select.appendChild(opt);
     });
-    if (STATE.reviewer) {
+    if (data.bound_reviewer) {
+      STATE.reviewer = data.bound_reviewer;
+      sessionStorage.setItem('tendermatch_reviewer', data.bound_reviewer);
+      select.value = data.bound_reviewer;
+      select.disabled = true;
+      updateAuthUI();
+    } else if (STATE.reviewer) {
       select.value = STATE.reviewer;
     }
   } catch (err) {
@@ -305,7 +311,7 @@ function createTenderCard(tender) {
           <span>🏛️ ${escapeHtml(tender.organization || 'Unknown Organization')}</span>
           <span>📄 Ref: ${escapeHtml(tender.tender_id || 'Not specified')}</span>
           <span>📅 Due: ${escapeHtml(tender.closing_date || 'Not listed')}</span>
-          ${tender.source_url ? `<a href="${escapeHtml(tender.source_url)}" target="_blank" rel="noopener" style="color: var(--accent-cyan);">Official Portal ↗</a>` : ''}
+          ${tender.source_url && isSafeUrl(tender.source_url) ? `<a href="${escapeHtml(tender.source_url)}" target="_blank" rel="noopener noreferrer" style="color: var(--accent-cyan);">Official Portal ↗</a>` : ''}
         </div>
       </div>
     </div>
@@ -440,4 +446,14 @@ function escapeHtml(str) {
 
 function jsonStringifySafe(obj) {
   return JSON.stringify(obj);
+}
+
+function isSafeUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  try {
+    const parsed = new URL(url, window.location.href);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch (e) {
+    return false;
+  }
 }
