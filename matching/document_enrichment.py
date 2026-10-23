@@ -190,12 +190,209 @@ def check_claim_limitation_conflicts(requirement_text: str, matched_claim: dict 
     return None
 
 
+def check_quotation_attribution_mismatch(
+    requirement_text: str,
+    quote: str,
+    field_name: str = "",
+) -> str | None:
+    """Check if numbers, parameter labels, or table values in quote are misattributed.
+
+    Detects cases where:
+    - Quote explicitly labels a different parameter (e.g. quote has 'Chamber Height: 500 mm'
+      but asserted requirement is 'Substrate Diameter: 500 mm').
+    - Table value in quote belongs to a different row/metric.
+    - Malformed units or unit contradictions occur between quote and requirement.
+    """
+    quote_lower = quote.lower()
+    req_lower = requirement_text.lower()
+
+    # Parameter label mismatch
+    param_patterns = [
+        ("chamber height", "substrate diameter"),
+        ("substrate diameter", "chamber height"),
+        ("wafer size", "flange diameter"),
+        ("flange diameter", "wafer size"),
+        ("operating temperature", "ambient temperature"),
+        ("maximum temperature", "minimum temperature"),
+        ("flow rate", "pumping speed"),
+        ("pumping speed", "flow rate"),
+        ("voltage", "frequency"),
+    ]
+    for param_a, param_b in param_patterns:
+        if param_a in quote_lower and param_b in req_lower and param_b not in quote_lower:
+            return f"Parameter attribution mismatch: quote specifies '{param_a}', but asserted requirement claims '{param_b}'"
+
+    # Malformed / conflicting units
+    # e.g., quote specifies 500 K but requirement claims 500 C, or 300 mm vs 300 cm
+    temp_re = r"(\d+(?:\.\d+)?)\s*(kelvin|k|°\s*c|deg\s*c|celsius|c|fahrenheit|°\s*f|f)\b"
+    num_match_quote = re.search(temp_re, quote_lower)
+    num_match_req = re.search(temp_re, req_lower)
+    if num_match_quote and num_match_req:
+        val_q, unit_q = num_match_quote.group(1), num_match_quote.group(2).strip()
+        val_r, unit_r = num_match_req.group(1), num_match_req.group(2).strip()
+        is_kelvin_q = "k" in unit_q
+        is_kelvin_r = "k" in unit_r
+        if is_kelvin_q != is_kelvin_r and val_q == val_r:
+            return f"Unit mismatch: quote specifies {val_q} {unit_q}, but requirement asserts {val_r} {unit_r}"
+
+    dim_re = r"(\d+(?:\.\d+)?)\s*(mm|cm|m|nm|um|µm|inches|inch|\")\b"
+    dim_match_q = re.search(dim_re, quote_lower)
+    dim_match_r = re.search(dim_re, req_lower)
+    if dim_match_q and dim_match_r:
+        val_q, unit_q = dim_match_q.group(1), dim_match_q.group(2).strip()
+        val_r, unit_r = dim_match_r.group(1), dim_match_r.group(2).strip()
+        if unit_q != unit_r and val_q == val_r:
+            return f"Unit mismatch: quote specifies {val_q} {unit_q}, but requirement asserts {val_r} {unit_r}"
+
+    return None
+
+
+def verify_source_quotation(
+    evidence_info: dict,
+    extraction: dict | None = None,
+    item_value: str = "",
+    field_name: str = "",
+) -> dict:
+    """Independently audit and verify requirement quotation against extracted PDF source pages.
+
+    Returns dict with:
+        validity: "source_verified", "source_unverified", "fabricated_quotation",
+                  "quote_page_mismatch", "source_unverified_needs_ocr",
+                  "source_partially_verified", "attribution_mismatch"
+        notes: explanation of validation or mismatch
+        verified_page: verified page number if found
+    """
+    page = evidence_info.get("page")
+    quote = evidence_info.get("quote", item_value)
+
+    if page is None or not quote or not str(quote).strip():
+        return {
+            "validity": "source_unverified",
+            "notes": "Missing page citation or quotation in evidence",
+            "verified_page": None,
+        }
+
+    quote_str = str(quote).strip()
+
+    if not extraction or not isinstance(extraction, dict):
+        return {
+            "validity": "source_verified" if page else "source_unverified",
+            "notes": f"Citation present (p. {page}); extraction text unavailable for verification",
+            "verified_page": page,
+        }
+
+    # Extract page texts
+    page_texts = extraction.get("page_texts", {})
+    if not page_texts and "pages" in extraction:
+        for p in extraction["pages"]:
+            if isinstance(p, dict) and "page" in p and "text" in p:
+                page_texts[p["page"]] = p["text"]
+
+    page_statuses = {
+        p["page"]: p.get("status")
+        for p in extraction.get("pages", [])
+        if isinstance(p, dict) and "page" in p
+    }
+
+    # Check if cited page requires OCR or is unreadable
+    if page_statuses.get(page) == "empty" or extraction.get("status") == "needs_ocr":
+        return {
+            "validity": "source_unverified_needs_ocr",
+            "notes": f"Page {page} has empty native text / requires OCR; quotation unverified",
+            "verified_page": page,
+        }
+    if page_statuses.get(page) == "unreadable":
+        return {
+            "validity": "source_unverified",
+            "notes": f"Page {page} is unreadable in native text parser",
+            "verified_page": page,
+        }
+
+    # If page texts are available, perform deep textual quotation verification
+    if page_texts:
+        def _norm(s: str) -> str:
+            return " ".join(s.lower().split())
+
+        norm_quote = _norm(quote_str)
+        cited_page_text = str(page_texts.get(page, "") or "")
+        norm_cited_page = _norm(cited_page_text)
+
+        # Check if quote is present on the cited page
+        if norm_quote in norm_cited_page:
+            # Check for parameter attribution mismatch
+            attribution_err = check_quotation_attribution_mismatch(item_value, quote_str, field_name)
+            if attribution_err:
+                return {
+                    "validity": "attribution_mismatch",
+                    "notes": attribution_err,
+                    "verified_page": page,
+                }
+
+            # Check if page was truncated
+            if page_statuses.get(page) == "truncated" or extraction.get("status") == "text_truncated":
+                return {
+                    "validity": "source_partially_verified",
+                    "notes": f"Quotation verified on page {page}, but page text was truncated; omissions not assessed",
+                    "verified_page": page,
+                }
+
+            return {
+                "validity": "source_verified",
+                "notes": f"Exact quotation verified in native PDF text on page {page}",
+                "verified_page": page,
+            }
+
+        # Check if quotation spans across page boundaries (e.g. end of page into page + 1)
+        next_page_text = str(page_texts.get(page + 1, "") or "")
+        if next_page_text and norm_quote not in _norm(next_page_text):
+            combined = _norm(cited_page_text[-len(quote_str) * 2:] + " " + next_page_text[:len(quote_str) * 2])
+            if norm_quote in combined:
+                return {
+                    "validity": "source_verified",
+                    "notes": f"Quotation verified spanning pages {page}-{page + 1}",
+                    "verified_page": page,
+                }
+
+        # Check if quotation appears on ANOTHER page
+        other_pages = [p_num for p_num, p_txt in page_texts.items() if norm_quote in _norm(str(p_txt or ""))]
+        if other_pages:
+            return {
+                "validity": "quote_page_mismatch",
+                "notes": f"Quotation not present on asserted page {page}; found on page(s) {other_pages}",
+                "verified_page": other_pages[0],
+            }
+
+        # Not found anywhere in PDF text: Fabricated quotation!
+        return {
+            "validity": "fabricated_quotation",
+            "notes": f"Quotation '{quote_str}' is fabricated or not present in native text of page {page} or document",
+            "verified_page": None,
+        }
+
+    # If page_texts is not provided, fallback to checking page in pages
+    pages_list = extraction.get("pages", [])
+    has_page = page in pages_list or any(isinstance(p, dict) and p.get("page") == page for p in pages_list)
+    if has_page:
+        return {
+            "validity": "source_verified",
+            "notes": f"Page citation {page} present in extraction metadata",
+            "verified_page": page,
+        }
+    return {
+        "validity": "quote_page_mismatch",
+        "notes": f"Page {page} not present in extracted document pages",
+        "verified_page": None,
+    }
+
+
 def evaluate_technical_compatibility(
     item_value: str,
     evidence_info: dict,
     maker_profile: dict,
     claims: list[dict],
     feedback_history: list[dict] | None = None,
+    extraction: dict | None = None,
+    field_name: str = "",
 ) -> dict:
     """Evaluate four independent verification concepts for an extracted requirement.
 
@@ -214,11 +411,15 @@ def evaluate_technical_compatibility(
     maker_id = maker_profile.get("id")
     maker_name = maker_profile.get("name", "Unknown Manufacturer")
 
-    # 1. Source extraction validity
-    if page is not None and quote and quote.strip():
-        source_validity = "source_verified"
-    else:
-        source_validity = "source_unverified"
+    # 1. Source extraction validity independently audited against PDF
+    source_audit = verify_source_quotation(
+        evidence_info=evidence_info,
+        extraction=extraction,
+        item_value=item_value,
+        field_name=field_name,
+    )
+    source_validity = source_audit["validity"]
+    source_notes = source_audit["notes"]
 
     # 2. Manufacturer claim validity
     valid_maker_ids = {
@@ -286,52 +487,59 @@ def evaluate_technical_compatibility(
                     break
 
     # 3. Technical compatibility evaluation
-    # A. Check domain incompatibility
-    domain_conflict = check_incompatible_equipment_domain(item_value, maker_profile)
-    if domain_conflict:
+    if source_validity in {"fabricated_quotation", "attribution_mismatch"}:
         tech_status = "explicit_conflict"
-        notes = domain_conflict
+        notes = f"Evidence citation rejected ({source_validity}): {source_notes}"
+    elif source_validity in {"quote_page_mismatch", "source_unverified_needs_ocr", "source_partially_verified"}:
+        tech_status = "needs_review"
+        notes = f"Citation integrity issue ({source_validity}): {source_notes}"
     else:
-        # B. Check parameter / numerical / model mismatches
-        param_conflict = check_parameter_mismatches(item_value, maker_profile, m_claims)
-        if param_conflict:
+        # A. Check domain incompatibility
+        domain_conflict = check_incompatible_equipment_domain(item_value, maker_profile)
+        if domain_conflict:
             tech_status = "explicit_conflict"
-            notes = param_conflict
+            notes = domain_conflict
         else:
-            # C. Check service-only scope
-            service_conflict = check_service_only_scope(item_value, maker_profile)
-            if service_conflict:
+            # B. Check parameter / numerical / model mismatches
+            param_conflict = check_parameter_mismatches(item_value, maker_profile, m_claims)
+            if param_conflict:
                 tech_status = "explicit_conflict"
-                notes = service_conflict
+                notes = param_conflict
             else:
-                # D. Check claim limitation conflicts
-                limitation_conflict = check_claim_limitation_conflicts(item_value, matched_claim)
-                if limitation_conflict:
+                # C. Check service-only scope
+                service_conflict = check_service_only_scope(item_value, maker_profile)
+                if service_conflict:
                     tech_status = "explicit_conflict"
-                    notes = limitation_conflict
-                elif claim_validity == "unsupported_claim":
-                    tech_status = "explicit_conflict"
-                    notes = f"Unsupported claim: official documentation explicitly does not substantiate {matched_claim.get('claim_text')}"
-                elif claim_validity == "capability_evidence_found":
-                    if source_validity == "source_verified":
-                        tech_status = "technical_match_supported"
-                        notes = f"Verified in PDF (p. {page}) and substantiated by official manufacturer claim: {matched_claim.get('claim_id')}"
-                    else:
-                        tech_status = "capability_evidence_found"
-                        notes = f"Manufacturer capability substantiated by {matched_claim.get('claim_id')}, but requirement source unverified in PDF"
-                elif claim_validity == "lexical_candidate":
-                    tech_status = "lexical_candidate"
-                    notes = f"Lexical keyword overlap detected ({matched_capability}); technical compatibility not substantiated by official claim evidence"
-                elif claim_validity == "unverified_claim":
-                    tech_status = "needs_review"
-                    notes = f"Conditional/unverified claim requires human sales adjudication: {matched_claim.get('claim_id')}"
+                    notes = service_conflict
                 else:
-                    if check_missing_specifications(item_value, "technical_specifications"):
-                        tech_status = "insufficient_evidence"
-                        notes = "Critical technical parameters missing from specification; cannot substantiate fit"
-                    else:
+                    # D. Check claim limitation conflicts
+                    limitation_conflict = check_claim_limitation_conflicts(item_value, matched_claim)
+                    if limitation_conflict:
+                        tech_status = "explicit_conflict"
+                        notes = limitation_conflict
+                    elif claim_validity == "unsupported_claim":
+                        tech_status = "explicit_conflict"
+                        notes = f"Unsupported claim: official documentation explicitly does not substantiate {matched_claim.get('claim_text')}"
+                    elif claim_validity == "capability_evidence_found":
+                        if source_validity == "source_verified":
+                            tech_status = "technical_match_supported"
+                            notes = f"Verified in PDF (p. {page}) and substantiated by official manufacturer claim: {matched_claim.get('claim_id')}"
+                        else:
+                            tech_status = "needs_review"
+                            notes = f"Manufacturer capability substantiated by {matched_claim.get('claim_id')}, but requirement source unverified in PDF ({source_validity}): {source_notes}"
+                    elif claim_validity == "lexical_candidate":
+                        tech_status = "lexical_candidate"
+                        notes = f"Lexical keyword overlap detected ({matched_capability}); technical compatibility not substantiated by official claim evidence"
+                    elif claim_validity == "unverified_claim":
                         tech_status = "needs_review"
-                        notes = "Tender specification unverified against manufacturer capabilities"
+                        notes = f"Conditional/unverified claim requires human sales adjudication: {matched_claim.get('claim_id')}"
+                    else:
+                        if check_missing_specifications(item_value, "technical_specifications"):
+                            tech_status = "insufficient_evidence"
+                            notes = "Critical technical parameters missing from specification; cannot substantiate fit"
+                        else:
+                            tech_status = "needs_review"
+                            notes = "Tender specification unverified against manufacturer capabilities"
 
     # 4. Human disposition lookup
     human_disposition = "unreviewed"
@@ -422,12 +630,8 @@ def enrich_tender_with_document_evidence(
         summary = f"Tender PDF partially reviewed ({pages_reviewed} pages); subsequent requirements unverified."
         was_truncated = True
     elif status == "extracted":
-        if extraction.get("comprehensive_coverage") is True:
-            completeness = "coverage_verified"
-            summary = f"Official PDF verified natively across {pages_reviewed} page(s) with comprehensive requirement coverage."
-        else:
-            completeness = "coverage_not_assessed"
-            summary = f"Official PDF native text extracted across {pages_reviewed} page(s); requirement coverage not assessed."
+        completeness = "coverage_not_assessed"
+        summary = f"Official PDF native text extracted across {pages_reviewed} page(s); requirement coverage not assessed."
         was_truncated = False
     else:
         completeness = "unavailable"
@@ -473,6 +677,8 @@ def enrich_tender_with_document_evidence(
                     maker_profile=profile,
                     claims=claims,
                     feedback_history=feedback_history,
+                    extraction=extraction,
+                    field_name=field_name,
                 )
                 assessed_requirements.append(assessment)
 

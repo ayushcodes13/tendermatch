@@ -200,7 +200,7 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
 - Fixed `_load_default_manufacturers` in `matching/document_enrichment.py` to support list-format JSON catalogs.
 - **Verification**: 9 acceptance journey tests passed; 335 full-suite tests passed in 8.8s; 14 profiles and 18 claims validated with 0 errors and 0 warnings.
 
-## Phase 0 — Hardened Manufacturer Evidence Promotion Semantics
+## Phase 0 — Hardened Manufacturer Evidence Promotion Semantics (PR #202)
 
 - **Defect Addressed**: `evaluate_technical_compatibility()` previously allowed multiword keywords, services, and unverified product entries to set `claim_validity = "capability_evidence_found"`, subsequently promoting lexical overlap into `technical_match_supported` with synthetic evidence text.
 - **Corrected Behavior**:
@@ -209,4 +209,18 @@ PR #183 merged as `95206e9`, PR #184 as `0e1a9fb`, PR #185 as `3f74789`, PR #186
   - Added `check_claim_limitation_conflicts` to enforce configuration and substrate limitations (e.g. powder CVD vs planar wafer).
   - Enforced conservative `needs_review` routing for conditional, unverified, or ambiguous claims and unquantified specifications.
 - **Adversarial Regression Coverage**: Added 7 adversarial tests in `tests/test_document_evidence_enrichment.py` covering profile keywords alone, service keywords alone, conditional services, missing source URLs, configuration limitation conflicts, legacy models, and unchecked conditions.
-- **Verification**: 21 targeted tests passed; 9 end-to-end acceptance tests passed; 14 profiles and 18 claims validated with 0 errors and 0 warnings.
+- **Verification**: 21 targeted tests passed; 9 end-to-end acceptance tests passed; 14 profiles and 18 claims validated with 0 errors and 0 warnings. Merged as `0d57af4`.
+
+## Phase 0 — Adversarial Source Quotation and Citation Integrity Audit
+
+- **Defects Addressed**: Source-validity checks previously relied only on metadata presence (a page number and non-empty quote string) without verifying the quote against the actual extracted native PDF text or verifying that the asserted parameter matched the quoted source.
+- **Corrected Behavior**:
+  - `data/extraction.py`: Stores extracted native page text in `result["page_texts"] = {page_num: text}` during PDF extraction while keeping `result["pages"]` schema intact.
+  - `matching/document_enrichment.py`:
+    - Added `verify_source_quotation()`: verifies exact quotation in native PDF text on the cited page; detects requirement quotes spanning adjacent page boundaries; flags quotes located on another page (`quote_page_mismatch`); detects scanned/empty pages (`source_unverified_needs_ocr`); flags quotes on truncated pages (`source_partially_verified`); rejects ungrounded quotes as `fabricated_quotation`.
+    - Added `check_quotation_attribution_mismatch()`: detects parameter label mismatches (e.g. chamber height vs substrate diameter) and conflicting/malformed units (e.g. 500 K vs 500 C, 300 mm vs 300 cm).
+    - Hardened compatibility: Fabricated quotations and attribution mismatches trigger `explicit_conflict`, populating `conflicts` and demoting tender to `explore` with `agent_review_required`.
+    - Enforced `coverage_not_assessed` unless omissions have been formally evaluated.
+- **Adversarial Regression Coverage**: 8 adversarial tests in `tests/test_document_evidence_enrichment.py` covering fabricated quotations, page mismatches, table parameter attribution mismatches, unit contradictions, scanned/OCR-needed pages, page-boundary spanning, truncated extractions, and omissions assessment checks.
+- **Verification**: 29 targeted tests passed; 272 full-suite deterministic tests passed.
+

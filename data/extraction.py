@@ -67,6 +67,7 @@ def _extract_pdf_requirements_in_worker(
         "content_fingerprint": content_fingerprint,
         "status": "unavailable",
         "pages": [],
+        "page_texts": {},
         "fields": {},
         "error_type": None,
         "extracted_at": datetime.now(timezone.utc).isoformat(),
@@ -101,8 +102,10 @@ def _extract_pdf_requirements_in_worker(
             if nonempty_lines:
                 saw_text = True
                 result["pages"].append({"page": index + 1, "status": "truncated" if was_truncated else "text"})
+                result["page_texts"][index + 1] = page_text
             else:
                 result["pages"].append({"page": index + 1, "status": "empty"})
+                result["page_texts"][index + 1] = ""
             for line in nonempty_lines:
                 match = _LABEL_RE.match(line)
                 if not match:
