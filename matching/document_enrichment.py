@@ -169,6 +169,27 @@ def check_missing_specifications(requirement_text: str, field_name: str) -> bool
     return False
 
 
+def check_claim_limitation_conflicts(requirement_text: str, matched_claim: dict | None) -> str | None:
+    """Check if requirement contradicts known limitations of the matched claim."""
+    if not matched_claim:
+        return None
+    req_lower = requirement_text.lower()
+    limitations = matched_claim.get("known_limitations", [])
+    for lim in limitations:
+        lim_lower = str(lim).lower()
+        # 1. Planar wafer vs powder functionalization (e.g. PARTEQ-CVD-001)
+        if "cannot be used for planar wafer" in lim_lower or "limited to powder" in lim_lower:
+            if "planar wafer" in req_lower or "silicon wafer" in req_lower or "wafer substrate" in req_lower:
+                return f"Configuration limitation conflict: tender requires planar wafer CVD, but claim {matched_claim.get('claim_id')} is limited to powder/particulate functionalization"
+        # 2. Technique restrictions (e.g. sputtering only, no e-beam)
+        if "sputtering only" in lim_lower and ("e-beam" in req_lower or "electron beam" in req_lower):
+            return f"Configuration limitation conflict: tender requires e-beam evaporation, but {matched_claim.get('claim_id')} is limited to sputtering"
+        # 3. Batch/industrial volume vs research/benchtop scale
+        if ("benchtop" in lim_lower or "research scale" in lim_lower) and ("mass production" in req_lower or "industrial throughput" in req_lower):
+            return f"Scale limitation conflict: tender requires industrial mass production, but {matched_claim.get('claim_id')} is designed for research/benchtop scale"
+    return None
+
+
 def evaluate_technical_compatibility(
     item_value: str,
     evidence_info: dict,
@@ -218,10 +239,18 @@ def evaluate_technical_compatibility(
         claim_tokens = _extract_text_tokens(claim_term)
         if (claim_tokens and claim_tokens.issubset(value_tokens)) or (claim_term in item_value.lower()):
             state = c.get("validation_state")
+            src_url = str(c.get("source_url") or "").strip()
+            has_resolvable_source = src_url.startswith("http://") or src_url.startswith("https://")
+
             if state in {"validated_capability", "product_specific"}:
-                claim_validity = "capability_evidence_found"
-                matched_claim = c
-                break
+                if has_resolvable_source:
+                    claim_validity = "capability_evidence_found"
+                    matched_claim = c
+                    break
+                else:
+                    claim_validity = "unverified_claim"
+                    matched_claim = c
+                    break
             elif state == "unsupported":
                 claim_validity = "unsupported_claim"
                 matched_claim = c
@@ -231,38 +260,30 @@ def evaluate_technical_compatibility(
                 matched_claim = c
                 break
 
-    # If no claim record, check profile products vs keywords
+    # If no validated claim record, check profile products and keywords.
+    # Note: A profile keyword, offered service, or unverified product alone
+    # must NEVER establish capability_evidence_found; it remains strictly a lexical_candidate.
     matched_capability = None
-    GENERIC_AUXILIARY_KEYWORDS = frozenset({
-        "vacuum chamber", "vacuum system", "high precision", "laboratory equipment",
-        "power supply", "sample stage", "digital display", "control unit",
-        "mounting flange", "standard accessories", "spare parts", "safety interlock",
-        "thin film training", "system installation", "installation", "training",
-    })
-
     if claim_validity == "insufficient_evidence":
         products = [str(p) for p in maker_profile.get("products", [])]
+        keywords = [str(k) for k in maker_profile.get("keywords", [])]
+        services = [str(s) for s in maker_profile.get("offered_services", [])]
+
         for p in products:
             p_tokens = _extract_text_tokens(p)
             if (len(p_tokens) >= 2 and p_tokens.issubset(value_tokens)) or (p.lower() in item_value.lower() and len(p) >= 5):
-                claim_validity = "capability_evidence_found"
+                claim_validity = "lexical_candidate"
                 matched_capability = p
                 break
 
-    if claim_validity == "insufficient_evidence":
-        keywords = [str(k) for k in maker_profile.get("keywords", [])]
-        services = [str(s) for s in maker_profile.get("offered_services", [])]
-        for k in keywords + services:
-            k_lower = k.lower()
-            k_tokens = _extract_text_tokens(k_lower)
-            if len(k_tokens) >= 2 and k_tokens.issubset(value_tokens):
-                matched_capability = k
-                # If keyword is a core technical capability (not a generic auxiliary phrase), treat as capability
-                if k_lower not in GENERIC_AUXILIARY_KEYWORDS and len(k_tokens) >= 2:
-                    claim_validity = "capability_evidence_found"
-                    break
-                else:
+        if claim_validity == "insufficient_evidence":
+            for k in keywords + services:
+                k_lower = k.lower()
+                k_tokens = _extract_text_tokens(k_lower)
+                if len(k_tokens) >= 2 and k_tokens.issubset(value_tokens):
                     claim_validity = "lexical_candidate"
+                    matched_capability = k
+                    break
 
     # 3. Technical compatibility evaluation
     # A. Check domain incompatibility
@@ -282,30 +303,35 @@ def evaluate_technical_compatibility(
             if service_conflict:
                 tech_status = "explicit_conflict"
                 notes = service_conflict
-            elif claim_validity == "unsupported_claim":
-                tech_status = "explicit_conflict"
-                notes = f"Unsupported claim: official documentation explicitly does not substantiate {matched_claim.get('claim_text')}"
-            elif claim_validity == "capability_evidence_found":
-                if source_validity == "source_verified":
-                    tech_status = "technical_match_supported"
-                    notes = f"Verified in PDF (p. {page}) and substantiated by manufacturer evidence: {matched_claim.get('claim_id') if matched_claim else matched_capability}"
-                else:
-                    tech_status = "capability_evidence_found"
-                    notes = "Manufacturer capability substantiated, but requirement source unverified in PDF"
-            elif claim_validity == "lexical_candidate":
-                # Multi-keyword overlap without substantiated product capability remains a candidate
-                tech_status = "lexical_candidate"
-                notes = "Lexical keyword overlap detected; technical compatibility not yet substantiated by official claim evidence"
-            elif claim_validity == "unverified_claim":
-                tech_status = "needs_review"
-                notes = f"Conditional/unverified claim requires human sales adjudication: {matched_claim.get('claim_id')}"
             else:
-                if check_missing_specifications(item_value, "technical_specifications"):
-                    tech_status = "insufficient_evidence"
-                    notes = "Critical technical parameters missing from specification; cannot substantiate fit"
-                else:
+                # D. Check claim limitation conflicts
+                limitation_conflict = check_claim_limitation_conflicts(item_value, matched_claim)
+                if limitation_conflict:
+                    tech_status = "explicit_conflict"
+                    notes = limitation_conflict
+                elif claim_validity == "unsupported_claim":
+                    tech_status = "explicit_conflict"
+                    notes = f"Unsupported claim: official documentation explicitly does not substantiate {matched_claim.get('claim_text')}"
+                elif claim_validity == "capability_evidence_found":
+                    if source_validity == "source_verified":
+                        tech_status = "technical_match_supported"
+                        notes = f"Verified in PDF (p. {page}) and substantiated by official manufacturer claim: {matched_claim.get('claim_id')}"
+                    else:
+                        tech_status = "capability_evidence_found"
+                        notes = f"Manufacturer capability substantiated by {matched_claim.get('claim_id')}, but requirement source unverified in PDF"
+                elif claim_validity == "lexical_candidate":
+                    tech_status = "lexical_candidate"
+                    notes = f"Lexical keyword overlap detected ({matched_capability}); technical compatibility not substantiated by official claim evidence"
+                elif claim_validity == "unverified_claim":
                     tech_status = "needs_review"
-                    notes = "Tender specification unverified against manufacturer capabilities"
+                    notes = f"Conditional/unverified claim requires human sales adjudication: {matched_claim.get('claim_id')}"
+                else:
+                    if check_missing_specifications(item_value, "technical_specifications"):
+                        tech_status = "insufficient_evidence"
+                        notes = "Critical technical parameters missing from specification; cannot substantiate fit"
+                    else:
+                        tech_status = "needs_review"
+                        notes = "Tender specification unverified against manufacturer capabilities"
 
     # 4. Human disposition lookup
     human_disposition = "unreviewed"
